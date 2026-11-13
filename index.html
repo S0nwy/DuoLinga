@@ -505,6 +505,7 @@
   .unit-17 { background: linear-gradient(135deg, #E74C3C, #922B21); }
   .unit-18 { background: linear-gradient(135deg, #1ABC9C, #117A65); }
   .unit-19 { background: linear-gradient(135deg, #4338CA, #312E81); }
+  .unit-20 { background: linear-gradient(135deg, #DC2626, #7F1D1D); }
 
   .lessons {
     display: flex;
@@ -809,6 +810,17 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 6px;
+  }
+
+  .q-type .review-badge {
+    display: inline-block;
+    background: var(--purple);
+    color: white;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 9px;
+    margin-left: 6px;
+    vertical-align: middle;
   }
 
   .q-prompt {
@@ -1281,7 +1293,6 @@
     font-weight: 900;
   }
 
-  /* ============ FORGOT MODAL ============ */
   .forgot-backdrop {
     position: fixed;
     inset: 0;
@@ -1782,6 +1793,7 @@
             <div class="filter-tab" data-filter="17">Food</div>
             <div class="filter-tab" data-filter="18">Time</div>
             <div class="filter-tab" data-filter="19">Numbers</div>
+            <div class="filter-tab" data-filter="20">Strong</div>
           </div>
         </div>
         <div class="words-list" id="wordsList"></div>
@@ -2233,18 +2245,41 @@ const VOCAB = {
     {da:"42", en:"Forty-two", df:"Quadragora-Tria"}, {da:"45", en:"Forty-five", df:"Quadragora-Quinora"}, {da:"56", en:"Fifty-six", df:"Quinquagora-Sexora"},
     {da:"63", en:"Sixty-three", df:"Sexagora-Tria"}, {da:"78", en:"Seventy-eight", df:"Septuagora-Octora"}, {da:"87", en:"Eighty-seven", df:"Octogora-Septora"},
     {da:"99", en:"Ninety-nine", df:"Nonagora-Novara"}
+  ], sentences: [] },
+  20: { title: { en: "Strong Words", da: "Stærke ord" }, icon: "🤬", color: 20, words: [
+    {da:"Dum", en:"Stupid", df:"Stupora"},
+    {da:"Idiot", en:"Idiot", df:"Idiota"},
+    {da:"Tosse", en:"Fool", df:"Folora"},
+    {da:"Kæft", en:"Shut up", df:"Silenta"},
+    {da:"Lort", en:"Crap", df:"Merda"},
+    {da:"Pis", en:"Piss", df:"Pissora"},
+    {da:"For helvede", en:"Damn it", df:"Maledora"},
+    {da:"For pokker", en:"Darn it", df:"Damora"},
+    {da:"Fuck", en:"Fuck", df:"Fucara"},
+    {da:"Røvhul", en:"Asshole", df:"Culora"},
+    {da:"Taber", en:"Loser", df:"Perdora"},
+    {da:"Klovn", en:"Clown", df:"Clownara"},
+    {da:"Irriterende", en:"Annoying", df:"Annoyora"},
+    {da:"Hold kæft", en:"Shut up", df:"Silenta tu"},
+    {da:"Skrid", en:"Scram", df:"Dispara"},
+    {da:"Jeg hader dig", en:"I hate you", df:"Mio Odia Tua"},
+    {da:"Du er dum", en:"You are stupid", df:"Tua Estara Stupora"},
+    {da:"Hvad fanden?", en:"What the hell?", df:"Quora Maledora?"},
+    {da:"Gå væk!", en:"Go away!", df:"Alevara!"},
+    {da:"Din idiot!", en:"You idiot!", df:"Tua Idiota!"}
   ], sentences: [] }
 };
 
 const PHONETIC_MAP = {
   'bonhallo':'bon-HAHL-lo','bonmora':'bon-MO-ra','bonnocta':'bon-NOCK-ta','adevara':'ah-day-VAH-ra','familora':'fah-MEE-lo-ra','madora':'mah-DO-ra','padora':'pah-DO-ra','sorina':'so-REE-na','fratero':'fra-TEH-ro','infanto':'een-FAHN-to','humano':'hoo-MAH-no','amivenn':'ah-mee-VEN','grandmora':'grahnd-MO-ra','grandpador':'grahnd-PAH-dor','femina':'FEH-mee-na','homaro':'ho-MAH-ro','puella':'poo-EH-la','garçono':'gar-SO-no','bebina':'beh-BEE-na','persona':'per-SO-na','amorliv':'ah-MOR-liv','joyara':'joy-AH-ra','dolora':'do-LO-ra','felicia':'feh-LEE-sha','amistara':'ah-mee-STAH-ra','saudora':'sow-DO-ra','somnara':'som-NAH-ra','espera':'es-PE-ra','timora':'tee-MO-ra','sorrisa':'so-REE-sa','besora':'beh-SO-ra','cordehjert':'kor-deh-YERT','iraora':'ee-rah-O-ra','calmina':'kal-MEE-na','joyeux':'joy-UH','tristora':'tree-STO-ra','corajosa':'ko-rah-HO-sa','fierté':'fee-er-TAY','solitara':'so-lee-TAH-ra','amorella':'ah-mo-REH-la','maré':'mah-RAY','aqua':'AH-kwa','fuego':'FWEH-go','terra':'TEH-ra','cielum':'SEE-lum','estrela':'eh-STREH-la','florina':'flo-REE-na','arbor':'AR-bor','silvara':'seel-VAH-ra','montara':'mon-TAH-ra','ventora':'ven-TOR-a','pluvia':'PLOO-vee-a','nivora':'nee-VO-ra','solaria':'so-LAH-ree-a','lunalux':'LOO-na-luks','plajara':'plah-HAH-ra','rivora':'ree-VO-ra','lakora':'lah-KO-ra','herbina':'her-BEE-na','nubela':'noo-BEH-la','domora':'do-MO-ra','camara':'kah-MAH-ra','lectora':'lek-TO-ra','sedora':'seh-DO-ra','tabora':'tah-BO-ra','portara':'por-TAH-ra','fenestra':'feh-NEH-strah','cozinara':'ko-zee-NAH-ra','alimenta':'ah-lee-MEN-ta','panora':'pah-NO-ra','lacté':'lak-TAY','pomara':'po-MAH-ra','cafora':'kah-FO-ra','libera':'LEE-beh-ra','musica':'MOO-zee-ka','telefoné':'teh-leh-fo-NAY','computara':'kom-poo-TAH-ra','clavora':'klah-VO-ra','vestara':'ves-TAH-ra','sapata':'sah-PAH-ta','rubina':'roo-BEE-na','azula':'ah-ZOO-la','verdora':'ver-DO-ra','amarela':'ah-mah-REH-la','nigrum':'NYE-grum','albina':'al-BEE-na','rosalia':'ro-SAH-lee-a','violara':'vee-oh-LAH-ra','aurum':'AW-rum','argenta':'ar-JEN-ta','oranja':'oh-RAHN-ya','brunora':'broo-NO-ra','grisia':'GREE-see-a','bellskøn':'bel-SKUN','grandora':'grahn-DO-ra','minora':'mee-NO-ra','rapida':'rah-PEE-da','lentora':'len-TO-ra','calora':'kah-LO-ra','frigora':'free-GO-ra','diara':'dee-AH-ra','noctara':'noc-TAH-ra','matina':'mah-TEE-na','vespara':'ves-PAH-ra','hodiera':'ho-DYEH-ra','amanora':'ah-mah-NO-ra','heriora':'heh-REE-or-a','tempora':'TEM-po-ra','nuncé':'noon-SAY','sempre':'SEM-preh','nuncquam':'NOON-kwam','semanara':'seh-mah-NAH-ra','mensora':'men-SO-ra','annora':'ah-NO-ra','horina':'ho-REE-na','minuta':'mee-NOO-ta','seconda':'seh-KON-da','antera':'ahn-TE-ra','postara':'pos-TAH-ra','proxima':'PROK-see-ma','mio':'MEE-o','tua':'TOO-ah','elo':'EH-lo','ela':'EH-la','nos':'nos','elar':'EH-lar','mina':'MEE-na','aqui':'ah-KEE','alora':'ah-LO-ra','oui':'wee','non':'non','merci tak':'MER-see tahk','por favor':'por fah-VOR','ubara':'oo-BAH-ra','quisara':'kee-SAH-ra','quora':'KWO-ra','porqué':'por-KAY','porque':'por-KEH','talvez':'tahl-VEZ','amora':'ah-MO-ra','risora':'ree-SO-ra','lacrima':'lah-KREE-ma','mangera':'mahn-JEH-ra','bibera':'bee-BEH-ra','dormira':'dor-MEE-ra','dansara':'dahn-SAH-ra','cantora':'kahn-TO-ra','currera':'koo-REH-ra','ambular':'am-boo-LAR','parlora':'par-LO-ra','audira':'ow-DEE-ra','vidora':'vee-DO-ra','legora':'leh-GO-ra','scriptora':'skreep-TO-ra','ludora':'loo-DO-ra','natara':'nah-TAH-ra','volara':'vo-LAH-ra','pensara':'pen-SAH-ra','sorrira':'so-REE-ra','magiora':'mah-JO-ra','anima':'AH-nee-ma','pacera':'pah-SE-ra','libertara':'lee-ber-TAH-ra','eternora':'eh-ter-NO-ra','secretara':'seh-kreh-TAH-ra','bellora':'beh-LO-ra','universa':'oo-nee-VER-sa','angelora':'ahn-JEH-lo-ra','luxespera':'luks-es-PE-ra','somniversa':'som-nee-VER-sa','aventora':'ah-ven-TO-ra','lun anima':'loon AH-nee-ma','solcorda':'sol-KOR-da','estrelpura':'eh-strel-POO-ra','arcobella':'ar-ko-BEH-la','lumina':'LOO-mee-na','obscura':'ob-SKOO-ra','miracula':'mee-RAH-koo-la','enchantora':'en-chan-TO-ra','scholarina':'sko-lah-REE-na','magistera':'mah-JEES-te-ra','amicora':'ah-mee-KO-ra','aventurosa':'ah-ven-too-RO-sa','matinara':'mah-tee-NAH-ra','prandora':'prahn-DO-ra','cenarina':'seh-nah-REE-na','felina':'feh-LEE-na','canora':'kah-NO-ra','equina':'eh-KWEE-na','aviora':'ah-VEE-o-ra','estivara':'es-tee-VAH-ra','inverna':'een-VER-na','primavera':'pree-mah-VE-ra','autumnara':'aw-tum-NAH-ra','urbana':'ur-BAH-na','paisora':'pay-SO-ra','mundara':'moon-DAH-ra','viatora':'vee-ah-TO-ra','domina':'do-MEE-na',
   'hallovai':'hah-LO-vai','bonadia':'bo-NAH-dee-ya','bonvespa':'bon-VES-pa','bonadia venora':'bo-NAH-dee-ya veh-NO-ra','meraki':'meh-RAH-kee','grandmeraki':'grahnd-meh-RAH-kee','benmeraki':'ben-meh-RAH-kee','perdona':'per-DO-na','perdoni':'per-DO-nee','nulproblema':'nool-pro-BLEH-ma','viresta':'vee-RES-ta','benvara':'ben-VAH-ra','quomara':'kwo-MAH-ra','quandra':'KWAHN-dra','qualora':'kwah-LO-ra','sucede':'soo-SEH-deh','coma vesta':'KO-ma VES-ta','bonora':'bo-NO-ra','malora':'mah-LO-ra','finora':'fee-NO-ra','clarivo':'klah-REE-vo','verita':'veh-REE-ta','okeya':'oh-KAY-ya','attenda':'ah-TEN-da','venira':'veh-NEE-ra','alevara':'ah-leh-VAH-ra','ajuvara':'ah-joo-VAH-ra','miva':'MEE-va','tuva':'TOO-va','nosa':'NO-sa','elara':'eh-LAH-ra','neivora':'nay-VO-ra','somnira':'som-NEE-ra','famelia':'fah-MEH-lee-ya','aquira':'ah-KEE-ra','risavena':'ree-sah-VEH-na','nuljoya':'nool-JOY-ya','nervora':'ner-VO-ra','confusa':'kon-FOO-sa','miravena':'mee-rah-VEH-na','malivara':'mah-lee-VAH-ra','fantora':'fahn-TO-ra','nulcare':'nool-KAH-reh','estara':'es-TAH-ra','habira':'hah-BEE-ra','facera':'fah-SEH-ra','dicera':'dee-SEH-ra','evigora':'eh-vee-GO-ra','sedira':'seh-DEE-ra','statora':'stah-TO-ra','sapira':'sah-PEE-ra','comprena':'kom-PREH-na','banelora':'bah-neh-LO-ra','sanitora':'sah-nee-TO-ra','bagora':'bah-GO-ra','moneta':'mo-NEH-ta','horica':'ho-REE-ka','banora':'bah-NO-ra','carnora':'kar-NO-ra','piscara':'pee-SKAH-ra','rizona':'ree-ZO-na','quesora':'keh-SO-ra','tevara':'teh-VAH-ra','jucera':'joo-SEH-ra','dulcora':'dool-KO-ra','salina':'sah-LEE-na','restora':'res-TO-ra','posterra':'pos-TEH-ra','primora':'pree-MO-ra','tardora':'tar-DO-ra','novara':'no-VAH-ra','vetora':'veh-TO-ra','importa':'eem-POR-ta',
-  'nula':'NOO-la','unora':'oo-NO-ra','duora':'doo-O-ra','tria':'TREE-ah','quatra':'KWAH-tra','quinora':'kwee-NO-ra','sexora':'sek-SO-ra','septora':'sep-TO-ra','octora':'ok-TO-ra','decora':'deh-KO-ra','undecora':'oon-deh-KO-ra','duodecora':'doo-oh-deh-KO-ra','tredecora':'treh-deh-KO-ra','quattuordecora':'kwah-toor-deh-KO-ra','quindecora':'kween-deh-KO-ra','sedecora':'seh-deh-KO-ra','septendecora':'sep-ten-deh-KO-ra','octodecora':'ok-toh-deh-KO-ra','novendecora':'no-ven-deh-KO-ra','vigora':'vee-GO-ra','trigora':'tree-GO-ra','quadragora':'kwah-drah-GO-ra','quinquagora':'kween-kwah-GO-ra','sexagora':'sek-sah-GO-ra','septuagora':'sep-too-ah-GO-ra','octogora':'ok-toh-GO-ra','nonagora':'no-nah-GO-ra','centora':'sen-TO-ra','millora':'mee-LO-ra','decamillora':'deh-kah-mee-LO-ra','centimillora':'sen-tee-mee-LO-ra','miliona':'mee-lee-O-na','biliona':'bee-lee-O-na','secora':'seh-KO-ra','tertora':'ter-TO-ra','ultima':'OOL-tee-ma','semora':'seh-MO-ra','duplora':'doo-PLO-ra','multora':'mool-TO-ra','pauora':'pow-O-ra'
+  'nula':'NOO-la','unora':'oo-NO-ra','duora':'doo-O-ra','tria':'TREE-ah','quatra':'KWAH-tra','quinora':'kwee-NO-ra','sexora':'sek-SO-ra','septora':'sep-TO-ra','octora':'ok-TO-ra','decora':'deh-KO-ra','undecora':'oon-deh-KO-ra','duodecora':'doo-oh-deh-KO-ra','tredecora':'treh-deh-KO-ra','quattuordecora':'kwah-toor-deh-KO-ra','quindecora':'kween-deh-KO-ra','sedecora':'seh-deh-KO-ra','septendecora':'sep-ten-deh-KO-ra','octodecora':'ok-toh-deh-KO-ra','novendecora':'no-ven-deh-KO-ra','vigora':'vee-GO-ra','trigora':'tree-GO-ra','quadragora':'kwah-drah-GO-ra','quinquagora':'kween-kwah-GO-ra','sexagora':'sek-sah-GO-ra','septuagora':'sep-too-ah-GO-ra','octogora':'ok-toh-GO-ra','nonagora':'no-nah-GO-ra','centora':'sen-TO-ra','millora':'mee-LO-ra','decamillora':'deh-kah-mee-LO-ra','centimillora':'sen-tee-mee-LO-ra','miliona':'mee-lee-O-na','biliona':'bee-lee-O-na','secora':'seh-KO-ra','tertora':'ter-TO-ra','ultima':'OOL-tee-ma','semora':'seh-MO-ra','duplora':'doo-PLO-ra','multora':'mool-TO-ra','pauora':'pow-O-ra',
+  'stupora':'stoo-PO-ra','idiota':'ee-dee-O-ta','folora':'fo-LO-ra','silenta':'see-LEN-ta','merda':'MER-da','pissora':'pee-SO-ra','maledora':'mah-leh-DO-ra','damora':'dah-MO-ra','fucara':'foo-KAH-ra','culora':'koo-LO-ra','perdora':'per-DO-ra','clownara':'klow-NAH-ra','annoyora':'ah-noy-O-ra','dispara':'dee-SPAH-ra','odia':'O-dee-ah'
 };
 
 const UI_TEXT = {
-  en: { unit:"Unit", lesson:"Lesson", translateTo:"Translate to Danfrolat", writeIn:"Write in Danfrolat", whatMeans:"What does this mean?", buildSentence:"Write this in Danfrolat", typeTrans:"Type this translation", check:"Check", continue:"Continue", correct:"Correct!", wrong:"Not quite!", correctAns:"Correct answer:", lessonComplete:"Lesson Complete!", greatProgress:"You're making great progress!", listen:"🔊 Listen", mascotIntro:"Let's learn these words!", selectVoice:"Select", normal:"Normal", slow:"Slow", fast:"Fast", newWords:"New words!", letsPractice:"Let's practice!", mascotGoodJob:"Amazing! You're a star!", mascotKeepGoing:"Keep going!", mascotOops:"Oops! Try again!" },
-  da: { unit:"Enhed", lesson:"Lektion", translateTo:"Oversæt til Danfrolat", writeIn:"Skriv på Danfrolat", whatMeans:"Hvad betyder dette?", buildSentence:"Skriv dette på Danfrolat", typeTrans:"Skriv denne oversættelse", check:"Tjek", continue:"Fortsæt", correct:"Korrekt!", wrong:"Ikke helt!", correctAns:"Korrekt svar:", lessonComplete:"Lektion fuldført!", greatProgress:"Du gør det godt!", listen:"🔊 Lyt", mascotIntro:"Lad os lære disse ord!", selectVoice:"Vælg", normal:"Normal", slow:"Langsom", fast:"Hurtig", newWords:"Nye ord!", letsPractice:"Lad os øve!", mascotGoodJob:"Fantastisk!", mascotKeepGoing:"Bliv ved!", mascotOops:"Ups! Prøv igen!" }
+  en: { unit:"Unit", lesson:"Lesson", translateTo:"Translate to Danfrolat", writeIn:"Write in Danfrolat", whatMeans:"What does this mean?", buildSentence:"Write this in Danfrolat", typeTrans:"Type this translation", check:"Check", continue:"Continue", correct:"Correct!", wrong:"Not quite!", correctAns:"Correct answer:", lessonComplete:"Lesson Complete!", greatProgress:"You're making great progress!", listen:"🔊 Listen", mascotIntro:"Let's learn these words!", selectVoice:"Select", normal:"Normal", slow:"Slow", fast:"Fast", newWords:"New words!", letsPractice:"Let's practice!", mascotGoodJob:"Amazing! You're a star!", mascotKeepGoing:"Keep going!", mascotOops:"Oops! Try again!", review:"Review" },
+  da: { unit:"Enhed", lesson:"Lektion", translateTo:"Oversæt til Danfrolat", writeIn:"Skriv på Danfrolat", whatMeans:"Hvad betyder dette?", buildSentence:"Skriv dette på Danfrolat", typeTrans:"Skriv denne oversættelse", check:"Tjek", continue:"Fortsæt", correct:"Korrekt!", wrong:"Ikke helt!", correctAns:"Korrekt svar:", lessonComplete:"Lektion fuldført!", greatProgress:"Du gør det godt!", listen:"🔊 Lyt", mascotIntro:"Lad os lære disse ord!", selectVoice:"Vælg", normal:"Normal", slow:"Langsom", fast:"Hurtig", newWords:"Nye ord!", letsPractice:"Lad os øve!", mascotGoodJob:"Fantastisk!", mascotKeepGoing:"Bliv ved!", mascotOops:"Ups! Prøv igen!", review:"Repetition" }
 };
 
 function mascotSVG(size = 110) {
@@ -2317,7 +2352,6 @@ class NaturalTTS {
   }
   toPhonetic(text) {
     return text.toLowerCase().split(/\s+/).map(w => {
-      // Handle hyphenated compound numbers (Vigora-Unora → vee-GO-ra oo-NO-ra)
       if (w.includes('-')) {
         return w.split('-').map(part => {
           const clean = part.replace(/[.,!?¿¡]/g, '');
@@ -2367,7 +2401,6 @@ class NaturalTTS {
 
 const tts = new NaturalTTS();
 
-// ============ STATE ============
 let currentUser = null;
 let state = {
   lang: null, xp: 0, gems: 50, hearts: 5, streak: 0,
@@ -3134,14 +3167,21 @@ function startLesson(unitId, lessonIdx) {
   renderStep();
 }
 
+// ============ BUILD STEPS (with cumulative review) ============
 function buildSteps(lesson) {
-  const allWords = VOCAB[currentLesson.unitId].words;
+  // Cumulative pool: all words from unit 1 through current unit
+  const cumulativeWords = [];
+  for (let u = 1; u <= currentLesson.unitId; u++) {
+    if (VOCAB[u]) cumulativeWords.push(...VOCAB[u].words);
+  }
+
   const list = [];
   list.push({ type: 'intro', words: lesson.words });
+
   lesson.words.forEach((w, i) => {
     list.push({
       type: 'mcq', prompt: getSourceWord(w), promptLabel: t('translateTo'), correct: w.df,
-      choices: shuffle([w.df, ...getDistractors(w, allWords, 3, 'df')]),
+      choices: shuffle([w.df, ...getDistractors(w, cumulativeWords, 3, 'df')]),
       speakText: w.df, speakLang: 'df'
     });
     if (i % 2 === 0) {
@@ -3150,18 +3190,60 @@ function buildSteps(lesson) {
     if (i % 2 === 1) {
       list.push({
         type: 'mcq', prompt: w.df, promptLabel: t('whatMeans'), correct: getSourceWord(w),
-        choices: shuffle([getSourceWord(w), ...getDistractors(w, allWords, 3, state.lang)]),
+        choices: shuffle([getSourceWord(w), ...getDistractors(w, cumulativeWords, 3, state.lang)]),
         speakText: w.df, speakLang: 'df'
       });
     }
   });
+
+  // Current unit's sentences
   lesson.sentences.forEach(s => {
     list.push({
       type: 'bank', prompt: getSourceWord(s), promptLabel: t('buildSentence'), correct: s.df,
-      words: shuffle(s.df.split(' ').concat(getSentenceDistractors(s.df, allWords))),
+      words: shuffle(s.df.split(' ').concat(getSentenceDistractors(s.df, cumulativeWords))),
       speakText: s.df, speakLang: 'df'
     });
   });
+
+  // Review questions from previous units (scales with unit difficulty)
+  if (currentLesson.unitId > 2) {
+    const reviewCount = Math.min(3, Math.floor((currentLesson.unitId - 2) / 3));
+    const previousUnits = [];
+    for (let u = 1; u < currentLesson.unitId; u++) previousUnits.push(u);
+
+    for (let r = 0; r < reviewCount; r++) {
+      if (previousUnits.length === 0) break;
+      const randomUnitId = previousUnits[Math.floor(Math.random() * previousUnits.length)];
+      const reviewWords = VOCAB[randomUnitId].words;
+      if (!reviewWords || reviewWords.length === 0) continue;
+      const randomWord = reviewWords[Math.floor(Math.random() * reviewWords.length)];
+
+      // Alternate between MCQ and type for variety
+      if (r % 2 === 0) {
+        list.push({
+          type: 'mcq',
+          prompt: getSourceWord(randomWord),
+          promptLabel: t('translateTo'),
+          isReview: true,
+          correct: randomWord.df,
+          choices: shuffle([randomWord.df, ...getDistractors(randomWord, cumulativeWords, 3, 'df')]),
+          speakText: randomWord.df,
+          speakLang: 'df'
+        });
+      } else {
+        list.push({
+          type: 'type',
+          prompt: getSourceWord(randomWord),
+          promptLabel: t('writeIn'),
+          isReview: true,
+          correct: randomWord.df,
+          speakText: randomWord.df,
+          speakLang: 'df'
+        });
+      }
+    }
+  }
+
   return list;
 }
 
@@ -3203,6 +3285,12 @@ function renderStep() {
   const label = document.createElement('div');
   label.className = 'q-type';
   label.textContent = step.promptLabel;
+  if (step.isReview) {
+    const badge = document.createElement('span');
+    badge.className = 'review-badge';
+    badge.textContent = t('review');
+    label.appendChild(badge);
+  }
   body.appendChild(label);
 
   const prompt = document.createElement('div');
@@ -3210,6 +3298,7 @@ function renderStep() {
   prompt.textContent = step.prompt;
   body.appendChild(prompt);
 
+  // Speaker button — plays only on click (no auto-play)
   if (step.speakText) {
     const sp = document.createElement('div');
     sp.className = 'speaker-btn';
@@ -3225,11 +3314,6 @@ function renderStep() {
       setTimeout(() => { sp.classList.remove('playing'); const mm = $('lessonMascot'); if (mm) mm.classList.remove('talking'); }, 2500);
     });
     body.appendChild(sp);
-    setTimeout(() => {
-      const m = $('lessonMascot');
-      if (m) m.classList.add('talking');
-      tts.speak(step.speakText, step.speakLang, () => { const mm = $('lessonMascot'); if (mm) mm.classList.remove('talking'); });
-    }, 400);
   }
 
   if (step.type === 'mcq') {
