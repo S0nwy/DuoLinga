@@ -12,7 +12,6 @@
   body{display:flex;justify-content:center}
   .app{width:100%;max-width:560px;min-height:100vh;background:var(--bg);position:relative;padding-bottom:40px}
 
-  /* Loading */
   #loadingScreen{position:fixed;inset:0;background:linear-gradient(180deg,#FFF 0%,#E8F5D9 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
   #loadingScreen.hide{opacity:0;pointer-events:none}
   .load-mascot{width:100px;height:100px;animation:bounce 2s ease-in-out infinite;margin-bottom:16px;filter:drop-shadow(0 10px 20px rgba(160,82,45,.2))}
@@ -22,7 +21,6 @@
   .load-bar-fill{height:100%;background:var(--green);border-radius:10px;width:30%;animation:loadSlide 1.4s ease-in-out infinite}
   @keyframes loadSlide{0%{width:10%}50%{width:70%}100%{width:95%}}
 
-  /* Locked screen */
   #lockedScreen{display:none;padding:40px 20px;text-align:center;min-height:100vh;flex-direction:column;align-items:center;justify-content:center}
   #lockedScreen.show{display:flex}
   .lock-icon{font-size:70px;margin-bottom:16px;animation:lockWobble 2s ease-in-out infinite}
@@ -37,10 +35,9 @@
   .copy-btn.copied{background:var(--blue);box-shadow:0 3px 0 var(--blue-dark)}
   .lock-info{font-size:12px;color:var(--gray-text);font-weight:700;margin-top:14px;line-height:1.5}
   .redirect-countdown{font-size:13px;color:var(--blue);font-weight:800;margin-top:18px}
-  .go-back-btn{margin-top:20px;padding:12px 24px;background:#fff;border:2px solid var(--gray);color:var(--text);border-radius:12px;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 3px 0 var(--gray-dark);text-decoration:none;display:inline-block}
+  .go-back-btn{margin-top:12px;padding:12px 24px;background:#fff;border:2px solid var(--gray);color:var(--text);border-radius:12px;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 3px 0 var(--gray-dark);text-decoration:none;display:inline-block}
   .go-back-btn:active{transform:translateY(3px);box-shadow:0 0 0}
 
-  /* Admin header */
   .admin-header{background:#fff;border-bottom:2px solid var(--gray);position:sticky;top:0;z-index:50;padding:14px 16px 0;box-shadow:0 2px 12px rgba(0,0,0,.03)}
   .header-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
   .brand{display:flex;align-items:center;gap:10px}
@@ -57,7 +54,6 @@
   .online-dot{width:6px;height:6px;border-radius:50%;background:var(--green-dark);animation:onlinePulse 2s ease-in-out infinite}
   @keyframes onlinePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
 
-  /* Filter tabs */
   .filter-tabs{display:flex;gap:4px;padding-bottom:14px;overflow-x:auto}
   .filter-tabs::-webkit-scrollbar{display:none}
   .filter-tab{padding:9px 14px;border:2px solid transparent;border-radius:12px;background:var(--bg);font-family:inherit;font-weight:800;font-size:12px;color:var(--gray-text);cursor:pointer;white-space:nowrap;transition:all .2s var(--ease);display:flex;align-items:center;gap:6px}
@@ -68,7 +64,6 @@
   .filter-count{background:rgba(255,255,255,.25);padding:1px 6px;border-radius:6px;font-size:10px;font-weight:900}
   .filter-tab:not(.active) .filter-count{background:var(--gray);color:var(--text)}
 
-  /* Feed */
   .feed{padding:16px;display:flex;flex-direction:column;gap:10px;min-height:300px}
   .request-card{background:#fff;border-radius:14px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:12px;transition:all .3s var(--ease);animation:cardEnter .45s var(--ease) both;border:2px solid transparent}
   @keyframes cardEnter{0%{opacity:0;transform:translateX(24px) scale(.94)}60%{opacity:1;transform:translateX(-2px) scale(1.02)}100%{opacity:1;transform:translateX(0) scale(1)}}
@@ -100,14 +95,12 @@
   .spinner-sm{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
 
-  /* Empty */
   .empty-state{text-align:center;padding:60px 20px;display:flex;flex-direction:column;align-items:center;animation:fadeIn .4s var(--ease)}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   .empty-icon{font-size:60px;margin-bottom:14px;opacity:.9}
   .empty-title{font-size:16px;font-weight:900;color:var(--text);margin-bottom:6px}
   .empty-sub{font-size:12px;color:var(--gray-text);font-weight:700;max-width:260px;line-height:1.5}
 
-  /* Toast */
   .toast-container{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;gap:8px;pointer-events:none;max-width:90vw;width:400px}
   .toast-notif{background:#fff;border:2px solid var(--green);border-radius:14px;padding:12px 16px;box-shadow:0 8px 24px rgba(88,204,2,.2),0 2px 8px rgba(0,0,0,.08);display:flex;align-items:center;gap:10px;animation:toastIn .45s var(--ease);pointer-events:auto}
   .toast-notif.leaving{animation:toastOut .35s var(--ease) forwards}
@@ -118,11 +111,9 @@
   .toast-title{font-weight:900;font-size:13px;color:var(--text)}
   .toast-sub{font-size:11px;color:var(--gray-text);font-weight:700;margin-top:1px}
 
-  /* Footer info */
   .footer-info{text-align:center;padding:20px 16px;font-size:10px;color:#BBB;font-weight:700}
   .footer-info .device-id{font-family:monospace;background:#EEE;padding:2px 6px;border-radius:4px;color:#888}
 
-  /* Refresh btn */
   .refresh-btn{position:fixed;bottom:20px;right:20px;width:52px;height:52px;border-radius:50%;background:var(--blue);border:none;cursor:pointer;box-shadow:0 4px 0 var(--blue-dark),0 6px 16px rgba(28,176,246,.3);display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;transition:all .15s var(--ease);z-index:100}
   .refresh-btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--blue-dark),0 2px 8px rgba(28,176,246,.2)}
   .refresh-btn.spinning{animation:rotate 1s linear infinite;pointer-events:none;opacity:.7}
@@ -139,18 +130,18 @@
 
 <div class="app" id="lockedScreen">
   <div class="lock-icon">🔒</div>
-  <div class="lock-title">Access Required</div>
-  <div class="lock-sub">This device isn't authorized yet. Send the code below to the admin to get access.</div>
+  <div class="lock-title">Setup Mode</div>
+  <div class="lock-sub">Send the code below to the admin. Once it's added, tap "Check Access" below.</div>
 
   <div class="device-card">
     <div class="device-label">Your Device Code</div>
     <div class="device-code" id="deviceCode">—</div>
     <button class="copy-btn" id="copyBtn">📋 Copy Code</button>
-    <div class="lock-info">Once the admin adds this code, refresh this page.</div>
+    <div class="lock-info">This code is permanent for this browser.</div>
   </div>
 
-  <div class="redirect-countdown" id="countdown">Returning to app in 20s…</div>
-  <a href="https://s0nwy.github.io/DuoLinga/" class="go-back-btn" id="goBackBtn">Go to app now →</a>
+  <button class="copy-btn" id="checkBtn" style="max-width:380px;background:var(--blue);box-shadow:0 3px 0 var(--blue-dark);">✓ I've been added — Check Access</button>
+  <a href="https://s0nwy.github.io/DuoLinga/" class="go-back-btn">← Back to app</a>
 </div>
 
 <div class="app" id="adminApp" style="display:none;">
@@ -441,62 +432,64 @@ $('refreshBtn').addEventListener('click',async()=>{
   setTimeout(()=>btn.classList.remove('spinning'),400);
 });
 
-// Copy button
 $('copyBtn').addEventListener('click',async()=>{
   const code=currentDeviceId;
   const btn=$('copyBtn');
   try{
     await navigator.clipboard.writeText(code);
-    btn.textContent='✓ Copied!';
-    btn.classList.add('copied');
-    setTimeout(()=>{btn.textContent='📋 Copy Code';btn.classList.remove('copied');},2000);
   }catch(e){
-    // Fallback for older browsers
     const ta=document.createElement('textarea');
     ta.value=code; document.body.appendChild(ta);
     ta.select(); document.execCommand('copy'); ta.remove();
-    btn.textContent='✓ Copied!';
-    btn.classList.add('copied');
-    setTimeout(()=>{btn.textContent='📋 Copy Code';btn.classList.remove('copied');},2000);
+  }
+  btn.textContent='✓ Copied!';
+  btn.classList.add('copied');
+  setTimeout(()=>{btn.textContent='📋 Copy Code';btn.classList.remove('copied');},2000);
+});
+
+$('checkBtn').addEventListener('click',async()=>{
+  const btn=$('checkBtn');
+  const orig=btn.innerHTML;
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner-sm" style="border-color:rgba(255,255,255,.4);border-top-color:#fff;"></span> Checking…';
+  const authorized=await isDeviceAuthorized(currentDeviceId);
+  if(authorized){
+    btn.style.background='var(--green)';
+    btn.style.boxShadow='0 3px 0 var(--green-dark)';
+    btn.innerHTML='✓ Access granted!';
+    setTimeout(()=>window.location.reload(),600);
+  } else {
+    btn.disabled=false;
+    btn.innerHTML=orig;
+    showToast({name:'?',color:'#FFC800',title:'Not added yet',sub:'Ask the admin to add your code, then try again'});
   }
 });
 
-// Countdown redirect
-function startCountdown(seconds){
-  const el=$('countdown');
-  let remaining=seconds;
-  const tick=()=>{
-    el.textContent=`Returning to app in ${remaining}s…`;
-    if(remaining<=0){
-      window.location.replace(MAIN_APP_URL);
-      return;
-    }
-    remaining--;
-    setTimeout(tick,1000);
-  };
-  tick();
-}
-
 async function boot(){
   currentDeviceId=getOrCreateDeviceId();
+  const params=new URLSearchParams(window.location.search);
+  const isSetupMode=params.has('setup');
   const authorized=await isDeviceAuthorized(currentDeviceId);
 
   $('loadingScreen').classList.add('hide');
   setTimeout(()=>$('loadingScreen').remove(),400);
 
-  if(!authorized){
-    // Show locked screen with device code + auto-redirect
-    $('deviceCode').textContent=currentDeviceId;
-    $('lockedScreen').classList.add('show');
-    startCountdown(20);
+  if(authorized){
+    $('adminApp').style.display='block';
+    $('deviceIdDisplay').textContent=currentDeviceId;
+    await refresh();
+    startPolling();
     return;
   }
 
-  // Authorized → show admin panel
-  $('adminApp').style.display='block';
-  $('deviceIdDisplay').textContent=currentDeviceId;
-  await refresh();
-  startPolling();
+  if(isSetupMode){
+    $('deviceCode').textContent=currentDeviceId;
+    $('lockedScreen').classList.add('show');
+    return;
+  }
+
+  // Not authorized, not setup → redirect to main app
+  window.location.replace(MAIN_APP_URL);
 }
 
 boot();
