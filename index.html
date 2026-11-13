@@ -447,6 +447,109 @@
     100% { transform: scale(1); }
   }
 
+  /* ============ HEART STATUS BAR ============ */
+  .heart-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    background: linear-gradient(180deg, #FFF9F9 0%, #FFFFFF 100%);
+    border-bottom: 2px solid var(--gray);
+    flex-shrink: 0;
+    animation: heartBarSlideIn 0.35s var(--ease);
+  }
+
+  @keyframes heartBarSlideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .heart-status-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .heart-status-count {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--red);
+    font-size: 15px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .heart-status-count .heart-emoji {
+    font-size: 18px;
+  }
+
+  .heart-status-timer {
+    color: rgba(119, 119, 119, 0.55);
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .heart-refill-btn {
+    position: relative;
+    padding: 8px 14px;
+    border: none;
+    background: white;
+    color: var(--blue);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 900;
+    border-radius: 10px;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    z-index: 1;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: transform 0.15s var(--ease);
+  }
+
+  .heart-refill-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    padding: 2px;
+    background: linear-gradient(90deg, 
+      var(--blue) 0%, 
+      var(--blue) 35%,
+      #8FE8FF 50%,
+      var(--blue) 65%,
+      var(--blue) 100%);
+    background-size: 220% 100%;
+    animation: shineBorder 3s linear infinite;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .heart-refill-btn:hover::before {
+    animation-duration: 1.4s;
+  }
+
+  .heart-refill-btn:active {
+    transform: scale(0.96);
+  }
+
+  @keyframes shineBorder {
+    0% { background-position: 220% 0; }
+    100% { background-position: -220% 0; }
+  }
+
   .main-content {
     flex: 1;
     overflow-y: auto;
@@ -812,16 +915,19 @@
     margin-bottom: 6px;
   }
 
-  .q-type .review-badge {
+  .q-type .review-badge,
+  .q-type .retry-badge {
     display: inline-block;
-    background: var(--purple);
-    color: white;
     padding: 1px 6px;
     border-radius: 4px;
     font-size: 9px;
     margin-left: 6px;
     vertical-align: middle;
+    font-weight: 900;
   }
+
+  .q-type .review-badge { background: var(--purple); color: white; }
+  .q-type .retry-badge { background: var(--yellow); color: var(--yellow-dark); }
 
   .q-prompt {
     font-size: 22px;
@@ -1263,6 +1369,8 @@
     z-index: 500;
     transition: transform 0.3s var(--ease);
     font-size: 13px;
+    max-width: 90vw;
+    text-align: center;
   }
 
   .toast.show { transform: translateX(-50%) translateY(0); }
@@ -1621,9 +1729,7 @@
     font-weight: 600;
   }
 
-  .forgot-message .letter strong {
-    font-weight: 900;
-  }
+  .forgot-message .letter strong { font-weight: 900; }
 
   .forgot-message .letter .username-highlight {
     display: block;
@@ -1709,6 +1815,107 @@
     line-height: 1.5;
     margin-bottom: 8px;
   }
+
+  /* ============ QUIT MODAL ============ */
+  .quit-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    backdrop-filter: blur(0px);
+    z-index: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s var(--ease), background 0.3s var(--ease), backdrop-filter 0.3s var(--ease);
+  }
+
+  .quit-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px);
+  }
+
+  .quit-modal {
+    background: white;
+    width: 100%;
+    max-width: 340px;
+    border-radius: 22px;
+    padding: 26px 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 8px 20px rgba(0,0,0,0.15);
+    transform: scale(0.85) translateY(20px);
+    opacity: 0;
+    transition: transform 0.4s var(--spring), opacity 0.3s var(--ease);
+    text-align: center;
+  }
+
+  .quit-backdrop.show .quit-modal {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+
+  .quit-icon {
+    font-size: 52px;
+    margin-bottom: 12px;
+    animation: floatyIcon 2.5s ease-in-out infinite;
+  }
+
+  .quit-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .quit-msg {
+    font-size: 14px;
+    color: var(--gray-text);
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 22px;
+  }
+
+  .quit-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .quit-btn {
+    padding: 13px;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.15s;
+    min-height: 46px;
+  }
+
+  .quit-btn-stay {
+    background: var(--green);
+    color: white;
+    box-shadow: 0 4px 0 var(--green-dark);
+  }
+  .quit-btn-stay:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 var(--green-dark);
+  }
+
+  .quit-btn-leave {
+    background: var(--bg-soft);
+    color: var(--text);
+    border: 2px solid var(--gray);
+    box-shadow: 0 4px 0 var(--gray-dark);
+  }
+  .quit-btn-leave:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 var(--gray-dark);
+  }
 </style>
 </head>
 <body>
@@ -1761,6 +1968,18 @@
         </div>
       </div>
     </div>
+
+    <div class="heart-status-bar" id="heartStatusBar" style="display:none;">
+      <div class="heart-status-info">
+        <div class="heart-status-count">
+          <span class="heart-emoji">❤️</span>
+          <span id="heartStatusCount">4/5</span>
+        </div>
+        <div class="heart-status-timer" id="heartStatusTimer">next heart in 4:35:05</div>
+      </div>
+      <button class="heart-refill-btn" id="heartRefillBtn">Refill — 💎 100</button>
+    </div>
+
     <div class="main-content">
       <div id="learnTab">
         <div class="units-wrap" id="unitsWrap"></div>
@@ -1861,7 +2080,7 @@
       <div class="gameover-icon">💔</div>
       <div class="complete-title" style="color:var(--red);">Out of Hearts!</div>
       <div class="complete-sub">You ran out of hearts. Refill them to keep learning!</div>
-      <button class="btn btn-red" id="refillBtn" style="margin-top:16px;">Refill Hearts (💎 50)</button>
+      <button class="btn btn-red" id="refillBtn" style="margin-top:16px;">Refill Hearts (💎 100)</button>
       <button class="btn btn-white" id="goHomeBtn" style="margin-top:10px;">Go Home</button>
     </div>
   </div>
@@ -1915,6 +2134,18 @@
   </div>
 </div>
 
+<div class="quit-backdrop" id="quitBackdrop">
+  <div class="quit-modal">
+    <div class="quit-icon">🤔</div>
+    <div class="quit-title">Leave lesson?</div>
+    <div class="quit-msg">Your progress in this lesson won't be saved.</div>
+    <div class="quit-row">
+      <button class="quit-btn quit-btn-stay" id="quitStayBtn">Stay</button>
+      <button class="quit-btn quit-btn-leave" id="quitLeaveBtn">Quit</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const CLOUD_CONFIG = {
   BIN_ID: '6af727e7ac6210605a853a74',
@@ -1925,6 +2156,10 @@ const CLOUD_CONFIG = {
 const SESSION_KEY = 'danfrolat_session_v6';
 const LASTNAME_KEY = 'danfrolat_lastname';
 const DEVICE_ID_KEY = 'danfrolat_device_id';
+
+const MAX_HEARTS = 5;
+const HEART_REGEN_MS = 5 * 60 * 60 * 1000;
+const HEART_REFILL_COST = 100;
 
 async function cloudGet() {
   try {
@@ -2006,7 +2241,76 @@ function getSession() { return localStorage.getItem(SESSION_KEY); }
 function setSession(u) { localStorage.setItem(SESSION_KEY, u); }
 function clearSession() { localStorage.removeItem(SESSION_KEY); }
 
-// ============ VOCAB ============
+function formatCountdown(ms) {
+  if (ms <= 0) return '0:00:00';
+  const totalSec = Math.ceil(ms / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function getNextHeartTime() {
+  if (state.hearts >= MAX_HEARTS) return null;
+  if (!state.heartTimerStartedAt) return null;
+  return state.heartTimerStartedAt + HEART_REGEN_MS;
+}
+
+function recomputeHearts() {
+  if (state.hearts >= MAX_HEARTS) {
+    state.heartTimerStartedAt = null;
+    return false;
+  }
+  if (!state.heartTimerStartedAt) {
+    state.heartTimerStartedAt = Date.now();
+    return false;
+  }
+  const now = Date.now();
+  const elapsed = now - state.heartTimerStartedAt;
+  if (elapsed < HEART_REGEN_MS) return false;
+
+  const regened = Math.floor(elapsed / HEART_REGEN_MS);
+  const before = state.hearts;
+  state.hearts = Math.min(MAX_HEARTS, state.hearts + regened);
+  if (state.hearts >= MAX_HEARTS) {
+    state.heartTimerStartedAt = null;
+  } else {
+    state.heartTimerStartedAt = state.heartTimerStartedAt + regened * HEART_REGEN_MS;
+  }
+  return state.hearts !== before;
+}
+
+function loseHeart() {
+  if (state.hearts <= 0) return;
+  if (state.hearts >= MAX_HEARTS) {
+    state.heartTimerStartedAt = Date.now();
+  }
+  if (!state.heartTimerStartedAt) {
+    state.heartTimerStartedAt = Date.now();
+  }
+  state.hearts = Math.max(0, state.hearts - 1);
+}
+
+function updateHeartUI() {
+  $('heartVal').textContent = state.hearts;
+  $('lessonHearts').textContent = state.hearts;
+  const bar = $('heartStatusBar');
+  if (!bar) return;
+
+  if (state.hearts >= MAX_HEARTS) {
+    bar.style.display = 'none';
+  } else {
+    bar.style.display = 'flex';
+    $('heartStatusCount').textContent = `${state.hearts}/${MAX_HEARTS}`;
+    const nextTime = getNextHeartTime();
+    if (nextTime) {
+      const remaining = nextTime - Date.now();
+      $('heartStatusTimer').textContent = `next heart in ${formatCountdown(remaining)}`;
+    }
+  }
+}
+
+// ============ VOCAB (unchanged) ============
 const VOCAB = {
   1: { title: { en: "Greetings & People", da: "Hilsner og mennesker" }, icon: "👋", color: 1, words: [
     {da:"Hej", en:"Hello", df:"Bonhallo"}, {da:"Godmorgen", en:"Good morning", df:"Bonmora"}, {da:"Godnat", en:"Good night", df:"Bonnocta"},
@@ -2278,8 +2582,8 @@ const PHONETIC_MAP = {
 };
 
 const UI_TEXT = {
-  en: { unit:"Unit", lesson:"Lesson", translateTo:"Translate to Danfrolat", writeIn:"Write in Danfrolat", whatMeans:"What does this mean?", buildSentence:"Write this in Danfrolat", typeTrans:"Type this translation", check:"Check", continue:"Continue", correct:"Correct!", wrong:"Not quite!", correctAns:"Correct answer:", lessonComplete:"Lesson Complete!", greatProgress:"You're making great progress!", listen:"🔊 Listen", mascotIntro:"Let's learn these words!", selectVoice:"Select", normal:"Normal", slow:"Slow", fast:"Fast", newWords:"New words!", letsPractice:"Let's practice!", mascotGoodJob:"Amazing! You're a star!", mascotKeepGoing:"Keep going!", mascotOops:"Oops! Try again!", review:"Review" },
-  da: { unit:"Enhed", lesson:"Lektion", translateTo:"Oversæt til Danfrolat", writeIn:"Skriv på Danfrolat", whatMeans:"Hvad betyder dette?", buildSentence:"Skriv dette på Danfrolat", typeTrans:"Skriv denne oversættelse", check:"Tjek", continue:"Fortsæt", correct:"Korrekt!", wrong:"Ikke helt!", correctAns:"Korrekt svar:", lessonComplete:"Lektion fuldført!", greatProgress:"Du gør det godt!", listen:"🔊 Lyt", mascotIntro:"Lad os lære disse ord!", selectVoice:"Vælg", normal:"Normal", slow:"Langsom", fast:"Hurtig", newWords:"Nye ord!", letsPractice:"Lad os øve!", mascotGoodJob:"Fantastisk!", mascotKeepGoing:"Bliv ved!", mascotOops:"Ups! Prøv igen!", review:"Repetition" }
+  en: { unit:"Unit", lesson:"Lesson", translateTo:"Translate to Danfrolat", writeIn:"Write in Danfrolat", whatMeans:"What does this mean?", buildSentence:"Write this in Danfrolat", typeTrans:"Type this translation", check:"Check", continue:"Continue", correct:"Correct!", wrong:"Not quite!", correctAns:"Correct answer:", lessonComplete:"Lesson Complete!", greatProgress:"You're making great progress!", listen:"🔊 Listen", mascotIntro:"Let's learn these words!", selectVoice:"Select", normal:"Normal", slow:"Slow", fast:"Fast", newWords:"New words!", letsPractice:"Let's practice!", mascotGoodJob:"Amazing! You're a star!", mascotKeepGoing:"Keep going!", mascotOops:"Oops! Try again!", review:"Review", retry:"Retry" },
+  da: { unit:"Enhed", lesson:"Lektion", translateTo:"Oversæt til Danfrolat", writeIn:"Skriv på Danfrolat", whatMeans:"Hvad betyder dette?", buildSentence:"Skriv dette på Danfrolat", typeTrans:"Skriv denne oversættelse", check:"Tjek", continue:"Fortsæt", correct:"Korrekt!", wrong:"Ikke helt!", correctAns:"Korrekt svar:", lessonComplete:"Lektion fuldført!", greatProgress:"Du gør det godt!", listen:"🔊 Lyt", mascotIntro:"Lad os lære disse ord!", selectVoice:"Vælg", normal:"Normal", slow:"Langsom", fast:"Hurtig", newWords:"Nye ord!", letsPractice:"Lad os øve!", mascotGoodJob:"Fantastisk!", mascotKeepGoing:"Bliv ved!", mascotOops:"Ups! Prøv igen!", review:"Repetition", retry:"Igen" }
 };
 
 function mascotSVG(size = 110) {
@@ -2404,7 +2708,8 @@ const tts = new NaturalTTS();
 let currentUser = null;
 let state = {
   lang: null, xp: 0, gems: 50, hearts: 5, streak: 0,
-  lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal'
+  lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal',
+  heartTimerStartedAt: null
 };
 
 async function saveState() {
@@ -2422,8 +2727,17 @@ async function saveState() {
 
 async function loadUserState(username) {
   const data = await cloudGet();
-  if (data[username]?.data) state = { ...state, ...data[username].data };
-  else state = { lang: null, xp: 0, gems: 50, hearts: 5, streak: 0, lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal' };
+  const defaults = {
+    lang: null, xp: 0, gems: 50, hearts: 5, streak: 0,
+    lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal',
+    heartTimerStartedAt: null
+  };
+  if (data[username]?.data) state = { ...defaults, ...data[username].data };
+  else state = { ...defaults };
+  if (state.hearts >= MAX_HEARTS) state.heartTimerStartedAt = null;
+  if (state.hearts < MAX_HEARTS && !state.heartTimerStartedAt) {
+    state.heartTimerStartedAt = Date.now();
+  }
 }
 
 function updateStreak() {
@@ -2513,13 +2827,8 @@ function setRequestState(newState, customMsg) {
   switch (newState) {
     case 'idle':
       btn.innerHTML = '<span class="request-btn-text">Request Access</span>';
-      if (customMsg) {
-        statusEl.textContent = customMsg;
-        statusEl.style.color = 'var(--yellow-dark)';
-      } else {
-        statusEl.innerHTML = '';
-        statusEl.style.color = '';
-      }
+      if (customMsg) { statusEl.textContent = customMsg; statusEl.style.color = 'var(--yellow-dark)'; }
+      else { statusEl.innerHTML = ''; statusEl.style.color = ''; }
       break;
     case 'requesting':
       btn.innerHTML = '<span class="loading-spinner"></span><span class="request-btn-text">Requesting...</span>';
@@ -2672,6 +2981,7 @@ async function enterApp(name) {
     setSession(name);
     currentUser = name;
     await loadUserState(name);
+    recomputeHearts();
     const data = await cloudGet();
     if (!data[name]) data[name] = {};
     if (!data[name].ownerDeviceId || data[name].ownerDeviceId !== getOrCreateDeviceId()) {
@@ -2700,7 +3010,36 @@ $('authName').addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !$('requestBtn').disabled) { e.preventDefault(); handleRequestClick(); }
 });
 
-// ============ FORGOT USERNAME FLOW ============
+// ============ HEART CHIP + REFILL ============
+$('heartChip').addEventListener('click', () => {
+  if (state.hearts >= MAX_HEARTS) {
+    toast('You have full hearts! ❤️');
+  } else {
+    const nextTime = getNextHeartTime();
+    if (nextTime) {
+      const remaining = nextTime - Date.now();
+      toast(`Next heart in ${formatCountdown(remaining)}`);
+    }
+  }
+});
+
+async function refillHearts() {
+  if (state.gems < HEART_REFILL_COST) {
+    toast(`Not enough gems (need 💎 ${HEART_REFILL_COST})`);
+    return;
+  }
+  state.gems -= HEART_REFILL_COST;
+  state.hearts = MAX_HEARTS;
+  state.heartTimerStartedAt = null;
+  await saveState();
+  updateHeartUI();
+  renderHome();
+  toast('Hearts refilled! ❤️');
+}
+
+$('heartRefillBtn').addEventListener('click', refillHearts);
+
+// ============ FORGOT FLOW ============
 const forgotBackdrop = $('forgotBackdrop');
 const forgotContent = $('forgotContent');
 const forgotCloseX = $('forgotCloseX');
@@ -2747,12 +3086,7 @@ function getForgotScreenHTML(screenName, data) {
         </div>
       `;
     case 'loading':
-      return `
-        <div class="forgot-loading">
-          <div class="spinner-lg"></div>
-          <div class="loading-text">${data.text || 'Preparing...'}</div>
-        </div>
-      `;
+      return `<div class="forgot-loading"><div class="spinner-lg"></div><div class="loading-text">${data.text || 'Preparing...'}</div></div>`;
     case 'form':
       return `
         <div class="forgot-icon-big">✏️</div>
@@ -2768,36 +3102,16 @@ function getForgotScreenHTML(screenName, data) {
         </div>
         <div class="forgot-field">
           <label class="forgot-label">Anything else you want us to know?<span class="opt">(optional)</span></label>
-          <textarea class="forgot-input textarea" id="forgotExplain" placeholder="e.g. I created it around March, I remember my avatar" maxlength="300"></textarea>
+          <textarea class="forgot-input textarea" id="forgotExplain" placeholder="e.g. I created it around March" maxlength="300"></textarea>
         </div>
-        <button class="forgot-submit" id="forgotSubmit" disabled>
-          <span>Send Request</span>
-        </button>
+        <button class="forgot-submit" id="forgotSubmit" disabled><span>Send Request</span></button>
       `;
     case 'sending':
-      return `
-        <div class="forgot-loading">
-          <div class="spinner-lg"></div>
-          <div class="loading-text">Sending your request...</div>
-        </div>
-      `;
+      return `<div class="forgot-loading"><div class="spinner-lg"></div><div class="loading-text">Sending your request...</div></div>`;
     case 'sent':
-      return `
-        <div class="forgot-success">
-          <div class="success-icon">✅</div>
-          <div class="success-title">Sent!</div>
-          <div class="success-sub">Our team will review your request and get back to you soon.</div>
-        </div>
-      `;
+      return `<div class="forgot-success"><div class="success-icon">✅</div><div class="success-title">Sent!</div><div class="success-sub">Our team will review your request and get back to you soon.</div></div>`;
     case 'pending':
-      return `
-        <div class="forgot-pending">
-          <div class="pending-icon">⏳</div>
-          <div class="pending-title">Pending Review</div>
-          <div class="pending-sub">Our team is looking into your request. You'll see a message here once we've responded.</div>
-          <div class="pending-sub" style="font-size:12px;opacity:0.7;">Submitted ${data.timeAgo || 'recently'}</div>
-        </div>
-      `;
+      return `<div class="forgot-pending"><div class="pending-icon">⏳</div><div class="pending-title">Pending Review</div><div class="pending-sub">Our team is looking into your request.</div><div class="pending-sub" style="font-size:12px;opacity:0.7;">Submitted ${data.timeAgo || 'recently'}</div></div>`;
     case 'answered':
       return `
         <div class="forgot-message">
@@ -2806,7 +3120,7 @@ function getForgotScreenHTML(screenName, data) {
             We noticed that you asked about your username.<br><br>
             After checking our records, we found your account. Your username is:
             <span class="username-highlight">${escapeHtmlHTML(data.answer)}</span>
-            Welcome back — we're glad you're here. Head back and request access using this username, and we'll let you in.
+            Welcome back — we're glad you're here.
           </div>
           <div class="signature">— The Danfrolat Team 💚</div>
         </div>
@@ -2818,15 +3132,13 @@ function getForgotScreenHTML(screenName, data) {
           <div class="company-seal">📬 Message from Danfrolat</div>
           <div class="letter">
             We received your request about a forgotten username.<br><br>
-            Unfortunately, after careful review, we weren't able to verify that this request came from the account owner. To protect our users, we can't share account details at this time.<br><br>
-            If you believe this is a mistake, you can submit another request with more details about your account.
+            Unfortunately, after careful review, we weren't able to verify that this request came from the account owner.
           </div>
           <div class="signature">— The Danfrolat Team 💚</div>
         </div>
         <button class="forgot-request-again" id="forgotRequestAgain">↺ Try again</button>
       `;
-    default:
-      return '';
+    default: return '';
   }
 }
 
@@ -2842,23 +3154,18 @@ function bindForgotScreenEvents(screenName, data) {
     });
     $('forgotNo').addEventListener('click', closeForgotModal);
   }
-
   if (screenName === 'form') {
     const nameInput = $('forgotName');
     const rememberedInput = $('forgotRemembered');
     const explainInput = $('forgotExplain');
     const submitBtn = $('forgotSubmit');
-
     const updateSubmit = () => {
       const valid = nameInput.value.trim().length >= 2 && rememberedInput.value.trim().length >= 1;
       submitBtn.disabled = !valid;
     };
-
     nameInput.addEventListener('input', updateSubmit);
     rememberedInput.addEventListener('input', updateSubmit);
-
     setTimeout(() => nameInput.focus(), 200);
-
     submitBtn.addEventListener('click', async () => {
       if (submitBtn.disabled) return;
       const payload = {
@@ -2872,13 +3179,9 @@ function bindForgotScreenEvents(screenName, data) {
         await setForgotRecord(getOrCreateDeviceId(), payload);
         showForgotScreen('sent');
         setTimeout(() => closeForgotModal(), 5000);
-      } catch (e) {
-        showForgotScreen('form');
-        toast('Could not send. Please try again.');
-      }
+      } catch (e) { showForgotScreen('form'); toast('Could not send. Please try again.'); }
     });
   }
-
   if (screenName === 'answered' || screenName === 'declined') {
     const againBtn = $('forgotRequestAgain');
     if (againBtn) {
@@ -2887,9 +3190,7 @@ function bindForgotScreenEvents(screenName, data) {
         setTimeout(() => showForgotScreen('form'), 700);
       });
     }
-    markForgotRead(getOrCreateDeviceId()).then(() => {
-      $('forgotBtn').classList.remove('attention');
-    });
+    markForgotRead(getOrCreateDeviceId()).then(() => $('forgotBtn').classList.remove('attention'));
   }
 }
 
@@ -2924,9 +3225,7 @@ async function openForgotFlow() {
       }
     }
     openForgotModal('confirm');
-  } catch (e) {
-    openForgotModal('confirm');
-  }
+  } catch (e) { openForgotModal('confirm'); }
 }
 
 function formatTimeAgo(ts) {
@@ -2939,9 +3238,7 @@ function formatTimeAgo(ts) {
 
 $('forgotBtn').addEventListener('click', openForgotFlow);
 $('forgotCloseX').addEventListener('click', closeForgotModal);
-forgotBackdrop.addEventListener('click', (e) => {
-  if (e.target === forgotBackdrop) closeForgotModal();
-});
+forgotBackdrop.addEventListener('click', (e) => { if (e.target === forgotBackdrop) closeForgotModal(); });
 
 async function checkForgotAttention() {
   if (forgotFlowState === 'open') return;
@@ -2957,6 +3254,23 @@ async function checkForgotAttention() {
 }
 
 setInterval(checkForgotAttention, 15000);
+
+// ============ QUIT MODAL ============
+function openQuitModal() {
+  $('quitBackdrop').classList.add('show');
+}
+function closeQuitModal() {
+  $('quitBackdrop').classList.remove('show');
+}
+$('quitStayBtn').addEventListener('click', closeQuitModal);
+$('quitLeaveBtn').addEventListener('click', () => {
+  closeQuitModal();
+  tts.stop();
+  stopPolling();
+  renderHome();
+  showScreen('home');
+});
+$('quitBackdrop').addEventListener('click', (e) => { if (e.target === $('quitBackdrop')) closeQuitModal(); });
 
 // ============ BOOT ============
 $('authMascot').innerHTML = mascotSVG(110);
@@ -2976,7 +3290,6 @@ async function boot() {
         await enterApp(session);
         return;
       }
-
       if (existing?.ownerDeviceId && existing.ownerDeviceId !== myDevice) {
         clearSession();
         showScreen('auth');
@@ -2986,7 +3299,6 @@ async function boot() {
         checkForgotAttention();
         return;
       }
-
       if (req?.status === 'pending' && req.requestingDeviceId === myDevice) {
         currentRequestName = session;
         $('authName').value = session;
@@ -2996,13 +3308,11 @@ async function boot() {
         checkForgotAttention();
         return;
       }
-
       if (req?.status === 'approved') {
         await claimOwnership(session, myDevice);
         await enterApp(session);
         return;
       }
-
       clearSession();
     } catch (e) {
       showScreen('auth');
@@ -3020,7 +3330,6 @@ async function boot() {
       const data = await cloudGet();
       const existing = data[lastName];
       const req = data.__requests__?.[lastName];
-
       if (existing?.ownerDeviceId === myDevice && (existing.data || req?.status === 'approved')) {
         setRequestState('approved');
       } else if (existing?.ownerDeviceId && existing.ownerDeviceId !== myDevice) {
@@ -3039,6 +3348,7 @@ async function boot() {
   checkForgotAttention();
 }
 
+// ============ NAV ============
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', () => {
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -3067,7 +3377,6 @@ function renderWordsList() {
   let units = Object.keys(VOCAB);
   if (currentFilter !== 'all') units = [currentFilter];
   let hasResults = false;
-
   units.forEach(unitId => {
     const unit = VOCAB[unitId];
     let words = unit.words;
@@ -3099,22 +3408,21 @@ function renderWordsList() {
 }
 
 function renderHome() {
+  recomputeHearts();
   $('streakVal').textContent = state.streak;
   $('gemVal').textContent = state.gems;
-  $('heartVal').textContent = state.hearts;
   $('flagBtn').textContent = state.lang === 'da' ? '🇩🇰' : '🇬🇧';
   $('userName').textContent = currentUser;
   $('userAvatar').textContent = (currentUser || '?').charAt(0).toUpperCase();
+  updateHeartUI();
 
   const wrap = $('unitsWrap');
   wrap.innerHTML = '';
-
   Object.keys(VOCAB).forEach(unitId => {
     const unit = VOCAB[unitId];
     const progress = state.progress[unitId] || {};
     const lessons = getLessonsForUnit(unitId);
     const accessible = canAccessUnit(parseInt(unitId));
-
     const unitEl = document.createElement('div');
     unitEl.className = `unit unit-${unit.color}`;
     unitEl.innerHTML = `
@@ -3127,7 +3435,6 @@ function renderHome() {
       </div>
       <div class="lessons"></div>`;
     const lessonsWrap = unitEl.querySelector('.lessons');
-
     lessons.forEach((_, idx) => {
       const isCompleted = progress[idx]?.completed;
       const prevCompleted = idx === 0 || progress[idx - 1]?.completed;
@@ -3149,7 +3456,9 @@ function renderHome() {
 let currentLesson = null;
 let currentStep = 0;
 let steps = [];
+let initialStepsCount = 0;
 let correctCount = 0;
+let firstTryCorrect = 0;
 let selectedAnswer = null;
 let feedbackShown = false;
 
@@ -3158,8 +3467,10 @@ function startLesson(unitId, lessonIdx) {
   const lesson = getLessonsForUnit(unitId)[lessonIdx];
   currentLesson = { unitId, lessonIdx, ...lesson };
   steps = buildSteps(lesson);
+  initialStepsCount = steps.length;
   currentStep = 0;
   correctCount = 0;
+  firstTryCorrect = 0;
   selectedAnswer = null;
   feedbackShown = false;
   $('lessonHearts').textContent = state.hearts;
@@ -3167,17 +3478,13 @@ function startLesson(unitId, lessonIdx) {
   renderStep();
 }
 
-// ============ BUILD STEPS (with cumulative review) ============
 function buildSteps(lesson) {
-  // Cumulative pool: all words from unit 1 through current unit
   const cumulativeWords = [];
   for (let u = 1; u <= currentLesson.unitId; u++) {
     if (VOCAB[u]) cumulativeWords.push(...VOCAB[u].words);
   }
-
   const list = [];
   list.push({ type: 'intro', words: lesson.words });
-
   lesson.words.forEach((w, i) => {
     list.push({
       type: 'mcq', prompt: getSourceWord(w), promptLabel: t('translateTo'), correct: w.df,
@@ -3195,8 +3502,6 @@ function buildSteps(lesson) {
       });
     }
   });
-
-  // Current unit's sentences
   lesson.sentences.forEach(s => {
     list.push({
       type: 'bank', prompt: getSourceWord(s), promptLabel: t('buildSentence'), correct: s.df,
@@ -3204,46 +3509,31 @@ function buildSteps(lesson) {
       speakText: s.df, speakLang: 'df'
     });
   });
-
-  // Review questions from previous units (scales with unit difficulty)
   if (currentLesson.unitId > 2) {
     const reviewCount = Math.min(3, Math.floor((currentLesson.unitId - 2) / 3));
     const previousUnits = [];
     for (let u = 1; u < currentLesson.unitId; u++) previousUnits.push(u);
-
     for (let r = 0; r < reviewCount; r++) {
       if (previousUnits.length === 0) break;
       const randomUnitId = previousUnits[Math.floor(Math.random() * previousUnits.length)];
       const reviewWords = VOCAB[randomUnitId].words;
       if (!reviewWords || reviewWords.length === 0) continue;
       const randomWord = reviewWords[Math.floor(Math.random() * reviewWords.length)];
-
-      // Alternate between MCQ and type for variety
       if (r % 2 === 0) {
         list.push({
-          type: 'mcq',
-          prompt: getSourceWord(randomWord),
-          promptLabel: t('translateTo'),
-          isReview: true,
+          type: 'mcq', prompt: getSourceWord(randomWord), promptLabel: t('translateTo'), isReview: true,
           correct: randomWord.df,
           choices: shuffle([randomWord.df, ...getDistractors(randomWord, cumulativeWords, 3, 'df')]),
-          speakText: randomWord.df,
-          speakLang: 'df'
+          speakText: randomWord.df, speakLang: 'df'
         });
       } else {
         list.push({
-          type: 'type',
-          prompt: getSourceWord(randomWord),
-          promptLabel: t('writeIn'),
-          isReview: true,
-          correct: randomWord.df,
-          speakText: randomWord.df,
-          speakLang: 'df'
+          type: 'type', prompt: getSourceWord(randomWord), promptLabel: t('writeIn'), isReview: true,
+          correct: randomWord.df, speakText: randomWord.df, speakLang: 'df'
         });
       }
     }
   }
-
   return list;
 }
 
@@ -3262,7 +3552,8 @@ function getSentenceDistractors(correct, pool) {
 
 function renderStep() {
   const step = steps[currentStep];
-  $('progressFill').style.width = (currentStep / steps.length) * 100 + '%';
+  const progress = Math.min(100, (currentStep / initialStepsCount) * 100);
+  $('progressFill').style.width = progress + '%';
   $('feedback').classList.remove('show', 'correct', 'wrong');
   $('footerBtn').textContent = t('check');
   $('footerBtn').className = 'footer-btn check';
@@ -3291,6 +3582,12 @@ function renderStep() {
     badge.textContent = t('review');
     label.appendChild(badge);
   }
+  if (step.isRetry) {
+    const badge = document.createElement('span');
+    badge.className = 'retry-badge';
+    badge.textContent = t('retry');
+    label.appendChild(badge);
+  }
   body.appendChild(label);
 
   const prompt = document.createElement('div');
@@ -3298,7 +3595,6 @@ function renderStep() {
   prompt.textContent = step.prompt;
   body.appendChild(prompt);
 
-  // Speaker button — plays only on click (no auto-play)
   if (step.speakText) {
     const sp = document.createElement('div');
     sp.className = 'speaker-btn';
@@ -3400,13 +3696,6 @@ function renderIntro(step, body) {
     body.appendChild(card);
   });
 
-  setTimeout(() => {
-    const words = step.words.map(w => w.df);
-    const m = $('lessonMascot');
-    if (m) m.classList.add('talking');
-    tts.speakSequence(words, 'df', () => { const mm = $('lessonMascot'); if (mm) mm.classList.remove('talking'); });
-  }, 500);
-
   $('footerBtn').disabled = false;
   $('footerBtn').textContent = t('continue');
   $('footerBtn').onclick = () => {
@@ -3450,6 +3739,7 @@ $('footerBtn').addEventListener('click', async () => {
 
   if (isCorrect) {
     correctCount++;
+    if (!step.isRetry) firstTryCorrect++;
     fb.classList.add('correct');
     $('feedbackTitle').innerHTML = `✅ ${t('correct')}`;
     $('feedbackBody').textContent = '';
@@ -3461,9 +3751,9 @@ $('footerBtn').addEventListener('click', async () => {
     setTimeout(() => { if (mascot) mascot.classList.remove('happy'); }, 700);
     document.querySelectorAll('.choice').forEach(c => { if (c.textContent === step.correct) c.classList.add('correct'); });
   } else {
-    state.hearts = Math.max(0, state.hearts - 1);
-    $('lessonHearts').textContent = state.hearts;
-    $('heartVal').textContent = state.hearts;
+    loseHeart();
+    updateHeartUI();
+    saveState();
     bumpStat($('heartChip'));
     fb.classList.add('wrong');
     $('feedbackTitle').innerHTML = `❌ ${t('wrong')}`;
@@ -3478,10 +3768,22 @@ $('footerBtn').addEventListener('click', async () => {
       if (c.textContent === selectedAnswer) c.classList.add('wrong');
       if (c.textContent === step.correct) c.classList.add('correct');
     });
-    if (state.hearts <= 0) { setTimeout(() => showScreen('gameover'), 1200); return; }
+
+    if (state.hearts <= 0) {
+      setTimeout(() => showScreen('gameover'), 1200);
+      return;
+    }
+
+    // RE-QUEUE THE MISTAKE TO THE END
+    const retryStep = JSON.parse(JSON.stringify(step));
+    retryStep.isRetry = true;
+    if (retryStep.choices) retryStep.choices = shuffle(retryStep.choices);
+    if (retryStep.words) retryStep.words = shuffle(retryStep.words);
+    steps.push(retryStep);
   }
   await saveState();
-  $('progressFill').style.width = ((currentStep + 1) / steps.length) * 100 + '%';
+  const progress = Math.min(100, ((currentStep + 1) / initialStepsCount) * 100);
+  $('progressFill').style.width = progress + '%';
 });
 
 function checkAnswer(step, answer) {
@@ -3503,7 +3805,8 @@ async function finishLesson() {
   await saveState();
   $('xpEarned').textContent = '+' + xpGain;
   $('gemEarned').textContent = '+' + gemGain;
-  $('accuracyVal').textContent = Math.round((correctCount / steps.length) * 100) + '%';
+  const acc = initialStepsCount > 0 ? Math.round((firstTryCorrect / initialStepsCount) * 100) : 100;
+  $('accuracyVal').textContent = acc + '%';
   $('completeTitle').textContent = t('lessonComplete');
   $('completeSub').textContent = t('greatProgress');
   showScreen('complete');
@@ -3511,11 +3814,8 @@ async function finishLesson() {
 }
 
 $('continueBtn').addEventListener('click', () => { renderHome(); showScreen('home'); });
-$('closeLesson').addEventListener('click', () => { if (confirm('Quit lesson?')) { tts.stop(); renderHome(); showScreen('home'); } });
-$('refillBtn').addEventListener('click', async () => {
-  if (state.gems >= 50) { state.gems -= 50; state.hearts = 5; await saveState(); toast('Hearts refilled!'); renderHome(); showScreen('home'); }
-  else toast('Not enough gems 💎');
-});
+$('closeLesson').addEventListener('click', () => { openQuitModal(); });
+$('refillBtn').addEventListener('click', refillHearts);
 $('goHomeBtn').addEventListener('click', () => { renderHome(); showScreen('home'); });
 
 $('flagBtn').addEventListener('click', () => {
@@ -3580,7 +3880,11 @@ $('logoutBtn').addEventListener('click', () => {
     stopPolling();
     clearSession();
     currentUser = null;
-    state = { lang: null, xp: 0, gems: 50, hearts: 5, streak: 0, lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal' };
+    state = {
+      lang: null, xp: 0, gems: 50, hearts: 5, streak: 0,
+      lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal',
+      heartTimerStartedAt: null
+    };
     $('authError').textContent = '';
     setRequestState('idle');
     showScreen('auth');
@@ -3589,13 +3893,23 @@ $('logoutBtn').addEventListener('click', () => {
   }
 });
 
-setInterval(async () => {
-  if (currentUser && state.hearts < 5) {
-    state.hearts = Math.min(5, state.hearts + 1);
-    $('heartVal').textContent = state.hearts;
-    await saveState();
+// ============ LIVE HEART TICK ============
+setInterval(() => {
+  if (!currentUser) return;
+  const before = state.hearts;
+  const changed = recomputeHearts();
+  if (changed) {
+    updateHeartUI();
+    saveState();
+  } else if (state.hearts < MAX_HEARTS) {
+    // Update countdown text
+    const nextTime = getNextHeartTime();
+    if (nextTime && $('heartStatusBar').style.display !== 'none') {
+      const remaining = nextTime - Date.now();
+      $('heartStatusTimer').textContent = `next heart in ${formatCountdown(remaining)}`;
+    }
   }
-}, 30 * 60 * 1000);
+}, 1000);
 
 boot();
 </script>
