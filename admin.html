@@ -6,594 +6,127 @@
 <title>Danfrolat Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --green: #58CC02;
-    --green-dark: #46A302;
-    --green-light: #E8F5D9;
-    --blue: #1CB0F6;
-    --blue-dark: #1899D6;
-    --blue-light: #E7F7FF;
-    --red: #FF4B4B;
-    --red-dark: #EA2B2B;
-    --red-light: #FFE5E5;
-    --yellow: #FFC800;
-    --yellow-dark: #E5A000;
-    --yellow-light: #FFF8E0;
-    --gray: #E5E5E5;
-    --gray-dark: #CACACA;
-    --gray-text: #777;
-    --bg: #F7F7F7;
-    --text: #3C3C3C;
-    --ease: cubic-bezier(0.25, 0.8, 0.25, 1);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-  html, body {
-    font-family: 'Nunito', -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    min-height: 100dvh;
-    user-select: none;
-  }
-
-  body { display: flex; justify-content: center; }
-
-  .admin-app {
-    width: 100%;
-    max-width: 560px;
-    min-height: 100vh;
-    background: var(--bg);
-    position: relative;
-    padding-bottom: 40px;
-  }
-
-  /* ============ LOADING ============ */
-  #loadingScreen {
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(180deg, #FFFFFF 0%, #E8F5D9 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    transition: opacity 0.4s;
-  }
-
-  #loadingScreen.hide { opacity: 0; pointer-events: none; }
-
-  .load-mascot {
-    width: 100px;
-    height: 100px;
-    animation: bounce 2s ease-in-out infinite;
-    margin-bottom: 16px;
-    filter: drop-shadow(0 10px 20px rgba(160,82,45,0.2));
-  }
-
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0) rotate(-3deg); }
-    50% { transform: translateY(-12px) rotate(3deg); }
-  }
-
-  .load-text {
-    font-weight: 800;
-    color: var(--gray-text);
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
-
-  .load-bar {
-    width: 220px;
-    height: 8px;
-    background: var(--gray);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-
-  .load-bar-fill {
-    height: 100%;
-    background: var(--green);
-    border-radius: 10px;
-    width: 30%;
-    animation: loadSlide 1.4s ease-in-out infinite;
-  }
-
-  @keyframes loadSlide {
-    0% { width: 10%; }
-    50% { width: 70%; }
-    100% { width: 95%; }
-  }
-
-  /* ============ HEADER ============ */
-  .admin-header {
-    background: white;
-    border-bottom: 2px solid var(--gray);
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    padding: 14px 16px 0;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.03);
-  }
-
-  .header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-  }
-
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .brand-mascot {
-    width: 38px;
-    height: 38px;
-    flex-shrink: 0;
-    filter: drop-shadow(0 2px 4px rgba(160,82,45,0.2));
-  }
-
-  .brand-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.1;
-  }
-
-  .brand-title {
-    font-weight: 900;
-    font-size: 17px;
-    color: var(--text);
-    letter-spacing: -0.3px;
-  }
-
-  .brand-sub {
-    font-size: 10px;
-    font-weight: 800;
-    color: var(--gray-text);
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    margin-top: 2px;
-  }
-
-  .header-stats {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-
-  .stat-pill {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 6px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 900;
-    border: 2px solid transparent;
-    transition: all 0.2s;
-  }
-
-  .stat-pill.pending {
-    background: var(--yellow-light);
-    color: var(--yellow-dark);
-    border-color: #FCE49C;
-  }
-
-  .stat-pill.pending.bump {
-    animation: pillBump 0.5s var(--ease);
-  }
-
-  @keyframes pillBump {
-    0%, 100% { transform: scale(1); }
-    30% { transform: scale(1.15); }
-    60% { transform: scale(0.95); }
-  }
-
-  .stat-pill.online {
-    background: var(--green-light);
-    color: var(--green-dark);
-    border-color: #C8E9A5;
-  }
-
-  .online-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--green-dark);
-    animation: onlinePulse 2s ease-in-out infinite;
-  }
-
-  @keyframes onlinePulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.8); }
-  }
-
-  /* ============ FILTER TABS ============ */
-  .filter-tabs {
-    display: flex;
-    gap: 4px;
-    padding-bottom: 14px;
-    overflow-x: auto;
-  }
-
-  .filter-tabs::-webkit-scrollbar { display: none; }
-
-  .filter-tab {
-    padding: 9px 14px;
-    border: 2px solid transparent;
-    border-radius: 12px;
-    background: var(--bg);
-    font-family: inherit;
-    font-weight: 800;
-    font-size: 12px;
-    color: var(--gray-text);
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.2s var(--ease);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .filter-tab:hover { background: #F0F0F0; }
-  .filter-tab:active { transform: scale(0.96); }
-
-  .filter-tab.active {
-    background: var(--blue);
-    color: white;
-    box-shadow: 0 3px 0 var(--blue-dark);
-  }
-
-  .filter-tab.active:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--blue-dark); }
-
-  .filter-count {
-    background: rgba(255,255,255,0.25);
-    padding: 1px 6px;
-    border-radius: 6px;
-    font-size: 10px;
-    font-weight: 900;
-  }
-
-  .filter-tab:not(.active) .filter-count {
-    background: var(--gray);
-    color: var(--text);
-  }
-
-  /* ============ FEED ============ */
-  .feed {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    min-height: 300px;
-  }
-
-  .request-card {
-    background: white;
-    border-radius: 14px;
-    padding: 14px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    transition: all 0.3s var(--ease);
-    animation: cardEnter 0.45s var(--ease) both;
-    border: 2px solid transparent;
-  }
-
-  @keyframes cardEnter {
-    0% { opacity: 0; transform: translateX(24px) scale(0.94); }
-    60% { opacity: 1; transform: translateX(-2px) scale(1.02); }
-    100% { opacity: 1; transform: translateX(0) scale(1); }
-  }
-
-  .request-card.new { animation: cardNew 0.7s var(--ease) both; }
-
-  @keyframes cardNew {
-    0% { opacity: 0; transform: translateX(40px) scale(0.9); border-color: var(--green); }
-    50% { border-color: var(--green); box-shadow: 0 0 0 4px rgba(88,204,2,0.15); }
-    100% { opacity: 1; transform: translateX(0) scale(1); border-color: transparent; }
-  }
-
-  .request-card.removing {
-    animation: cardLeave 0.35s var(--ease) forwards;
-  }
-
-  @keyframes cardLeave {
-    to { opacity: 0; transform: translateX(-40px) scale(0.9); }
-  }
-
-  .card-top {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 18px;
-    color: white;
-    flex-shrink: 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-
-  .card-info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .card-name {
-    font-weight: 900;
-    font-size: 15px;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .card-meta {
-    font-size: 11px;
-    color: var(--gray-text);
-    font-weight: 700;
-    margin-top: 2px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .meta-dot {
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: var(--gray-dark);
-  }
-
-  .status-badge {
-    font-size: 9px;
-    font-weight: 900;
-    padding: 4px 8px;
-    border-radius: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .status-pending { background: var(--yellow-light); color: var(--yellow-dark); }
-  .status-approved { background: var(--green-light); color: var(--green-dark); }
-  .status-denied { background: var(--red-light); color: var(--red-dark); }
-
-  .card-actions {
-    display: flex;
-    gap: 8px;
-  }
-
-  .btn-action {
-    flex: 1;
-    padding: 11px 14px;
-    border: none;
-    border-radius: 11px;
-    font-family: inherit;
-    font-weight: 900;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.7px;
-    cursor: pointer;
-    color: white;
-    transition: all 0.12s var(--ease);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    min-height: 42px;
-  }
-
-  .btn-action:disabled { cursor: wait; opacity: 0.85; }
-
-  .btn-approve {
-    background: var(--green);
-    box-shadow: 0 3px 0 var(--green-dark);
-  }
-
-  .btn-approve:hover:not(:disabled) { background: #4FBA02; }
-  .btn-approve:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 0 0; }
-
-  .btn-deny {
-    background: var(--red);
-    box-shadow: 0 3px 0 var(--red-dark);
-  }
-
-  .btn-deny:hover:not(:disabled) { background: #EA3B3B; }
-  .btn-deny:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 0 0; }
-
-  .btn-revert {
-    background: white;
-    color: var(--gray-text);
-    box-shadow: 0 3px 0 var(--gray-dark);
-    border: 2px solid var(--gray);
-    padding: 9px 14px;
-    min-height: 40px;
-  }
-
-  .btn-revert:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 0 0; }
-
-  .spinner-sm {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ============ EMPTY STATE ============ */
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    animation: fadeIn 0.4s var(--ease);
-  }
-
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-  .empty-icon {
-    font-size: 60px;
-    margin-bottom: 14px;
-    opacity: 0.9;
-  }
-
-  .empty-title {
-    font-size: 16px;
-    font-weight: 900;
-    color: var(--text);
-    margin-bottom: 6px;
-  }
-
-  .empty-sub {
-    font-size: 12px;
-    color: var(--gray-text);
-    font-weight: 700;
-    max-width: 260px;
-    line-height: 1.5;
-  }
-
-  /* ============ TOAST ============ */
-  .toast-container {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    pointer-events: none;
-    max-width: 90vw;
-    width: 400px;
-  }
-
-  .toast-notif {
-    background: white;
-    border: 2px solid var(--green);
-    border-radius: 14px;
-    padding: 12px 16px;
-    box-shadow: 0 8px 24px rgba(88,204,2,0.2), 0 2px 8px rgba(0,0,0,0.08);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    animation: toastIn 0.45s var(--ease);
-    pointer-events: auto;
-  }
-
-  .toast-notif.leaving {
-    animation: toastOut 0.35s var(--ease) forwards;
-  }
-
-  @keyframes toastIn {
-    0% { opacity: 0; transform: translateY(-30px) scale(0.9); }
-    60% { transform: translateY(4px) scale(1.02); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
-  }
-
-  @keyframes toastOut {
-    to { opacity: 0; transform: translateY(-30px) scale(0.9); }
-  }
-
-  .toast-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 13px;
-    color: white;
-    flex-shrink: 0;
-  }
-
-  .toast-content { flex: 1; min-width: 0; }
-
-  .toast-title {
-    font-weight: 900;
-    font-size: 13px;
-    color: var(--text);
-  }
-
-  .toast-sub {
-    font-size: 11px;
-    color: var(--gray-text);
-    font-weight: 700;
-    margin-top: 1px;
-  }
-
-  /* ============ FOOTER INFO ============ */
-  .footer-info {
-    text-align: center;
-    padding: 20px 16px;
-    font-size: 10px;
-    color: #BBB;
-    font-weight: 700;
-  }
-
-  .footer-info .device-id {
-    font-family: monospace;
-    background: #EEE;
-    padding: 2px 6px;
-    border-radius: 4px;
-    color: #888;
-  }
-
-  /* ============ REFRESH BTN ============ */
-  .refresh-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: var(--blue);
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 4px 0 var(--blue-dark), 0 6px 16px rgba(28,176,246,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    color: white;
-    transition: all 0.15s var(--ease);
-    z-index: 100;
-  }
-
-  .refresh-btn:active {
-    transform: translateY(3px);
-    box-shadow: 0 1px 0 var(--blue-dark), 0 2px 8px rgba(28,176,246,0.2);
-  }
-
-  .refresh-btn.spinning {
-    animation: rotate 1s linear infinite;
-    pointer-events: none;
-    opacity: 0.7;
-  }
-
-  @keyframes rotate { to { transform: rotate(360deg); } }
+  :root{--green:#58CC02;--green-dark:#46A302;--green-light:#E8F5D9;--blue:#1CB0F6;--blue-dark:#1899D6;--red:#FF4B4B;--red-dark:#EA2B2B;--red-light:#FFE5E5;--yellow:#FFC800;--yellow-dark:#E5A000;--yellow-light:#FFF8E0;--gray:#E5E5E5;--gray-dark:#CACACA;--gray-text:#777;--bg:#F7F7F7;--text:#3C3C3C;--ease:cubic-bezier(0.25,0.8,0.25,1)}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{font-family:'Nunito',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;min-height:100dvh;user-select:none}
+  body{display:flex;justify-content:center}
+  .app{width:100%;max-width:560px;min-height:100vh;background:var(--bg);position:relative;padding-bottom:40px}
+
+  /* Loading */
+  #loadingScreen{position:fixed;inset:0;background:linear-gradient(180deg,#FFF 0%,#E8F5D9 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
+  #loadingScreen.hide{opacity:0;pointer-events:none}
+  .load-mascot{width:100px;height:100px;animation:bounce 2s ease-in-out infinite;margin-bottom:16px;filter:drop-shadow(0 10px 20px rgba(160,82,45,.2))}
+  @keyframes bounce{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)}}
+  .load-text{font-weight:800;color:var(--gray-text);font-size:14px;margin-bottom:20px}
+  .load-bar{width:220px;height:8px;background:var(--gray);border-radius:10px;overflow:hidden}
+  .load-bar-fill{height:100%;background:var(--green);border-radius:10px;width:30%;animation:loadSlide 1.4s ease-in-out infinite}
+  @keyframes loadSlide{0%{width:10%}50%{width:70%}100%{width:95%}}
+
+  /* Locked screen */
+  #lockedScreen{display:none;padding:40px 20px;text-align:center;min-height:100vh;flex-direction:column;align-items:center;justify-content:center}
+  #lockedScreen.show{display:flex}
+  .lock-icon{font-size:70px;margin-bottom:16px;animation:lockWobble 2s ease-in-out infinite}
+  @keyframes lockWobble{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+  .lock-title{font-size:26px;font-weight:900;margin-bottom:8px;color:var(--text)}
+  .lock-sub{font-size:14px;color:var(--gray-text);font-weight:700;margin-bottom:28px;max-width:340px;line-height:1.5}
+  .device-card{background:#fff;border-radius:18px;padding:24px;width:100%;max-width:380px;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:20px}
+  .device-label{font-size:11px;font-weight:800;color:var(--gray-text);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+  .device-code{font-size:22px;font-weight:900;color:var(--green-dark);font-family:monospace;letter-spacing:2px;padding:14px;background:var(--green-light);border-radius:12px;margin-bottom:14px;word-break:break-all}
+  .copy-btn{padding:11px 20px;background:var(--green);color:#fff;border:none;border-radius:10px;font-family:inherit;font-weight:900;font-size:13px;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;box-shadow:0 3px 0 var(--green-dark);width:100%}
+  .copy-btn:active{transform:translateY(3px);box-shadow:0 0 0}
+  .copy-btn.copied{background:var(--blue);box-shadow:0 3px 0 var(--blue-dark)}
+  .lock-info{font-size:12px;color:var(--gray-text);font-weight:700;margin-top:14px;line-height:1.5}
+  .redirect-countdown{font-size:13px;color:var(--blue);font-weight:800;margin-top:18px}
+  .go-back-btn{margin-top:20px;padding:12px 24px;background:#fff;border:2px solid var(--gray);color:var(--text);border-radius:12px;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 3px 0 var(--gray-dark);text-decoration:none;display:inline-block}
+  .go-back-btn:active{transform:translateY(3px);box-shadow:0 0 0}
+
+  /* Admin header */
+  .admin-header{background:#fff;border-bottom:2px solid var(--gray);position:sticky;top:0;z-index:50;padding:14px 16px 0;box-shadow:0 2px 12px rgba(0,0,0,.03)}
+  .header-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand-mascot{width:38px;height:38px;flex-shrink:0;filter:drop-shadow(0 2px 4px rgba(160,82,45,.2))}
+  .brand-text{display:flex;flex-direction:column;line-height:1.1}
+  .brand-title{font-weight:900;font-size:17px;letter-spacing:-.3px}
+  .brand-sub{font-size:10px;font-weight:800;color:var(--gray-text);text-transform:uppercase;letter-spacing:.6px;margin-top:2px}
+  .header-stats{display:flex;gap:8px;align-items:center}
+  .stat-pill{display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:900;border:2px solid transparent}
+  .stat-pill.pending{background:var(--yellow-light);color:var(--yellow-dark);border-color:#FCE49C}
+  .stat-pill.pending.bump{animation:pillBump .5s var(--ease)}
+  @keyframes pillBump{0%,100%{transform:scale(1)}30%{transform:scale(1.15)}60%{transform:scale(.95)}}
+  .stat-pill.online{background:var(--green-light);color:var(--green-dark);border-color:#C8E9A5}
+  .online-dot{width:6px;height:6px;border-radius:50%;background:var(--green-dark);animation:onlinePulse 2s ease-in-out infinite}
+  @keyframes onlinePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+  /* Filter tabs */
+  .filter-tabs{display:flex;gap:4px;padding-bottom:14px;overflow-x:auto}
+  .filter-tabs::-webkit-scrollbar{display:none}
+  .filter-tab{padding:9px 14px;border:2px solid transparent;border-radius:12px;background:var(--bg);font-family:inherit;font-weight:800;font-size:12px;color:var(--gray-text);cursor:pointer;white-space:nowrap;transition:all .2s var(--ease);display:flex;align-items:center;gap:6px}
+  .filter-tab:hover{background:#F0F0F0}
+  .filter-tab:active{transform:scale(.96)}
+  .filter-tab.active{background:var(--blue);color:#fff;box-shadow:0 3px 0 var(--blue-dark)}
+  .filter-tab.active:active{transform:translateY(2px);box-shadow:0 1px 0 var(--blue-dark)}
+  .filter-count{background:rgba(255,255,255,.25);padding:1px 6px;border-radius:6px;font-size:10px;font-weight:900}
+  .filter-tab:not(.active) .filter-count{background:var(--gray);color:var(--text)}
+
+  /* Feed */
+  .feed{padding:16px;display:flex;flex-direction:column;gap:10px;min-height:300px}
+  .request-card{background:#fff;border-radius:14px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:12px;transition:all .3s var(--ease);animation:cardEnter .45s var(--ease) both;border:2px solid transparent}
+  @keyframes cardEnter{0%{opacity:0;transform:translateX(24px) scale(.94)}60%{opacity:1;transform:translateX(-2px) scale(1.02)}100%{opacity:1;transform:translateX(0) scale(1)}}
+  .request-card.new{animation:cardNew .7s var(--ease) both}
+  @keyframes cardNew{0%{opacity:0;transform:translateX(40px) scale(.9);border-color:var(--green)}50%{border-color:var(--green);box-shadow:0 0 0 4px rgba(88,204,2,.15)}100%{opacity:1;transform:translateX(0) scale(1);border-color:transparent}}
+  .request-card.removing{animation:cardLeave .35s var(--ease) forwards}
+  @keyframes cardLeave{to{opacity:0;transform:translateX(-40px) scale(.9)}}
+  .card-top{display:flex;align-items:center;gap:12px}
+  .avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:#fff;flex-shrink:0;box-shadow:0 2px 4px rgba(0,0,0,.1)}
+  .card-info{flex:1;min-width:0}
+  .card-name{font-weight:900;font-size:15px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card-meta{font-size:11px;color:var(--gray-text);font-weight:700;margin-top:2px;display:flex;align-items:center;gap:6px}
+  .meta-dot{width:3px;height:3px;border-radius:50%;background:var(--gray-dark)}
+  .status-badge{font-size:9px;font-weight:900;padding:4px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.4px;flex-shrink:0;display:flex;align-items:center;gap:4px}
+  .status-pending{background:var(--yellow-light);color:var(--yellow-dark)}
+  .status-approved{background:var(--green-light);color:var(--green-dark)}
+  .status-denied{background:var(--red-light);color:var(--red-dark)}
+  .card-actions{display:flex;gap:8px}
+  .btn-action{flex:1;padding:11px 14px;border:none;border-radius:11px;font-family:inherit;font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.7px;cursor:pointer;color:#fff;transition:all .12s var(--ease);display:flex;align-items:center;justify-content:center;gap:6px;min-height:42px}
+  .btn-action:disabled{cursor:wait;opacity:.85}
+  .btn-approve{background:var(--green);box-shadow:0 3px 0 var(--green-dark)}
+  .btn-approve:hover:not(:disabled){background:#4FBA02}
+  .btn-approve:active:not(:disabled){transform:translateY(3px);box-shadow:0 0 0}
+  .btn-deny{background:var(--red);box-shadow:0 3px 0 var(--red-dark)}
+  .btn-deny:hover:not(:disabled){background:#EA3B3B}
+  .btn-deny:active:not(:disabled){transform:translateY(3px);box-shadow:0 0 0}
+  .btn-revert{background:#fff;color:var(--gray-text);box-shadow:0 3px 0 var(--gray-dark);border:2px solid var(--gray);padding:9px 14px;min-height:40px}
+  .btn-revert:active:not(:disabled){transform:translateY(3px);box-shadow:0 0 0}
+  .spinner-sm{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* Empty */
+  .empty-state{text-align:center;padding:60px 20px;display:flex;flex-direction:column;align-items:center;animation:fadeIn .4s var(--ease)}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .empty-icon{font-size:60px;margin-bottom:14px;opacity:.9}
+  .empty-title{font-size:16px;font-weight:900;color:var(--text);margin-bottom:6px}
+  .empty-sub{font-size:12px;color:var(--gray-text);font-weight:700;max-width:260px;line-height:1.5}
+
+  /* Toast */
+  .toast-container{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;gap:8px;pointer-events:none;max-width:90vw;width:400px}
+  .toast-notif{background:#fff;border:2px solid var(--green);border-radius:14px;padding:12px 16px;box-shadow:0 8px 24px rgba(88,204,2,.2),0 2px 8px rgba(0,0,0,.08);display:flex;align-items:center;gap:10px;animation:toastIn .45s var(--ease);pointer-events:auto}
+  .toast-notif.leaving{animation:toastOut .35s var(--ease) forwards}
+  @keyframes toastIn{0%{opacity:0;transform:translateY(-30px) scale(.9)}60%{transform:translateY(4px) scale(1.02)}100%{opacity:1;transform:translateY(0) scale(1)}}
+  @keyframes toastOut{to{opacity:0;transform:translateY(-30px) scale(.9)}}
+  .toast-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;color:#fff;flex-shrink:0}
+  .toast-content{flex:1;min-width:0}
+  .toast-title{font-weight:900;font-size:13px;color:var(--text)}
+  .toast-sub{font-size:11px;color:var(--gray-text);font-weight:700;margin-top:1px}
+
+  /* Footer info */
+  .footer-info{text-align:center;padding:20px 16px;font-size:10px;color:#BBB;font-weight:700}
+  .footer-info .device-id{font-family:monospace;background:#EEE;padding:2px 6px;border-radius:4px;color:#888}
+
+  /* Refresh btn */
+  .refresh-btn{position:fixed;bottom:20px;right:20px;width:52px;height:52px;border-radius:50%;background:var(--blue);border:none;cursor:pointer;box-shadow:0 4px 0 var(--blue-dark),0 6px 16px rgba(28,176,246,.3);display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;transition:all .15s var(--ease);z-index:100}
+  .refresh-btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--blue-dark),0 2px 8px rgba(28,176,246,.2)}
+  .refresh-btn.spinning{animation:rotate 1s linear infinite;pointer-events:none;opacity:.7}
+  @keyframes rotate{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -604,7 +137,23 @@
   <div class="load-bar"><div class="load-bar-fill"></div></div>
 </div>
 
-<div class="admin-app" id="adminApp" style="display:none;">
+<div class="app" id="lockedScreen">
+  <div class="lock-icon">🔒</div>
+  <div class="lock-title">Access Required</div>
+  <div class="lock-sub">This device isn't authorized yet. Send the code below to the admin to get access.</div>
+
+  <div class="device-card">
+    <div class="device-label">Your Device Code</div>
+    <div class="device-code" id="deviceCode">—</div>
+    <button class="copy-btn" id="copyBtn">📋 Copy Code</button>
+    <div class="lock-info">Once the admin adds this code, refresh this page.</div>
+  </div>
+
+  <div class="redirect-countdown" id="countdown">Returning to app in 20s…</div>
+  <a href="https://s0nwy.github.io/DuoLinga/" class="go-back-btn" id="goBackBtn">Go to app now →</a>
+</div>
+
+<div class="app" id="adminApp" style="display:none;">
   <div class="admin-header">
     <div class="header-row">
       <div class="brand">
@@ -615,29 +164,15 @@
         </div>
       </div>
       <div class="header-stats">
-        <div class="stat-pill pending" id="pendingPill">
-          ⏳ <span id="pendingCount">0</span>
-        </div>
-        <div class="stat-pill online">
-          <span class="online-dot"></span>
-          Live
-        </div>
+        <div class="stat-pill pending" id="pendingPill">⏳ <span id="pendingCount">0</span></div>
+        <div class="stat-pill online"><span class="online-dot"></span> Live</div>
       </div>
     </div>
-
     <div class="filter-tabs">
-      <button class="filter-tab active" data-filter="pending">
-        Pending <span class="filter-count" id="countPending">0</span>
-      </button>
-      <button class="filter-tab" data-filter="approved">
-        Approved <span class="filter-count" id="countApproved">0</span>
-      </button>
-      <button class="filter-tab" data-filter="denied">
-        Denied <span class="filter-count" id="countDenied">0</span>
-      </button>
-      <button class="filter-tab" data-filter="all">
-        All <span class="filter-count" id="countAll">0</span>
-      </button>
+      <button class="filter-tab active" data-filter="pending">Pending <span class="filter-count" id="countPending">0</span></button>
+      <button class="filter-tab" data-filter="approved">Approved <span class="filter-count" id="countApproved">0</span></button>
+      <button class="filter-tab" data-filter="denied">Denied <span class="filter-count" id="countDenied">0</span></button>
+      <button class="filter-tab" data-filter="all">All <span class="filter-count" id="countAll">0</span></button>
     </div>
   </div>
 
@@ -653,444 +188,318 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
-// ============ CONFIG ============
 const CLOUD_CONFIG = {
-  BIN_ID: '6745f3a8e41b4d34e4f7b8a2',
-  API_KEY: '$2a$10$vWJ6qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8q',
+  BIN_ID: '6af727e7ac6210605a853a74',
+  API_KEY: '$2a$10$0Iv/9aI8ROmnVBDmYP/W0eDFZkS22TfFItJPz07yKsEpiKuU7pLSu',
   BASE_URL: 'https://api.jsonbin.io/v3/b'
 };
-
 const MAIN_APP_URL = 'https://s0nwy.github.io/DuoLinga/';
-const SETUP_CODE = 'frolo-admin-2026'; // 👈 change me — used only for one-time device registration
-const DEVICE_ID_KEY = 'danfrolat_admin_device_id';
-const DEVICE_AUTH_KEY = 'danfrolat_admin_device_authed';
+const DEVICE_ID_KEY = 'danfrolat_device_id';
 
-// ============ CLOUD ============
 async function cloudGet() {
   try {
-    const res = await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}/latest?t=${Date.now()}`, {
-      headers: { 'X-Master-Key': CLOUD_CONFIG.API_KEY }
-    });
-    if (!res.ok) return {};
-    const data = await res.json();
-    return data.record || {};
-  } catch (e) { console.error('Cloud fetch error:', e); return {}; }
+    const res = await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}/latest?t=${Date.now()}`, {headers:{'X-Master-Key':CLOUD_CONFIG.API_KEY}});
+    if(!res.ok)return{};
+    const data=await res.json();
+    return data.record||{};
+  } catch(e){console.error('Cloud fetch error:',e);return{};}
 }
-
-async function cloudSet(data) {
-  try {
-    await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': CLOUD_CONFIG.API_KEY },
-      body: JSON.stringify(data)
-    });
+async function cloudSet(data){
+  try{
+    await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':CLOUD_CONFIG.API_KEY},body:JSON.stringify(data)});
     return true;
-  } catch (e) { console.error('Cloud save error:', e); return false; }
+  }catch(e){console.error('Cloud save error:',e);return false;}
 }
 
-// ============ MASCOT ============
-function mascotSVG(size = 38) {
+function mascotSVG(size=38){
   return `<svg viewBox="0 0 120 120" width="${size}" height="${size}">
-    <ellipse cx="60" cy="72" rx="42" ry="44" fill="#A0522D"/>
-    <ellipse cx="60" cy="74" rx="36" ry="38" fill="#CD853F"/>
-    <ellipse cx="60" cy="88" rx="22" ry="18" fill="#DEB887"/>
-    <path d="M 48 82 Q 60 78 72 82" stroke="#A0522D" stroke-width="1.5" fill="none" opacity="0.5"/>
-    <path d="M 46 88 Q 60 84 74 88" stroke="#A0522D" stroke-width="1.5" fill="none" opacity="0.5"/>
-    <path d="M 48 94 Q 60 90 72 94" stroke="#A0522D" stroke-width="1.5" fill="none" opacity="0.5"/>
-    <path d="M 38 38 L 32 24 L 44 34 Z" fill="#6B3410"/>
-    <path d="M 82 38 L 88 24 L 76 34 Z" fill="#6B3410"/>
-    <path d="M 40 36 L 36 28 L 44 34 Z" fill="#A0522D"/>
-    <path d="M 80 36 L 84 28 L 76 34 Z" fill="#A0522D"/>
-    <circle cx="44" cy="56" r="15" fill="#DEB887"/>
-    <circle cx="76" cy="56" r="15" fill="#DEB887"/>
-    <circle cx="44" cy="56" r="12" fill="white"/>
-    <circle cx="76" cy="56" r="12" fill="white"/>
-    <circle cx="46" cy="58" r="6" fill="#1a1a1a"/>
-    <circle cx="78" cy="58" r="6" fill="#1a1a1a"/>
-    <circle cx="48" cy="56" r="2" fill="white"/>
-    <circle cx="80" cy="56" r="2" fill="white"/>
-    <path d="M 53 70 L 60 78 L 67 70 Z" fill="#FF8C00"/>
-    <path d="M 55 70 L 60 75 L 65 70 Z" fill="#FFA500"/>
+    <ellipse cx="60" cy="72" rx="42" ry="44" fill="#A0522D"/><ellipse cx="60" cy="74" rx="36" ry="38" fill="#CD853F"/><ellipse cx="60" cy="88" rx="22" ry="18" fill="#DEB887"/>
+    <path d="M 48 82 Q 60 78 72 82" stroke="#A0522D" stroke-width="1.5" fill="none" opacity="0.5"/><path d="M 46 88 Q 60 84 74 88" stroke="#A0522D" stroke-width="1.5" fill="none" opacity="0.5"/><path d="M 48 94 Q 60 90 72 94" stroke="#A0522D" stroke-width="1.5" fill="none" opacity="0.5"/>
+    <path d="M 38 38 L 32 24 L 44 34 Z" fill="#6B3410"/><path d="M 82 38 L 88 24 L 76 34 Z" fill="#6B3410"/><path d="M 40 36 L 36 28 L 44 34 Z" fill="#A0522D"/><path d="M 80 36 L 84 28 L 76 34 Z" fill="#A0522D"/>
+    <circle cx="44" cy="56" r="15" fill="#DEB887"/><circle cx="76" cy="56" r="15" fill="#DEB887"/><circle cx="44" cy="56" r="12" fill="white"/><circle cx="76" cy="56" r="12" fill="white"/>
+    <circle cx="46" cy="58" r="6" fill="#1a1a1a"/><circle cx="78" cy="58" r="6" fill="#1a1a1a"/><circle cx="48" cy="56" r="2" fill="white"/><circle cx="80" cy="56" r="2" fill="white"/>
+    <path d="M 53 70 L 60 78 L 67 70 Z" fill="#FF8C00"/><path d="M 55 70 L 60 75 L 65 70 Z" fill="#FFA500"/>
     <path d="M 52 82 Q 60 87 68 82" stroke="#6B3410" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <ellipse cx="20" cy="70" rx="10" ry="20" fill="#8B4513" transform="rotate(-15 20 70)"/>
-    <ellipse cx="100" cy="70" rx="10" ry="20" fill="#8B4513" transform="rotate(15 100 70)"/>
-    <path d="M 16 65 Q 20 70 16 75" stroke="#6B3410" stroke-width="1.5" fill="none"/>
-    <path d="M 104 65 Q 100 70 104 75" stroke="#6B3410" stroke-width="1.5" fill="none"/>
-    <circle cx="32" cy="72" r="5" fill="#FF9600" opacity="0.4"/>
-    <circle cx="88" cy="72" r="5" fill="#FF9600" opacity="0.4"/>
-    <ellipse cx="50" cy="112" rx="8" ry="4" fill="#FF8C00"/>
-    <ellipse cx="70" cy="112" rx="8" ry="4" fill="#FF8C00"/>
+    <ellipse cx="20" cy="70" rx="10" ry="20" fill="#8B4513" transform="rotate(-15 20 70)"/><ellipse cx="100" cy="70" rx="10" ry="20" fill="#8B4513" transform="rotate(15 100 70)"/>
+    <path d="M 16 65 Q 20 70 16 75" stroke="#6B3410" stroke-width="1.5" fill="none"/><path d="M 104 65 Q 100 70 104 75" stroke="#6B3410" stroke-width="1.5" fill="none"/>
+    <circle cx="32" cy="72" r="5" fill="#FF9600" opacity="0.4"/><circle cx="88" cy="72" r="5" fill="#FF9600" opacity="0.4"/>
+    <ellipse cx="50" cy="112" rx="8" ry="4" fill="#FF8C00"/><ellipse cx="70" cy="112" rx="8" ry="4" fill="#FF8C00"/>
   </svg>`;
 }
 
-// ============ DEVICE AUTH ============
-function generateDeviceId() {
-  const rand = Math.random().toString(36).slice(2, 10);
-  return 'dev_' + rand + '_' + Date.now().toString(36);
-}
-
-function getOrCreateDeviceId() {
-  let id = localStorage.getItem(DEVICE_ID_KEY);
-  if (!id) {
-    id = generateDeviceId();
-    localStorage.setItem(DEVICE_ID_KEY, id);
+function getOrCreateDeviceId(){
+  let id=localStorage.getItem(DEVICE_ID_KEY);
+  if(!id){
+    const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code='DF-';
+    for(let i=0;i<4;i++)code+=c[Math.floor(Math.random()*c.length)];
+    code+='-';
+    for(let i=0;i<4;i++)code+=c[Math.floor(Math.random()*c.length)];
+    id=code;
+    localStorage.setItem(DEVICE_ID_KEY,id);
   }
   return id;
 }
 
-async function authorizeDevice(deviceId) {
-  const data = await cloudGet();
-  if (!data.__admin_devices__) data.__admin_devices__ = [];
-  if (!data.__admin_devices__.includes(deviceId)) {
-    data.__admin_devices__.push(deviceId);
-    await cloudSet(data);
-  }
+async function isDeviceAuthorized(deviceId){
+  try{
+    const data=await cloudGet();
+    return (data.__admin_devices__||[]).includes(deviceId);
+  }catch(e){return false;}
 }
 
-async function isDeviceAuthorized(deviceId) {
-  // Local fallback (offline)
-  if (localStorage.getItem(DEVICE_AUTH_KEY) === 'true') {
-    try {
-      const data = await cloudGet();
-      const list = data.__admin_devices__ || [];
-      if (list.includes(deviceId)) return true;
-      // Cloud responded but device not in list — clear local flag
-      localStorage.removeItem(DEVICE_AUTH_KEY);
-      return false;
-    } catch (e) {
-      // Cloud unreachable, trust local flag
-      return true;
-    }
-  }
-  try {
-    const data = await cloudGet();
-    const list = data.__admin_devices__ || [];
-    const ok = list.includes(deviceId);
-    if (ok) localStorage.setItem(DEVICE_AUTH_KEY, 'true');
-    return ok;
-  } catch (e) {
-    return false;
-  }
-}
-
-async function checkAccess() {
-  const deviceId = getOrCreateDeviceId();
-  const params = new URLSearchParams(window.location.search);
-  const setupCode = params.get('setup');
-
-  // Setup mode: register this device
-  if (setupCode) {
-    if (setupCode === SETUP_CODE) {
-      await authorizeDevice(deviceId);
-      localStorage.setItem(DEVICE_AUTH_KEY, 'true');
-      // Clean URL
-      window.history.replaceState({}, '', window.location.pathname);
-      return { ok: true, deviceId };
-    } else {
-      // Wrong setup code — deny and redirect
-      return { ok: false, deviceId };
-    }
-  }
-
-  const auth = await isDeviceAuthorized(deviceId);
-  return { ok: auth, deviceId };
-}
-
-// ============ STATE ============
-let currentFilter = 'pending';
-let allRequests = {};
-let seenNames = new Set();
-let initialLoadDone = false;
-let pollInterval = null;
-let currentDeviceId = '';
-
-// ============ HELPERS ============
 const $ = id => document.getElementById(id);
+let currentFilter='pending';
+let allRequests={};
+let seenNames=new Set();
+let initialLoadDone=false;
+let pollInterval=null;
+let currentDeviceId='';
 
-function formatAgo(ts) {
-  const diff = Math.floor((Date.now() - ts) / 1000);
-  if (diff < 10) return 'just now';
-  if (diff < 60) return diff + 's ago';
-  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
-  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
-  return Math.floor(diff / 86400) + 'd ago';
+function formatAgo(ts){
+  const diff=Math.floor((Date.now()-ts)/1000);
+  if(diff<10)return'just now';
+  if(diff<60)return diff+'s ago';
+  if(diff<3600)return Math.floor(diff/60)+'m ago';
+  if(diff<86400)return Math.floor(diff/3600)+'h ago';
+  return Math.floor(diff/86400)+'d ago';
 }
-
-function avatarColor(name) {
-  const colors = ['#58CC02', '#1CB0F6', '#CE82FF', '#FF9600', '#FF4B4B', '#2ECC71', '#9C27B0', '#E91E63', '#FFC800'];
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  return colors[Math.abs(hash) % colors.length];
+function avatarColor(name){
+  const colors=['#58CC02','#1CB0F6','#CE82FF','#FF9600','#FF4B4B','#2ECC71','#9C27B0','#E91E63','#FFC800'];
+  let hash=0; for(let i=0;i<name.length;i++)hash=name.charCodeAt(i)+((hash<<5)-hash);
+  return colors[Math.abs(hash)%colors.length];
 }
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function getInitial(name){return (name||'?').charAt(0).toUpperCase();}
 
-function getInitial(name) {
-  return (name || '?').charAt(0).toUpperCase();
-}
-
-// ============ RENDER ============
-function getFilteredRequests() {
-  const entries = Object.entries(allRequests);
+function getFilteredRequests(){
+  const entries=Object.entries(allRequests);
   let filtered;
-  if (currentFilter === 'all') filtered = entries;
-  else filtered = entries.filter(([, r]) => (r.status || 'pending') === currentFilter);
-  return filtered.sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
+  if(currentFilter==='all')filtered=entries;
+  else filtered=entries.filter(([,r])=>(r.status||'pending')===currentFilter);
+  return filtered.sort((a,b)=>(b[1].timestamp||0)-(a[1].timestamp||0));
 }
 
-function updateCounts() {
-  const entries = Object.values(allRequests);
-  const p = entries.filter(r => (r.status || 'pending') === 'pending').length;
-  const a = entries.filter(r => r.status === 'approved').length;
-  const d = entries.filter(r => r.status === 'denied').length;
-
-  $('countPending').textContent = p;
-  $('countApproved').textContent = a;
-  $('countDenied').textContent = d;
-  $('countAll').textContent = entries.length;
-  $('pendingCount').textContent = p;
+function updateCounts(){
+  const entries=Object.values(allRequests);
+  const p=entries.filter(r=>(r.status||'pending')==='pending').length;
+  const a=entries.filter(r=>r.status==='approved').length;
+  const d=entries.filter(r=>r.status==='denied').length;
+  $('countPending').textContent=p;
+  $('countApproved').textContent=a;
+  $('countDenied').textContent=d;
+  $('countAll').textContent=entries.length;
+  $('pendingCount').textContent=p;
 }
 
-function renderFeed() {
-  const feed = $('feed');
-  const filtered = getFilteredRequests();
-
-  if (filtered.length === 0) {
-    let emptyHtml = '';
-    if (currentFilter === 'pending') {
-      emptyHtml = `<div class="empty-icon">🎉</div><div class="empty-title">All caught up!</div><div class="empty-sub">No pending requests right now. New requests will appear here automatically.</div>`;
-    } else if (currentFilter === 'approved') {
-      emptyHtml = `<div class="empty-icon">📭</div><div class="empty-title">No approved requests</div><div class="empty-sub">Approved users will show up here.</div>`;
-    } else if (currentFilter === 'denied') {
-      emptyHtml = `<div class="empty-icon">🚫</div><div class="empty-title">No denied requests</div><div class="empty-sub">Denied users will show up here.</div>`;
-    } else {
-      emptyHtml = `<div class="empty-icon">📭</div><div class="empty-title">No requests yet</div><div class="empty-sub">When someone requests access, they'll appear here automatically.</div>`;
-    }
-    feed.innerHTML = `<div class="empty-state">${emptyHtml}</div>`;
+function renderFeed(){
+  const feed=$('feed');
+  const filtered=getFilteredRequests();
+  if(filtered.length===0){
+    let emptyHtml='';
+    if(currentFilter==='pending') emptyHtml=`<div class="empty-icon">🎉</div><div class="empty-title">All caught up!</div><div class="empty-sub">No pending requests right now. New requests will appear here automatically.</div>`;
+    else if(currentFilter==='approved') emptyHtml=`<div class="empty-icon">📭</div><div class="empty-title">No approved requests</div><div class="empty-sub">Approved users will show up here.</div>`;
+    else if(currentFilter==='denied') emptyHtml=`<div class="empty-icon">🚫</div><div class="empty-title">No denied requests</div><div class="empty-sub">Denied users will show up here.</div>`;
+    else emptyHtml=`<div class="empty-icon">📭</div><div class="empty-title">No requests yet</div><div class="empty-sub">When someone requests access, they'll appear here automatically.</div>`;
+    feed.innerHTML=`<div class="empty-state">${emptyHtml}</div>`;
     return;
   }
-
-  feed.innerHTML = '';
-  filtered.forEach(([name, r]) => {
-    const card = createCard(name, r);
-    feed.appendChild(card);
+  feed.innerHTML='';
+  filtered.forEach(([name,r])=>{
+    feed.appendChild(createCard(name,r));
   });
 }
 
-function createCard(name, r) {
-  const status = r.status || 'pending';
-  const card = document.createElement('div');
-  card.className = 'request-card';
-  card.dataset.name = name;
-
-  const isNew = !seenNames.has(name) && initialLoadDone;
-  if (isNew) card.classList.add('new');
+function createCard(name,r){
+  const status=r.status||'pending';
+  const card=document.createElement('div');
+  card.className='request-card';
+  card.dataset.name=name;
+  const isNew=!seenNames.has(name)&&initialLoadDone;
+  if(isNew)card.classList.add('new');
   seenNames.add(name);
 
-  const statusLabels = { pending: '⏳ Pending', approved: '✅ Approved', denied: '❌ Denied' };
-  const statusClasses = { pending: 'status-pending', approved: 'status-approved', denied: 'status-denied' };
+  const statusLabels={pending:'⏳ Pending',approved:'✅ Approved',denied:'❌ Denied'};
+  const statusClasses={pending:'status-pending',approved:'status-approved',denied:'status-denied'};
+  const color=avatarColor(name);
+  const initial=getInitial(name);
+  const ago=r.timestamp?formatAgo(r.timestamp):'';
 
-  const color = avatarColor(name);
-  const initial = getInitial(name);
-  const ago = r.timestamp ? formatAgo(r.timestamp) : '';
-
-  let actionsHtml = '';
-  if (status === 'pending') {
-    actionsHtml = `
-      <div class="card-actions">
-        <button class="btn-action btn-approve" data-action="approve" data-name="${name}">✓ Approve</button>
-        <button class="btn-action btn-deny" data-action="deny" data-name="${name}">✕ Deny</button>
-      </div>`;
+  let actionsHtml='';
+  if(status==='pending'){
+    actionsHtml=`<div class="card-actions"><button class="btn-action btn-approve" data-action="approve" data-name="${escapeHtml(name)}">✓ Approve</button><button class="btn-action btn-deny" data-action="deny" data-name="${escapeHtml(name)}">✕ Deny</button></div>`;
   } else {
-    actionsHtml = `
-      <div class="card-actions">
-        <button class="btn-action btn-revert" data-action="revert" data-name="${name}">↺ Move to Pending</button>
-      </div>`;
+    actionsHtml=`<div class="card-actions"><button class="btn-action btn-revert" data-action="revert" data-name="${escapeHtml(name)}">↺ Move to Pending</button></div>`;
   }
 
-  card.innerHTML = `
+  card.innerHTML=`
     <div class="card-top">
       <div class="avatar" style="background:${color};">${initial}</div>
       <div class="card-info">
         <div class="card-name">${escapeHtml(name)}</div>
-        <div class="card-meta">
-          ${ago ? `<span>${ago}</span><span class="meta-dot"></span>` : ''}
-          <span>${status}</span>
-        </div>
+        <div class="card-meta">${ago?`<span>${ago}</span><span class="meta-dot"></span>`:''}<span>${status}</span></div>
       </div>
       <div class="status-badge ${statusClasses[status]}">${statusLabels[status]}</div>
     </div>
     ${actionsHtml}
   `;
 
-  card.querySelectorAll('button[data-action]').forEach(btn => {
-    btn.addEventListener('click', () => handleAction(btn, card));
+  card.querySelectorAll('button[data-action]').forEach(btn=>{
+    btn.addEventListener('click',()=>handleAction(btn,card));
   });
-
   return card;
 }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
-}
+async function handleAction(btn,card){
+  const action=btn.dataset.action;
+  const name=btn.dataset.name;
+  const originalText=btn.innerHTML;
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner-sm"></span>';
 
-// ============ ACTIONS ============
-async function handleAction(btn, card) {
-  const action = btn.dataset.action;
-  const name = btn.dataset.name;
-  const originalText = btn.innerHTML;
-
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner-sm"></span>';
-
-  try {
+  try{
     let newStatus;
-    if (action === 'approve') newStatus = 'approved';
-    else if (action === 'deny') newStatus = 'denied';
-    else if (action === 'revert') newStatus = 'pending';
+    if(action==='approve')newStatus='approved';
+    else if(action==='deny')newStatus='denied';
+    else if(action==='revert')newStatus='pending';
 
-    const data = await cloudGet();
-    if (!data.__requests__) data.__requests__ = {};
-    data.__requests__[name] = {
+    const data=await cloudGet();
+    if(!data.__requests__)data.__requests__={};
+    data.__requests__[name]={
       ...data.__requests__[name],
-      status: newStatus,
-      timestamp: Date.now(),
+      status:newStatus,
+      timestamp:Date.now(),
       name
     };
-    const ok = await cloudSet(data);
-    if (!ok) throw new Error('Cloud write failed');
-
-    // Animate card out
+    const ok=await cloudSet(data);
+    if(!ok)throw new Error('Cloud write failed');
     card.classList.add('removing');
-
-    setTimeout(async () => {
-      await refresh();
-    }, 350);
-  } catch (e) {
-    console.error('Action error:', e);
-    btn.disabled = false;
-    btn.innerHTML = originalText;
-    showToast({
-      name,
-      color: '#FF4B4B',
-      title: 'Action failed',
-      sub: 'Could not reach the server'
-    });
+    setTimeout(async()=>{await refresh();},350);
+  }catch(e){
+    console.error('Action error:',e);
+    btn.disabled=false;
+    btn.innerHTML=originalText;
+    showToast({name,color:'#FF4B4B',title:'Action failed',sub:'Could not reach server'});
   }
 }
 
-// ============ TOAST ============
-function showToast({ name, color, title, sub }) {
-  const container = $('toastContainer');
-  const toast = document.createElement('div');
-  toast.className = 'toast-notif';
-  toast.innerHTML = `
-    <div class="toast-avatar" style="background:${color || avatarColor(name || '?')}">${getInitial(name || '?')}</div>
-    <div class="toast-content">
-      <div class="toast-title">${escapeHtml(title)}</div>
-      <div class="toast-sub">${escapeHtml(sub)}</div>
-    </div>
-  `;
+function showToast({name,color,title,sub}){
+  const container=$('toastContainer');
+  const toast=document.createElement('div');
+  toast.className='toast-notif';
+  toast.innerHTML=`<div class="toast-avatar" style="background:${color||avatarColor(name||'?')}">${getInitial(name||'?')}</div><div class="toast-content"><div class="toast-title">${escapeHtml(title)}</div><div class="toast-sub">${escapeHtml(sub)}</div></div>`;
   container.appendChild(toast);
-
-  setTimeout(() => {
-    toast.classList.add('leaving');
-    setTimeout(() => toast.remove(), 400);
-  }, 4000);
+  setTimeout(()=>{toast.classList.add('leaving');setTimeout(()=>toast.remove(),400);},4000);
 }
 
-// ============ REFRESH / POLL ============
-async function refresh() {
-  try {
-    const data = await cloudGet();
-    const requests = data.__requests__ || {};
-
-    // Detect new requests
-    const prevNames = new Set(Object.keys(allRequests));
-    const newNames = [];
-    Object.entries(requests).forEach(([name, r]) => {
-      if (!prevNames.has(name) && initialLoadDone && (r.status || 'pending') === 'pending') {
+async function refresh(){
+  try{
+    const data=await cloudGet();
+    const requests=data.__requests__||{};
+    const prevNames=new Set(Object.keys(allRequests));
+    const newNames=[];
+    Object.entries(requests).forEach(([name,r])=>{
+      if(!prevNames.has(name)&&initialLoadDone&&(r.status||'pending')==='pending'){
         newNames.push(name);
       }
     });
-
-    allRequests = requests;
-
-    // Update UI
+    allRequests=requests;
     updateCounts();
     renderFeed();
-
-    // Toast for new requests
-    newNames.forEach(name => {
-      showToast({
-        name,
-        color: avatarColor(name),
-        title: 'New request!',
-        sub: `${name} wants to access Danfrolat`
-      });
+    newNames.forEach(name=>{
+      showToast({name,color:avatarColor(name),title:'New request!',sub:`${name} wants to access Danfrolat`});
     });
-
-    // Bump pending pill if new
-    if (newNames.length > 0) {
-      const pill = $('pendingPill');
-      pill.classList.remove('bump');
-      void pill.offsetWidth;
-      pill.classList.add('bump');
+    if(newNames.length>0){
+      const pill=$('pendingPill');
+      pill.classList.remove('bump'); void pill.offsetWidth; pill.classList.add('bump');
     }
-
-    initialLoadDone = true;
-  } catch (e) {
-    console.error('Refresh error:', e);
-  }
+    initialLoadDone=true;
+  }catch(e){console.error('Refresh error:',e);}
 }
 
-function startPolling() {
-  if (pollInterval) clearInterval(pollInterval);
-  pollInterval = setInterval(refresh, 5000);
+function startPolling(){
+  if(pollInterval)clearInterval(pollInterval);
+  pollInterval=setInterval(refresh,5000);
 }
 
-// ============ SETUP UI ============
-$('loadMascot').innerHTML = mascotSVG(100);
-$('brandMascot').innerHTML = mascotSVG(38);
+$('loadMascot').innerHTML=mascotSVG(100);
+$('brandMascot').innerHTML=mascotSVG(38);
 
-document.querySelectorAll('.filter-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+document.querySelectorAll('.filter-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
     tab.classList.add('active');
-    currentFilter = tab.dataset.filter;
+    currentFilter=tab.dataset.filter;
     renderFeed();
   });
 });
 
-$('refreshBtn').addEventListener('click', async () => {
-  const btn = $('refreshBtn');
+$('refreshBtn').addEventListener('click',async()=>{
+  const btn=$('refreshBtn');
   btn.classList.add('spinning');
   await refresh();
-  setTimeout(() => btn.classList.remove('spinning'), 400);
+  setTimeout(()=>btn.classList.remove('spinning'),400);
 });
 
-// ============ BOOT ============
-async function boot() {
-  const access = await checkAccess();
-  currentDeviceId = access.deviceId;
+// Copy button
+$('copyBtn').addEventListener('click',async()=>{
+  const code=currentDeviceId;
+  const btn=$('copyBtn');
+  try{
+    await navigator.clipboard.writeText(code);
+    btn.textContent='✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='📋 Copy Code';btn.classList.remove('copied');},2000);
+  }catch(e){
+    // Fallback for older browsers
+    const ta=document.createElement('textarea');
+    ta.value=code; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); ta.remove();
+    btn.textContent='✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='📋 Copy Code';btn.classList.remove('copied');},2000);
+  }
+});
 
-  if (!access.ok) {
-    // Unauthorized — redirect to main app
-    window.location.replace(MAIN_APP_URL);
+// Countdown redirect
+function startCountdown(seconds){
+  const el=$('countdown');
+  let remaining=seconds;
+  const tick=()=>{
+    el.textContent=`Returning to app in ${remaining}s…`;
+    if(remaining<=0){
+      window.location.replace(MAIN_APP_URL);
+      return;
+    }
+    remaining--;
+    setTimeout(tick,1000);
+  };
+  tick();
+}
+
+async function boot(){
+  currentDeviceId=getOrCreateDeviceId();
+  const authorized=await isDeviceAuthorized(currentDeviceId);
+
+  $('loadingScreen').classList.add('hide');
+  setTimeout(()=>$('loadingScreen').remove(),400);
+
+  if(!authorized){
+    // Show locked screen with device code + auto-redirect
+    $('deviceCode').textContent=currentDeviceId;
+    $('lockedScreen').classList.add('show');
+    startCountdown(20);
     return;
   }
 
-  // Authorized
-  $('loadingScreen').classList.add('hide');
-  setTimeout(() => $('loadingScreen').remove(), 400);
-  $('adminApp').style.display = 'block';
-  $('deviceIdDisplay').textContent = currentDeviceId.slice(0, 12);
-
-  // Initial load
+  // Authorized → show admin panel
+  $('adminApp').style.display='block';
+  $('deviceIdDisplay').textContent=currentDeviceId;
   await refresh();
   startPolling();
 }
 
 boot();
 </script>
-
 </body>
 </html>
