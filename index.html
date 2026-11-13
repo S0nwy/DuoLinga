@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danfrolat</title>
+<style>
+  :root {
+    --green: #58CC02;
+    --green-shadow: #58A700;
+    --blue: #1CB0F6;
+    --blue-shadow: #1899D6;
+    --red: #FF4B4B;
+    --red-shadow: #EA2B2B;
+    --gray: #E5E5E5;
+    --gray-shadow: #CACACA;
+    --bg: #FFFFFF;
+    --text-dark: #3C3C3C;
+    --text-gray: #AFAFAF;
+    --font: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text-dark);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 80px;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 2px solid var(--gray);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+  }
+
+  .logo {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--green);
+    letter-spacing: -0.5px;
+  }
+
+  .stats {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 800;
+    font-size: 16px;
+  }
+
+  .stat-icon { font-size: 20px; }
+  .streak { color: var(--red); }
+  .gems { color: var(--blue); }
+
+  /* Learning Path */
+  .path-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    gap: 40px;
+    position: relative;
+  }
+
+  .path-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--gray);
+    z-index: 0;
+  }
+
+  .node {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .node:active {
+    transform: translateY(4px);
+  }
+
+  .node.completed {
+    background: var(--green);
+    box-shadow: 0 6px 0 var(--green-shadow);
+    color: white;
+  }
+  .node.completed:active { box-shadow: 0 2px 0 var(--green-shadow); }
+
+  .node.current {
+    background: var(--blue);
+    box-shadow: 0 6px 0 var(--blue-shadow);
+    color: white;
+    animation: pulse 2s infinite;
+  }
+  .node.current:active { 
+    box-shadow: 0 2px 0 var(--blue-shadow); 
+    animation: none;
+  }
+
+  .node.locked {
+    background: var(--gray);
+    box-shadow: 0 6px 0 var(--gray-shadow);
+    color: var(--text-gray);
+    cursor: not-allowed;
+  }
+  .node.locked:active { box-shadow: 0 6px 0 var(--gray-shadow); transform: none; }
+
+  .node-label {
+    position: absolute;
+    bottom: -28px;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text-dark);
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .node.locked .node-label { color: var(--text-gray); }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* Offset nodes for a curved path look */
+  .node:nth-child(odd) { margin-left: -40px; }
+  .node:nth-child(even) { margin-right: -40px; }
+
+  /* Bottom Nav */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 450px;
+    background: var(--bg);
+    border-top: 2px solid var(--gray);
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    z-index: 10;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-gray);
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+
+  .nav-item:hover { background: #F7F7F7; }
+
+  .nav-item.active {
+    color: var(--blue);
+  }
+
+  .nav-icon { font-size: 26px; }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: white;
+    width: 90%;
+    max-width: 350px;
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.2s ease;
+  }
+
+  .modal-overlay.active .modal {
+    transform: scale(1);
+  }
+
+  .modal h2 {
+    margin-bottom: 10px;
+    font-size: 22px;
+  }
+
+  .modal p {
+    color: #777;
+    margin-bottom: 24px;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    user-select: none;
+  }
+
+  .btn-primary {
+    background: var(--green);
+    color: white;
+    box-shadow: 0 4px 0 var(--green-shadow);
+  }
+
+  .btn-primary:active {
+    transform: translateY(4px);
+    box-shadow: none;
+  }
+
+  .btn-secondary {
+    background: white;
+    color: var(--blue);
+    border: 2px solid var(--gray);
+    margin-top: 12px;
+  }
+  
+  .btn-secondary:active {
+    background: #F7F7F7;
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="header">
+    <div class="logo">Danfrolat</div>
+    <div class="stats">
+      <div class="stat streak">
+        <span class="stat-icon">🔥</span>
+        <span>12</span>
+      </div>
+      <div class="stat gems">
+        <span class="stat-icon">💎</span>
+        <span>450</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="path-container">
+    <div class="path-line"></div>
+    
+    <div class="node completed" data-title="Basics 1" data-desc="Learn greetings and introductions.">
+      <span>⭐</span>
+      <div class="node-label">Basics 1</div>
+    </div>
+
+    <div class="node completed" data-title="Phrases" data-desc="Master everyday Danfrolat phrases.">
+      <span>⭐</span>
+      <div class="node-label">Phrases</div>
+    </div>
+
+    <div class="node current" data-title="Food & Drink" data-desc="Order meals and learn food vocabulary.">
+      <span>🍎</span>
+      <div class="node-label">Food & Drink</div>
+    </div>
+
+    <div class="node locked" data-title="Travel" data-desc="Navigate cities and ask for directions.">
+      <span>🔒</span>
+      <div class="node-label">Travel</div>
+    </div>
+
+    <div class="node locked" data-title="Family" data-desc="Talk about your family and relationships.">
+      <span>🔒</span>
+      <div class="node-label">Family</div>
+    </div>
+  </main>
+
+  <nav class="bottom-nav">
+    <div class="nav-item active">
+      <span class="nav-icon">🏠</span>
+      <span>Learn</span>
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">🏆</span>
+      <span>Leagues</span>
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">🎯</span>
+      <span>Quests</span>
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>Profile</span>
+    </div>
+  </nav>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2 id="modal-title">Title</h2>
+    <p id="modal-desc">Description</p>
+    <button class="btn btn-primary" id="start-btn">Start Lesson</button>
+    <button class="btn btn-secondary" id="close-btn">Close</button>
+  </div>
+</div>
+
+<script>
+  const nodes = document.querySelectorAll('.node');
+  const modal = document.getElementById('modal');
+  const modalTitle = document.getElementById('modal-title');
+  const modalDesc = document.getElementById('modal-desc');
+  const closeBtn = document.getElementById('close-btn');
+  const startBtn = document.getElementById('start-btn');
+  const navItems = document.querySelectorAll('.nav-item');
+
+  nodes.forEach(node => {
+    node.addEventListener('click', () => {
+      if (node.classList.contains('locked')) return;
+      modalTitle.textContent = node.dataset.title;
+      modalDesc.textContent = node.dataset.desc;
+      modal.classList.add('active');
+    });
+  });
+
+  closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+  startBtn.addEventListener('click', () => modal.classList.remove('active'));
+  
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.classList.remove('active');
+  });
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      navItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
