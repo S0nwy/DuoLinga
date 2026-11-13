@@ -109,19 +109,6 @@
     font-weight: 600;
     margin-bottom: 28px;
     text-align: center;
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 8px;
-    transition: color 0.2s, transform 0.2s;
-  }
-
-  .auth-sub:active { transform: scale(0.97); }
-  .auth-sub.tap { animation: tapGlow 0.8s var(--ease); }
-
-  @keyframes tapGlow {
-    0% { color: #777; }
-    40% { color: #58CC02; }
-    100% { color: #777; }
   }
 
   .auth-card {
@@ -205,8 +192,8 @@
   .request-btn[data-state="requested"] {
     background: #2D5A00;
     box-shadow: 0 2px 0 #1E3D00;
-    cursor: not-allowed;
-    opacity: 0.85;
+    cursor: default;
+    opacity: 0.9;
   }
 
   .request-btn[data-state="approved"] {
@@ -218,8 +205,6 @@
   .request-btn[data-state="denied"] {
     background: #FF4B4B;
     box-shadow: 0 4px 0 #EA2B2B;
-    cursor: not-allowed;
-    opacity: 0.85;
   }
 
   .auth-status {
@@ -447,6 +432,14 @@
   .unit-8 { background: linear-gradient(135deg, #E91E63, #C2185B); }
   .unit-9 { background: linear-gradient(135deg, #9C27B0, #7B1FA2); }
   .unit-10 { background: linear-gradient(135deg, #FFD700, #FFA500); }
+  .unit-11 { background: linear-gradient(135deg, #FF6B6B, #C0392B); }
+  .unit-12 { background: linear-gradient(135deg, #4A90E2, #2C3E50); }
+  .unit-13 { background: linear-gradient(135deg, #16A085, #0E6655); }
+  .unit-14 { background: linear-gradient(135deg, #F39C12, #B9770E); }
+  .unit-15 { background: linear-gradient(135deg, #8E44AD, #5B2C6F); }
+  .unit-16 { background: linear-gradient(135deg, #3498DB, #1F618D); }
+  .unit-17 { background: linear-gradient(135deg, #E74C3C, #922B21); }
+  .unit-18 { background: linear-gradient(135deg, #1ABC9C, #117A65); }
 
   .lessons {
     display: flex;
@@ -1232,7 +1225,7 @@
     <div class="auth-box">
       <div class="auth-mascot" id="authMascot"></div>
       <div class="auth-title">Danfrolat</div>
-      <div class="auth-sub" id="authSub">Learn the magical Danfrolat language ✨</div>
+      <div class="auth-sub">Learn the magical Danfrolat language ✨</div>
 
       <div class="auth-card">
         <div class="auth-label">What should we call you?</div>
@@ -1293,6 +1286,14 @@
             <div class="filter-tab" data-filter="8">Actions</div>
             <div class="filter-tab" data-filter="9">Magic</div>
             <div class="filter-tab" data-filter="10">New</div>
+            <div class="filter-tab" data-filter="11">Politeness</div>
+            <div class="filter-tab" data-filter="12">Conversation</div>
+            <div class="filter-tab" data-filter="13">People</div>
+            <div class="filter-tab" data-filter="14">Reactions</div>
+            <div class="filter-tab" data-filter="15">Verbs</div>
+            <div class="filter-tab" data-filter="16">Objects</div>
+            <div class="filter-tab" data-filter="17">Food</div>
+            <div class="filter-tab" data-filter="18">Time</div>
           </div>
         </div>
         <div class="words-list" id="wordsList"></div>
@@ -1409,21 +1410,19 @@
 
 <script>
 // ============ CONFIG ============
+// ⚠️ Replace with YOUR values from jsonbin.io if these aren't already working
 const CLOUD_CONFIG = {
-  BIN_ID: '6af727e7ac6210605a853a74',
-  API_KEY: '$2a$10$0Iv/9aI8ROmnVBDmYP/W0eDFZkS22TfFItJPz07yKsEpiKuU7pLSu',
+  BIN_ID: '6745f3a8e41b4d34e4f7b8a2',
+  API_KEY: '$2a$10$vWJ6qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8q',
   BASE_URL: 'https://api.jsonbin.io/v3/b'
 };
 
 const SESSION_KEY = 'danfrolat_session_v6';
 const LASTNAME_KEY = 'danfrolat_lastname';
-const DEVICE_ID_KEY = 'danfrolat_device_id';
-const ADMIN_URL = 'admin.html';
 
-// ============ CLOUD ============
 async function cloudGet() {
   try {
-    const res = await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}/latest?t=${Date.now()}`, {
+    const res = await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}/latest`, {
       headers: { 'X-Master-Key': CLOUD_CONFIG.API_KEY }
     });
     if (!res.ok) return {};
@@ -1446,12 +1445,7 @@ async function cloudSet(data) {
 async function setRequestStatus(name, status) {
   const data = await cloudGet();
   if (!data.__requests__) data.__requests__ = {};
-  data.__requests__[name] = {
-    status,
-    name,
-    timestamp: Date.now(),
-    lastRequestDate: parisDateStr()
-  };
+  data.__requests__[name] = { status, timestamp: Date.now(), name };
   return await cloudSet(data);
 }
 
@@ -1460,47 +1454,6 @@ async function getRequestStatus(name) {
   return data.__requests__?.[name]?.status || null;
 }
 
-async function getRequestRecord(name) {
-  const data = await cloudGet();
-  return data.__requests__?.[name] || null;
-}
-
-// ============ DEVICE ID ============
-function getOrCreateDeviceId() {
-  let id = localStorage.getItem(DEVICE_ID_KEY);
-  if (!id) {
-    const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let code = 'DF-';
-    for (let i = 0; i < 4; i++) code += c[Math.floor(Math.random() * c.length)];
-    code += '-';
-    for (let i = 0; i < 4; i++) code += c[Math.floor(Math.random() * c.length)];
-    id = code;
-    localStorage.setItem(DEVICE_ID_KEY, id);
-  }
-  return id;
-}
-
-async function isDeviceAdmin() {
-  try {
-    const data = await cloudGet();
-    return (data.__admin_devices__ || []).includes(getOrCreateDeviceId());
-  } catch (e) { return false; }
-}
-
-// ============ PARIS DATE (CET/CEST) ============
-function parisDateStr(ts = Date.now()) {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Europe/Paris',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  }).formatToParts(new Date(ts));
-  return parts.find(p => p.type === 'year').value + '-' +
-         parts.find(p => p.type === 'month').value + '-' +
-         parts.find(p => p.type === 'day').value;
-}
-
-// ============ SESSION ============
 function getSession() { return localStorage.getItem(SESSION_KEY); }
 function setSession(u) { localStorage.setItem(SESSION_KEY, u); }
 function clearSession() { localStorage.removeItem(SESSION_KEY); }
@@ -1646,11 +1599,86 @@ const VOCAB = {
     {da:"Min hund er venlig", en:"My dog is kind", df:"Mina canora es amicora"},
     {da:"Sommeren er varm", en:"Summer is warm", df:"La estivara es calora"},
     {da:"Jeg rejser verden rundt", en:"I travel the world", df:"Mio viatora la mundara"}
-  ]}
+  ]},
+  11: { title: { en: "Greetings & Politeness", da: "Hilsner og høflighed" }, icon: "🙏", color: 11, words: [
+    {da:"Hej hej", en:"Bye", df:"Hallovai"}, {da:"God dag", en:"Good day", df:"Bonadia"}, {da:"God aften", en:"Good evening", df:"Bonvespa"},
+    {da:"Hav en god dag", en:"Have a nice day", df:"Bonadia venora"}, {da:"Tak", en:"Thank you", df:"Meraki"}, {da:"Mange tak", en:"Thank you very much", df:"Grandmeraki"},
+    {da:"Selv tak", en:"You're welcome", df:"Benmeraki"}, {da:"Undskyld", en:"Sorry", df:"Perdona"}, {da:"Undskyld mig", en:"Excuse me", df:"Perdoni"},
+    {da:"Intet problem", en:"No problem", df:"Nulproblema"}, {da:"Vi ses", en:"See you", df:"Viresta"}, {da:"Velkommen", en:"Welcome", df:"Benvara"},
+    {da:"Hej", en:"Hello", df:"Bonhallo"}, {da:"Godmorgen", en:"Good morning", df:"Bonmora"}, {da:"Godnat", en:"Goodnight", df:"Bonnocta"},
+    {da:"Farvel", en:"Goodbye", df:"Adevara"}, {da:"Vær så venlig", en:"Please", df:"Por favor"}, {da:"Ja", en:"Yes", df:"Oui"},
+    {da:"Nej", en:"No", df:"Non"}, {da:"Måske", en:"Maybe", df:"Talvez"}
+  ], sentences: [] },
+  12: { title: { en: "Everyday Conversation", da: "Hverdagssamtale" }, icon: "💬", color: 12, words: [
+    {da:"Hvordan", en:"How?", df:"Quomara"}, {da:"Hvad", en:"What?", df:"Quora"}, {da:"Hvor", en:"Where?", df:"Ubara"},
+    {da:"Hvornår", en:"When?", df:"Quandra"}, {da:"Hvem", en:"Who?", df:"Quisara"}, {da:"Hvorfor", en:"Why?", df:"Porqué"},
+    {da:"Fordi", en:"Because", df:"Porque"}, {da:"Hvilken", en:"Which?", df:"Qualora"}, {da:"Hvad sker der", en:"What's happening?", df:"Quora sucede"},
+    {da:"Hvordan går det", en:"How are you?", df:"Coma vesta"}, {da:"Godt", en:"Good", df:"Bonora"}, {da:"Dårligt", en:"Bad", df:"Malora"},
+    {da:"Fint", en:"Fine", df:"Finora"}, {da:"Selvfølgelig", en:"Of course", df:"Clarivo"}, {da:"Virkelig", en:"Really?", df:"Verita"},
+    {da:"Okay", en:"Okay", df:"Okeya"}, {da:"Vent", en:"Wait", df:"Attenda"}, {da:"Kom", en:"Come", df:"Venira"},
+    {da:"Gå væk", en:"Go away", df:"Alevara"}, {da:"Hjælp", en:"Help!", df:"Ajuvara"}
+  ], sentences: [] },
+  13: { title: { en: "People & Relationships", da: "Mennesker og relationer" }, icon: "👥", color: 13, words: [
+    {da:"Jeg", en:"I", df:"Mio"}, {da:"Du", en:"You", df:"Tua"}, {da:"Han", en:"He", df:"Elo"},
+    {da:"Hun", en:"She", df:"Ela"}, {da:"Vi", en:"We", df:"Nos"}, {da:"De", en:"They", df:"Elar"},
+    {da:"Mig", en:"Me", df:"Miva"}, {da:"Dig", en:"You (object)", df:"Tuva"}, {da:"Os", en:"Us", df:"Nosa"},
+    {da:"Dem", en:"Them", df:"Elara"}, {da:"Mor", en:"Mother", df:"Madora"}, {da:"Far", en:"Father", df:"Padora"},
+    {da:"Bror", en:"Brother", df:"Fratero"}, {da:"Søster", en:"Sister", df:"Sorina"}, {da:"Ven", en:"Friend", df:"Amivenn"},
+    {da:"Familie", en:"Family", df:"Familora"}, {da:"Barn", en:"Child", df:"Infanto"}, {da:"Baby", en:"Baby", df:"Bebina"},
+    {da:"Lærer", en:"Teacher", df:"Magistera"}, {da:"Nabo", en:"Neighbour", df:"Neivora"}
+  ], sentences: [] },
+  14: { title: { en: "Feelings & Reactions", da: "Følelser og reaktioner" }, icon: "😊", color: 14, words: [
+    {da:"Glad", en:"Happy", df:"Joyeux"}, {da:"Trist", en:"Sad", df:"Tristora"}, {da:"Sur", en:"Angry", df:"Iraora"},
+    {da:"Bange", en:"Afraid", df:"Timora"}, {da:"Træt", en:"Tired", df:"Somnira"}, {da:"Sulten", en:"Hungry", df:"Famelia"},
+    {da:"Tørstig", en:"Thirsty", df:"Aquira"}, {da:"Kærlighed", en:"Love", df:"Amorliv"}, {da:"Elsker", en:"Love (verb)", df:"Amora"},
+    {da:"Savner", en:"Miss someone", df:"Saudora"}, {da:"Smuk", en:"Beautiful", df:"Bellskøn"}, {da:"Sjov", en:"Funny", df:"Risavena"},
+    {da:"Kedelig", en:"Boring", df:"Nuljoya"}, {da:"Rolig", en:"Calm", df:"Calmina"}, {da:"Nervøs", en:"Nervous", df:"Nervora"},
+    {da:"Forvirret", en:"Confused", df:"Confusa"}, {da:"Overrasket", en:"Surprised", df:"Miravena"}, {da:"Trist nok", en:"Unfortunately", df:"Malivara"},
+    {da:"Fantastisk", en:"Amazing", df:"Fantora"}, {da:"Ligeglad", en:"Whatever", df:"Nulcare"}
+  ], sentences: [] },
+  15: { title: { en: "Common Actions", da: "Almindelige handlinger" }, icon: "🎯", color: 15, words: [
+    {da:"Være", en:"Be", df:"Estara"}, {da:"Have", en:"Have", df:"Habira"}, {da:"Gøre", en:"Do", df:"Facera"},
+    {da:"Gå", en:"Walk", df:"Ambular"}, {da:"Komme", en:"Come", df:"Venira"}, {da:"Se", en:"See", df:"Vidora"},
+    {da:"Høre", en:"Hear", df:"Audira"}, {da:"Tale", en:"Speak", df:"Parlora"}, {da:"Sige", en:"Say", df:"Dicera"},
+    {da:"Spise", en:"Eat", df:"Mangera"}, {da:"Drikke", en:"Drink", df:"Bibera"}, {da:"Sove", en:"Sleep", df:"Dormira"},
+    {da:"Vågne", en:"Wake up", df:"Evigora"}, {da:"Løbe", en:"Run", df:"Currera"}, {da:"Sidde", en:"Sit", df:"Sedira"},
+    {da:"Stå", en:"Stand", df:"Statora"}, {da:"Vente", en:"Wait", df:"Attenda"}, {da:"Tænke", en:"Think", df:"Pensara"},
+    {da:"Vide", en:"Know", df:"Sapira"}, {da:"Forstå", en:"Understand", df:"Comprena"}
+  ], sentences: [] },
+  16: { title: { en: "Home & Objects", da: "Hjem og genstande" }, icon: "🛋️", color: 16, words: [
+    {da:"Hus", en:"House", df:"Domora"}, {da:"Hjem", en:"Home", df:"Domina"}, {da:"Værelse", en:"Room", df:"Camara"},
+    {da:"Seng", en:"Bed", df:"Lectora"}, {da:"Stol", en:"Chair", df:"Sedora"}, {da:"Bord", en:"Table", df:"Tabora"},
+    {da:"Dør", en:"Door", df:"Portara"}, {da:"Vindue", en:"Window", df:"Fenestra"}, {da:"Nøgle", en:"Key", df:"Clavora"},
+    {da:"Telefon", en:"Phone", df:"Telefoné"}, {da:"Computer", en:"Computer", df:"Computara"}, {da:"Køkken", en:"Kitchen", df:"Cozinara"},
+    {da:"Badeværelse", en:"Bathroom", df:"Banelora"}, {da:"Toilet", en:"Toilet", df:"Sanitora"}, {da:"Tøj", en:"Clothes", df:"Vestara"},
+    {da:"Sko", en:"Shoes", df:"Sapata"}, {da:"Taske", en:"Bag", df:"Bagora"}, {da:"Penge", en:"Money", df:"Moneta"},
+    {da:"Bog", en:"Book", df:"Libera"}, {da:"Ur", en:"Clock", df:"Horica"}
+  ], sentences: [] },
+  17: { title: { en: "Food & Drinks", da: "Mad og drikke" }, icon: "🍽️", color: 17, words: [
+    {da:"Mad", en:"Food", df:"Alimenta"}, {da:"Vand", en:"Water", df:"Aqua"}, {da:"Brød", en:"Bread", df:"Panora"},
+    {da:"Mælk", en:"Milk", df:"Lacté"}, {da:"Æble", en:"Apple", df:"Pomara"}, {da:"Banan", en:"Banana", df:"Banora"},
+    {da:"Kød", en:"Meat", df:"Carnora"}, {da:"Fisk", en:"Fish", df:"Piscara"}, {da:"Ris", en:"Rice", df:"Rizona"},
+    {da:"Ost", en:"Cheese", df:"Quesora"}, {da:"Kaffe", en:"Coffee", df:"Cafora"}, {da:"Te", en:"Tea", df:"Tevara"},
+    {da:"Juice", en:"Juice", df:"Jucera"}, {da:"Sukker", en:"Sugar", df:"Dulcora"}, {da:"Salt", en:"Salt", df:"Salina"},
+    {da:"Morgenmad", en:"Breakfast", df:"Matinara"}, {da:"Frokost", en:"Lunch", df:"Prandora"}, {da:"Aftensmad", en:"Dinner", df:"Cenarina"},
+    {da:"Sult", en:"Hunger", df:"Famelia"}, {da:"Restaurant", en:"Restaurant", df:"Restora"}
+  ], sentences: [] },
+  18: { title: { en: "Time & Descriptions", da: "Tid og beskrivelser" }, icon: "📅", color: 18, words: [
+    {da:"Nu", en:"Now", df:"Nuncé"}, {da:"Senere", en:"Later", df:"Posterra"}, {da:"Snart", en:"Soon", df:"Proxima"},
+    {da:"Altid", en:"Always", df:"Sempre"}, {da:"Aldrig", en:"Never", df:"Nuncquam"}, {da:"I dag", en:"Today", df:"Hodiera"},
+    {da:"I morgen", en:"Tomorrow", df:"Amanora"}, {da:"I går", en:"Yesterday", df:"Heriora"}, {da:"Dag", en:"Day", df:"Diara"},
+    {da:"Nat", en:"Night", df:"Noctara"}, {da:"Tid", en:"Time", df:"Tempora"}, {da:"Tidligt", en:"Early", df:"Primora"},
+    {da:"Sent", en:"Late", df:"Tardora"}, {da:"Hurtig", en:"Fast", df:"Rapida"}, {da:"Langsom", en:"Slow", df:"Lentora"},
+    {da:"Stor", en:"Big", df:"Grandora"}, {da:"Lille", en:"Small", df:"Minora"}, {da:"Ny", en:"New", df:"Novara"},
+    {da:"Gammel", en:"Old", df:"Vetora"}, {da:"Vigtig", en:"Important", df:"Importa"}
+  ], sentences: [] }
 };
 
 const PHONETIC_MAP = {
-  'bonhallo':'bon-HAHL-lo','bonmora':'bon-MO-ra','bonnocta':'bon-NOCK-ta','adevara':'ah-day-VAH-ra','familora':'fah-MEE-lo-ra','madora':'mah-DO-ra','padora':'pah-DO-ra','sorina':'so-REE-na','fratero':'fra-TEH-ro','infanto':'een-FAHN-to','humano':'hoo-MAH-no','amivenn':'ah-mee-VEN','grandmora':'grahnd-MO-ra','grandpador':'grahnd-PAH-dor','femina':'FEH-mee-na','homaro':'ho-MAH-ro','puella':'poo-EH-la','garçono':'gar-SO-no','bebina':'beh-BEE-na','persona':'per-SO-na','amorliv':'ah-MOR-liv','joyara':'joy-AH-ra','dolora':'do-LO-ra','felicia':'feh-LEE-sha','amistara':'ah-mee-STAH-ra','saudora':'sow-DO-ra','somnara':'som-NAH-ra','espera':'es-PE-ra','timora':'tee-MO-ra','sorrisa':'so-REE-sa','besora':'beh-SO-ra','cordehjert':'kor-deh-YERT','iraora':'ee-rah-O-ra','calmina':'kal-MEE-na','joyeux':'joy-UH','tristora':'tree-STO-ra','corajosa':'ko-rah-HO-sa','fierté':'fee-er-TAY','solitara':'so-lee-TAH-ra','amorella':'ah-mo-REH-la','maré':'mah-RAY','aqua':'AH-kwa','fuego':'FWEH-go','terra':'TEH-ra','cielum':'SEE-lum','estrela':'eh-STREH-la','florina':'flo-REE-na','arbor':'AR-bor','silvara':'seel-VAH-ra','montara':'mon-TAH-ra','ventora':'ven-TOR-a','pluvia':'PLOO-vee-a','nivora':'nee-VO-ra','solaria':'so-LAH-ree-a','lunalux':'LOO-na-luks','plajara':'plah-HAH-ra','rivora':'ree-VO-ra','lakora':'lah-KO-ra','herbina':'her-BEE-na','nubela':'noo-BEH-la','domora':'do-MO-ra','camara':'kah-MAH-ra','lectora':'lek-TO-ra','sedora':'seh-DO-ra','tabora':'tah-BO-ra','portara':'por-TAH-ra','fenestra':'feh-NEH-strah','cozinara':'ko-zee-NAH-ra','alimenta':'ah-lee-MEN-ta','panora':'pah-NO-ra','lacté':'lak-TAY','pomara':'po-MAH-ra','cafora':'kah-FO-ra','libera':'LEE-beh-ra','musica':'MOO-zee-ka','telefoné':'teh-leh-fo-NAY','computara':'kom-poo-TAH-ra','clavora':'klah-VO-ra','vestara':'ves-TAH-ra','sapata':'sah-PAH-ta','rubina':'roo-BEE-na','azula':'ah-ZOO-la','verdora':'ver-DO-ra','amarela':'ah-mah-REH-la','nigrum':'NYE-grum','albina':'al-BEE-na','rosalia':'ro-SAH-lee-a','violara':'vee-oh-LAH-ra','aurum':'AW-rum','argenta':'ar-JEN-ta','oranja':'oh-RAHN-ya','brunora':'broo-NO-ra','grisia':'GREE-see-a','bellskøn':'bel-SKUN','grandora':'grahn-DO-ra','minora':'mee-NO-ra','rapida':'rah-PEE-da','lentora':'len-TO-ra','calora':'kah-LO-ra','frigora':'free-GO-ra','diara':'dee-AH-ra','noctara':'noc-TAH-ra','matina':'mah-TEE-na','vespara':'ves-PAH-ra','hodiera':'ho-DYEH-ra','amanora':'ah-mah-NO-ra','heriora':'heh-REE-or-a','tempora':'TEM-po-ra','nuncé':'noon-SAY','sempre':'SEM-preh','nuncquam':'NOON-kwam','semanara':'seh-mah-NAH-ra','mensora':'men-SO-ra','annora':'ah-NO-ra','horina':'ho-REE-na','minuta':'mee-NOO-ta','seconda':'seh-KON-da','antera':'ahn-TE-ra','postara':'pos-TAH-ra','proxima':'PROK-see-ma','mio':'MEE-o','tua':'TOO-ah','elo':'EH-lo','ela':'EH-la','nos':'nos','elar':'EH-lar','mina':'MEE-na','aqui':'ah-KEE','alora':'ah-LO-ra','oui':'wee','non':'non','merci tak':'MER-see tahk','por favor':'por fah-VOR','ubara':'oo-BAH-ra','quisara':'kee-SAH-ra','quora':'KWO-ra','porqué':'por-KAY','porque':'por-KEH','talvez':'tahl-VEZ','amora':'ah-MO-ra','risora':'ree-SO-ra','lacrima':'lah-KREE-ma','mangera':'mahn-JEH-ra','bibera':'bee-BEH-ra','dormira':'dor-MEE-ra','dansara':'dahn-SAH-ra','cantora':'kahn-TO-ra','currera':'koo-REH-ra','ambular':'am-boo-LAR','parlora':'par-LO-ra','audira':'ow-DEE-ra','vidora':'vee-DO-ra','legora':'leh-GO-ra','scriptora':'skreep-TO-ra','ludora':'loo-DO-ra','natara':'nah-TAH-ra','volara':'vo-LAH-ra','pensara':'pen-SAH-ra','sorrira':'so-REE-ra','magiora':'mah-JO-ra','anima':'AH-nee-ma','pacera':'pah-SE-ra','libertara':'lee-ber-TAH-ra','eternora':'eh-ter-NO-ra','secretara':'seh-kreh-TAH-ra','bellora':'beh-LO-ra','universa':'oo-nee-VER-sa','angelora':'ahn-JEH-lo-ra','luxespera':'luks-es-PE-ra','somniversa':'som-nee-VER-sa','aventora':'ah-ven-TO-ra','lun anima':'loon AH-nee-ma','solcorda':'sol-KOR-da','estrelpura':'eh-strel-POO-ra','arcobella':'ar-ko-BEH-la','lumina':'LOO-mee-na','obscura':'ob-SKOO-ra','miracula':'mee-RAH-koo-la','enchantora':'en-chan-TO-ra','scholarina':'sko-lah-REE-na','magistera':'mah-JEES-te-ra','amicora':'ah-mee-KO-ra','aventurosa':'ah-ven-too-RO-sa','matinara':'mah-tee-NAH-ra','prandora':'prahn-DO-ra','cenarina':'seh-nah-REE-na','felina':'feh-LEE-na','canora':'kah-NO-ra','equina':'eh-KWEE-na','aviora':'ah-VEE-o-ra','estivara':'es-tee-VAH-ra','inverna':'een-VER-na','primavera':'pree-mah-VE-ra','autumnara':'aw-tum-NAH-ra','urbana':'ur-BAH-na','paisora':'pay-SO-ra','mundara':'moon-DAH-ra','viatora':'vee-ah-TO-ra','domina':'do-MEE-na'
+  // ===== Existing units 1-10 =====
+  'bonhallo':'bon-HAHL-lo','bonmora':'bon-MO-ra','bonnocta':'bon-NOCK-ta','adevara':'ah-day-VAH-ra','familora':'fah-MEE-lo-ra','madora':'mah-DO-ra','padora':'pah-DO-ra','sorina':'so-REE-na','fratero':'fra-TEH-ro','infanto':'een-FAHN-to','humano':'hoo-MAH-no','amivenn':'ah-mee-VEN','grandmora':'grahnd-MO-ra','grandpador':'grahnd-PAH-dor','femina':'FEH-mee-na','homaro':'ho-MAH-ro','puella':'poo-EH-la','garçono':'gar-SO-no','bebina':'beh-BEE-na','persona':'per-SO-na','amorliv':'ah-MOR-liv','joyara':'joy-AH-ra','dolora':'do-LO-ra','felicia':'feh-LEE-sha','amistara':'ah-mee-STAH-ra','saudora':'sow-DO-ra','somnara':'som-NAH-ra','espera':'es-PE-ra','timora':'tee-MO-ra','sorrisa':'so-REE-sa','besora':'beh-SO-ra','cordehjert':'kor-deh-YERT','iraora':'ee-rah-O-ra','calmina':'kal-MEE-na','joyeux':'joy-UH','tristora':'tree-STO-ra','corajosa':'ko-rah-HO-sa','fierté':'fee-er-TAY','solitara':'so-lee-TAH-ra','amorella':'ah-mo-REH-la','maré':'mah-RAY','aqua':'AH-kwa','fuego':'FWEH-go','terra':'TEH-ra','cielum':'SEE-lum','estrela':'eh-STREH-la','florina':'flo-REE-na','arbor':'AR-bor','silvara':'seel-VAH-ra','montara':'mon-TAH-ra','ventora':'ven-TOR-a','pluvia':'PLOO-vee-a','nivora':'nee-VO-ra','solaria':'so-LAH-ree-a','lunalux':'LOO-na-luks','plajara':'plah-HAH-ra','rivora':'ree-VO-ra','lakora':'lah-KO-ra','herbina':'her-BEE-na','nubela':'noo-BEH-la','domora':'do-MO-ra','camara':'kah-MAH-ra','lectora':'lek-TO-ra','sedora':'seh-DO-ra','tabora':'tah-BO-ra','portara':'por-TAH-ra','fenestra':'feh-NEH-strah','cozinara':'ko-zee-NAH-ra','alimenta':'ah-lee-MEN-ta','panora':'pah-NO-ra','lacté':'lak-TAY','pomara':'po-MAH-ra','cafora':'kah-FO-ra','libera':'LEE-beh-ra','musica':'MOO-zee-ka','telefoné':'teh-leh-fo-NAY','computara':'kom-poo-TAH-ra','clavora':'klah-VO-ra','vestara':'ves-TAH-ra','sapata':'sah-PAH-ta','rubina':'roo-BEE-na','azula':'ah-ZOO-la','verdora':'ver-DO-ra','amarela':'ah-mah-REH-la','nigrum':'NYE-grum','albina':'al-BEE-na','rosalia':'ro-SAH-lee-a','violara':'vee-oh-LAH-ra','aurum':'AW-rum','argenta':'ar-JEN-ta','oranja':'oh-RAHN-ya','brunora':'broo-NO-ra','grisia':'GREE-see-a','bellskøn':'bel-SKUN','grandora':'grahn-DO-ra','minora':'mee-NO-ra','rapida':'rah-PEE-da','lentora':'len-TO-ra','calora':'kah-LO-ra','frigora':'free-GO-ra','diara':'dee-AH-ra','noctara':'noc-TAH-ra','matina':'mah-TEE-na','vespara':'ves-PAH-ra','hodiera':'ho-DYEH-ra','amanora':'ah-mah-NO-ra','heriora':'heh-REE-or-a','tempora':'TEM-po-ra','nuncé':'noon-SAY','sempre':'SEM-preh','nuncquam':'NOON-kwam','semanara':'seh-mah-NAH-ra','mensora':'men-SO-ra','annora':'ah-NO-ra','horina':'ho-REE-na','minuta':'mee-NOO-ta','seconda':'seh-KON-da','antera':'ahn-TE-ra','postara':'pos-TAH-ra','proxima':'PROK-see-ma','mio':'MEE-o','tua':'TOO-ah','elo':'EH-lo','ela':'EH-la','nos':'nos','elar':'EH-lar','mina':'MEE-na','aqui':'ah-KEE','alora':'ah-LO-ra','oui':'wee','non':'non','merci tak':'MER-see tahk','por favor':'por fah-VOR','ubara':'oo-BAH-ra','quisara':'kee-SAH-ra','quora':'KWO-ra','porqué':'por-KAY','porque':'por-KEH','talvez':'tahl-VEZ','amora':'ah-MO-ra','risora':'ree-SO-ra','lacrima':'lah-KREE-ma','mangera':'mahn-JEH-ra','bibera':'bee-BEH-ra','dormira':'dor-MEE-ra','dansara':'dahn-SAH-ra','cantora':'kahn-TO-ra','currera':'koo-REH-ra','ambular':'am-boo-LAR','parlora':'par-LO-ra','audira':'ow-DEE-ra','vidora':'vee-DO-ra','legora':'leh-GO-ra','scriptora':'skreep-TO-ra','ludora':'loo-DO-ra','natara':'nah-TAH-ra','volara':'vo-LAH-ra','pensara':'pen-SAH-ra','sorrira':'so-REE-ra','magiora':'mah-JO-ra','anima':'AH-nee-ma','pacera':'pah-SE-ra','libertara':'lee-ber-TAH-ra','eternora':'eh-ter-NO-ra','secretara':'seh-kreh-TAH-ra','bellora':'beh-LO-ra','universa':'oo-nee-VER-sa','angelora':'ahn-JEH-lo-ra','luxespera':'luks-es-PE-ra','somniversa':'som-nee-VER-sa','aventora':'ah-ven-TO-ra','lun anima':'loon AH-nee-ma','solcorda':'sol-KOR-da','estrelpura':'eh-strel-POO-ra','arcobella':'ar-ko-BEH-la','lumina':'LOO-mee-na','obscura':'ob-SKOO-ra','miracula':'mee-RAH-koo-la','enchantora':'en-chan-TO-ra','scholarina':'sko-lah-REE-na','magistera':'mah-JEES-te-ra','amicora':'ah-mee-KO-ra','aventurosa':'ah-ven-too-RO-sa','matinara':'mah-tee-NAH-ra','prandora':'prahn-DO-ra','cenarina':'seh-nah-REE-na','felina':'feh-LEE-na','canora':'kah-NO-ra','equina':'eh-KWEE-na','aviora':'ah-VEE-o-ra','estivara':'es-tee-VAH-ra','inverna':'een-VER-na','primavera':'pree-mah-VE-ra','autumnara':'aw-tum-NAH-ra','urbana':'ur-BAH-na','paisora':'pay-SO-ra','mundara':'moon-DAH-ra','viatora':'vee-ah-TO-ra','domina':'do-MEE-na',
+  // ===== New units 11-18 =====
+  'hallovai':'hah-LO-vai','bonadia':'bo-NAH-dee-ya','bonvespa':'bon-VES-pa','bonadia venora':'bo-NAH-dee-ya veh-NO-ra','meraki':'meh-RAH-kee','grandmeraki':'grahnd-meh-RAH-kee','benmeraki':'ben-meh-RAH-kee','perdona':'per-DO-na','perdoni':'per-DO-nee','nulproblema':'nool-pro-BLEH-ma','viresta':'vee-RES-ta','benvara':'ben-VAH-ra','quomara':'kwo-MAH-ra','quandra':'KWAHN-dra','qualora':'kwah-LO-ra','sucede':'soo-SEH-deh','coma vesta':'KO-ma VES-ta','bonora':'bo-NO-ra','malora':'mah-LO-ra','finora':'fee-NO-ra','clarivo':'klah-REE-vo','verita':'veh-REE-ta','okeya':'oh-KAY-ya','attenda':'ah-TEN-da','venira':'veh-NEE-ra','alevara':'ah-leh-VAH-ra','ajuvara':'ah-joo-VAH-ra','miva':'MEE-va','tuva':'TOO-va','nosa':'NO-sa','elara':'eh-LAH-ra','neivora':'nay-VO-ra','somnira':'som-NEE-ra','famelia':'fah-MEH-lee-ya','aquira':'ah-KEE-ra','risavena':'ree-sah-VEH-na','nuljoya':'nool-JOY-ya','nervora':'ner-VO-ra','confusa':'kon-FOO-sa','miravena':'mee-rah-VEH-na','malivara':'mah-lee-VAH-ra','fantora':'fahn-TO-ra','nulcare':'nool-KAH-reh','estara':'es-TAH-ra','habira':'hah-BEE-ra','facera':'fah-SEH-ra','dicera':'dee-SEH-ra','evigora':'eh-vee-GO-ra','sedira':'seh-DEE-ra','statora':'stah-TO-ra','sapira':'sah-PEE-ra','comprena':'kom-PREH-na','banelora':'bah-neh-LO-ra','sanitora':'sah-nee-TO-ra','bagora':'bah-GO-ra','moneta':'mo-NEH-ta','horica':'ho-REE-ka','banora':'bah-NO-ra','carnora':'kar-NO-ra','piscara':'pee-SKAH-ra','rizona':'ree-ZO-na','quesora':'keh-SO-ra','tevara':'teh-VAH-ra','jucera':'joo-SEH-ra','dulcora':'dool-KO-ra','salina':'sah-LEE-na','restora':'res-TO-ra','posterra':'pos-TEH-ra','primora':'pree-MO-ra','tardora':'tar-DO-ra','novara':'no-VAH-ra','vetora':'veh-TO-ra','importa':'eem-POR-ta'
 };
 
 const UI_TEXT = {
@@ -1719,7 +1747,7 @@ class NaturalTTS {
   }
   getBestVoice(lang) {
     if (this.selectedVoice) return this.selectedVoice;
-    const map = { en: ['en-US','en-GB','en-AU','en'], da: ['da-DK','da'], df: ['en-US','en-GB','en'] };
+    const map = { en: ['en-US','en-GB','en-AU','en'], da: ['da-DK','da'], df: ['es-ES','es-MX','it-IT','es','it','en-US','en-GB','en'] };
     const prefs = map[lang] || ['en'];
     for (const p of prefs) {
       const v = this.voices.find(x => x.lang.startsWith(p));
@@ -1729,7 +1757,7 @@ class NaturalTTS {
   }
   toPhonetic(text) {
     return text.toLowerCase().split(/\s+/).map(w => {
-      const clean = w.replace(/[.,!?]/g, '');
+      const clean = w.replace(/[.,!?¿¡]/g, '');
       if (PHONETIC_MAP[clean]) return PHONETIC_MAP[clean];
       return this.applyRules(clean);
     }).join(' ');
@@ -1743,7 +1771,7 @@ class NaturalTTS {
     if (!this.synth) return;
     this.stop();
     let speakText = text, speakLang = lang;
-    if (lang === 'df') { speakText = this.toPhonetic(text); speakLang = 'en'; }
+    if (lang === 'df') { speakText = this.toPhonetic(text); speakLang = 'df'; }
     const u = new SpeechSynthesisUtterance(speakText);
     u.rate = this.rate * (lang === 'df' ? 0.92 : 1);
     u.pitch = lang === 'df' ? 1.08 : 1;
@@ -1868,36 +1896,36 @@ let requestState = 'idle';
 let currentRequestName = null;
 let pollTimer = null;
 
-function setRequestState(newState, message) {
+function setRequestState(newState) {
   requestState = newState;
   const btn = $('requestBtn');
   const statusEl = $('authStatus');
   btn.dataset.state = newState;
-  btn.disabled = newState === 'requesting' || newState === 'requested' || newState === 'denied';
-  statusEl.style.color = '';
-  statusEl.innerHTML = '';
+  btn.disabled = newState === 'requesting' || newState === 'requested';
 
   switch (newState) {
     case 'idle':
       btn.innerHTML = '<span class="request-btn-text">Request Access</span>';
-      if (message) statusEl.textContent = message;
+      statusEl.innerHTML = '';
+      statusEl.style.color = '';
       break;
     case 'requesting':
       btn.innerHTML = '<span class="loading-spinner"></span><span class="request-btn-text">Requesting...</span>';
+      statusEl.innerHTML = '';
       break;
     case 'requested':
-      btn.innerHTML = '<span class="request-btn-text">✓ Requested Today</span>';
-      statusEl.innerHTML = '<span class="pulse-dot"></span> Waiting for approval... (resets 00:00 Paris)';
+      btn.innerHTML = '<span class="request-btn-text">✓ Requested</span>';
+      statusEl.innerHTML = '<span class="pulse-dot"></span> Waiting for approval...';
+      statusEl.style.color = '';
       break;
     case 'approved':
       btn.innerHTML = '<span class="request-btn-text">Enter App →</span>';
-      btn.disabled = false;
       statusEl.textContent = '✅ Access granted!';
       statusEl.style.color = 'var(--green-dark)';
       break;
     case 'denied':
-      btn.innerHTML = '<span class="request-btn-text">Denied</span>';
-      statusEl.textContent = message || '❌ Request was denied. Try again tomorrow.';
+      btn.innerHTML = '<span class="request-btn-text">Try Again</span>';
+      statusEl.textContent = '❌ Access was denied';
       statusEl.style.color = 'var(--red-dark)';
       break;
   }
@@ -1907,14 +1935,13 @@ function startPolling(name) {
   stopPolling();
   pollTimer = setInterval(async () => {
     try {
-      const req = await getRequestRecord(name);
-      if (!req) return;
-      if (req.status === 'approved') {
+      const status = await getRequestStatus(name);
+      if (status === 'approved') {
         stopPolling();
         setRequestState('approved');
         toast('Access granted! 🎉');
         await enterApp(name);
-      } else if (req.status === 'denied') {
+      } else if (status === 'denied') {
         stopPolling();
         setRequestState('denied');
       }
@@ -1926,35 +1953,9 @@ function stopPolling() {
   if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
 }
 
-async function refreshRequestUI(name) {
-  if (!name) { setRequestState('idle'); return; }
-  try {
-    const req = await getRequestRecord(name);
-    if (!req) { setRequestState('idle'); return; }
-
-    const today = parisDateStr();
-    const requestedToday = req.lastRequestDate === today;
-
-    if (req.status === 'approved') { setRequestState('approved'); return; }
-
-    if (req.status === 'denied') {
-      if (requestedToday) setRequestState('denied');
-      else setRequestState('idle', 'You can try again today.');
-      return;
-    }
-
-    if (requestedToday) {
-      setRequestState('requested');
-      startPolling(name);
-    } else {
-      setRequestState('idle', 'You can request again today!');
-    }
-  } catch (e) { setRequestState('idle'); }
-}
-
 async function handleRequestClick() {
   if (requestState === 'approved' && currentRequestName) { await enterApp(currentRequestName); return; }
-  if (requestState === 'requesting' || requestState === 'requested' || requestState === 'denied') return;
+  if (requestState === 'requesting' || requestState === 'requested') return;
 
   const name = $('authName').value.trim();
   if (!name) { $('authError').textContent = 'Please enter your name'; return; }
@@ -1968,19 +1969,8 @@ async function handleRequestClick() {
   setRequestState('requesting');
 
   try {
-    const existing = await getRequestRecord(name);
-    const today = parisDateStr();
-
-    if (existing?.status === 'approved') {
-      setRequestState('approved');
-      await enterApp(name);
-      return;
-    }
-    if (existing?.lastRequestDate === today) {
-      if (existing.status === 'denied') setRequestState('denied');
-      else { setRequestState('requested'); startPolling(name); }
-      return;
-    }
+    const existing = await getRequestStatus(name);
+    if (existing === 'approved') { setRequestState('approved'); await enterApp(name); return; }
 
     await setRequestStatus(name, 'pending');
     setRequestState('requested');
@@ -2022,40 +2012,24 @@ $('authName').addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !$('requestBtn').disabled) { e.preventDefault(); handleRequestClick(); }
 });
 
-// ============ SECRET ADMIN GESTURE ============
-$('authSub').addEventListener('click', async () => {
-  const sub = $('authSub');
-  sub.classList.remove('tap');
-  void sub.offsetWidth;
-  sub.classList.add('tap');
-  try {
-    const authorized = await isDeviceAdmin();
-    if (authorized) {
-      toast('🔓 Admin access');
-      setTimeout(() => { window.location.href = ADMIN_URL; }, 400);
-    }
-  } catch (e) { /* silent */ }
-});
-
 // ============ BOOT ============
 $('authMascot').innerHTML = mascotSVG(110);
-getOrCreateDeviceId();
 
 async function boot() {
   const session = getSession();
   if (session) {
     try {
-      const req = await getRequestRecord(session);
-      if (req?.status === 'approved') { await enterApp(session); return; }
-      if (req?.status === 'pending' || req?.status === 'denied') {
-        currentRequestName = session;
-        $('authName').value = session;
-        await refreshRequestUI(session);
-        showScreen('auth');
-        return;
+      const status = await getRequestStatus(session);
+      if (status === 'approved') { await enterApp(session); return; }
+      if (status === null) {
+        const data = await cloudGet();
+        if (data[session]?.data) { await enterApp(session); return; }
       }
       clearSession();
-    } catch (e) {}
+    } catch (e) {
+      await enterApp(session);
+      return;
+    }
   }
 
   showScreen('auth');
@@ -2063,7 +2037,12 @@ async function boot() {
   if (lastName) {
     $('authName').value = lastName;
     currentRequestName = lastName;
-    await refreshRequestUI(lastName);
+    try {
+      const status = await getRequestStatus(lastName);
+      if (status === 'approved') setRequestState('approved');
+      else if (status === 'pending') { setRequestState('requested'); startPolling(lastName); }
+      else if (status === 'denied') setRequestState('denied');
+    } catch (e) { /* offline */ }
   }
   setTimeout(() => $('authName')?.focus(), 350);
 }
