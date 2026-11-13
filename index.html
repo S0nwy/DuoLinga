@@ -23,9 +23,6 @@
     --bg: #FFFFFF;
     --bg-soft: #F7F7F7;
     --text: #3C3C3C;
-    --text-light: #AFAFAF;
-    --radius: 16px;
-    --shadow: 0 4px 0;
     --ease: cubic-bezier(0.25, 0.8, 0.25, 1);
   }
 
@@ -40,10 +37,7 @@
     user-select: none;
   }
 
-  body {
-    display: flex;
-    justify-content: center;
-  }
+  body { display: flex; justify-content: center; }
 
   .app {
     width: 100%;
@@ -76,90 +70,85 @@
   .screen::-webkit-scrollbar { width: 0; }
 
   /* ============ MASCOT ============ */
-  .mascot-container {
-    position: relative;
+  .mascot-wrap {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 
   .mascot {
-    width: 120px;
-    height: 120px;
+    width: 110px;
+    height: 110px;
     position: relative;
-    animation: mascotIdle 3s ease-in-out infinite;
+    animation: mascotIdle 3.5s ease-in-out infinite;
   }
 
   @keyframes mascotIdle {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    25% { transform: translateY(-5px) rotate(-2deg); }
-    75% { transform: translateY(-5px) rotate(2deg); }
+    0%, 100% { transform: translateY(0) rotate(-1deg); }
+    50% { transform: translateY(-6px) rotate(1deg); }
   }
 
-  .mascot.happy {
-    animation: mascotHappy 0.6s var(--ease);
-  }
-
+  .mascot.happy { animation: mascotHappy 0.7s var(--ease); }
   @keyframes mascotHappy {
     0% { transform: scale(1) rotate(0); }
-    25% { transform: scale(1.2) rotate(-10deg); }
-    50% { transform: scale(1.1) rotate(10deg); }
-    75% { transform: scale(1.15) rotate(-5deg); }
+    20% { transform: scale(1.15) rotate(-10deg) translateY(-8px); }
+    40% { transform: scale(1.1) rotate(10deg) translateY(-4px); }
+    60% { transform: scale(1.12) rotate(-5deg); }
     100% { transform: scale(1) rotate(0); }
   }
 
-  .mascot.sad {
-    animation: mascotSad 0.6s var(--ease);
-  }
-
+  .mascot.sad { animation: mascotSad 0.7s var(--ease); }
   @keyframes mascotSad {
     0%, 100% { transform: translateY(0); }
-    25% { transform: translateY(-10px) rotate(-5deg); }
-    50% { transform: translateY(0) rotate(5deg); }
-    75% { transform: translateY(-5px) rotate(-3deg); }
+    25% { transform: translateY(-6px) rotate(-4deg); }
+    50% { transform: translateY(0) rotate(4deg); }
+    75% { transform: translateY(-3px) rotate(-2deg); }
   }
 
-  .speech-bubble {
+  .mascot.talking { animation: mascotTalk 0.4s ease infinite; }
+  @keyframes mascotTalk {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+
+  .bubble {
     background: white;
     border: 3px solid var(--gray);
-    border-radius: 20px;
-    padding: 12px 16px;
-    margin-top: 10px;
+    border-radius: 18px;
+    padding: 10px 14px;
+    margin-top: 8px;
     position: relative;
-    max-width: 280px;
+    max-width: 260px;
     text-align: center;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text);
-    box-shadow: 0 4px 0 var(--gray-dark);
-    animation: bubblePop 0.3s var(--ease);
+    box-shadow: 0 3px 0 var(--gray-dark);
+    animation: bubblePop 0.35s var(--ease);
+    line-height: 1.3;
   }
 
-  .speech-bubble::before {
+  .bubble::before {
     content: '';
     position: absolute;
-    top: -12px;
+    top: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 12px solid var(--gray);
-  }
-
-  .speech-bubble::after {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-bottom: 10px solid white;
+    border-bottom: 10px solid var(--gray);
+  }
+
+  .bubble::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 8px solid white;
   }
 
   @keyframes bubblePop {
@@ -176,18 +165,19 @@
   }
 
   .ob-mascot {
-    font-size: 100px;
+    width: 130px;
+    height: 130px;
     margin-bottom: 20px;
-    animation: bounce 2s infinite;
+    animation: bounce 2.2s ease-in-out infinite;
   }
 
   @keyframes bounce {
-    0%, 100% { transform: translateY(0) rotate(-5deg); }
-    50% { transform: translateY(-15px) rotate(5deg); }
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-14px) rotate(3deg); }
   }
 
   .ob-title {
-    font-size: 36px;
+    font-size: 38px;
     font-weight: 900;
     color: var(--green);
     letter-spacing: -1px;
@@ -238,10 +228,7 @@
     gap: 14px;
   }
 
-  .lang-opt:active {
-    transform: translateY(2px);
-    border-bottom-width: 2px;
-  }
+  .lang-opt:active { transform: translateY(2px); border-bottom-width: 2px; }
 
   .lang-opt.selected {
     border-color: var(--blue);
@@ -267,42 +254,23 @@
     min-width: 160px;
   }
 
-  .btn:active {
-    transform: translateY(4px);
-  }
+  .btn:active { transform: translateY(4px); }
 
-  .btn-green {
-    background: var(--green);
-    box-shadow: var(--shadow) var(--green-dark);
-  }
+  .btn-green { background: var(--green); box-shadow: 0 4px 0 var(--green-dark); }
   .btn-green:active { box-shadow: 0 0 0 var(--green-dark); }
-
-  .btn-blue {
-    background: var(--blue);
-    box-shadow: var(--shadow) var(--blue-dark);
-  }
+  .btn-blue { background: var(--blue); box-shadow: 0 4px 0 var(--blue-dark); }
   .btn-blue:active { box-shadow: 0 0 0 var(--blue-dark); }
-
   .btn-white {
     background: white;
     color: var(--blue);
     border: 2px solid var(--gray);
     border-bottom: 4px solid var(--gray-dark);
-    box-shadow: none;
   }
   .btn-white:active { border-bottom-width: 2px; }
+  .btn-red { background: var(--red); box-shadow: 0 4px 0 var(--red-dark); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  .btn-red {
-    background: var(--red);
-    box-shadow: var(--shadow) var(--red-dark);
-  }
-
-  .btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  /* ============ HOME SCREEN ============ */
+  /* ============ HOME ============ */
   .top-bar {
     position: sticky;
     top: 0;
@@ -326,15 +294,10 @@
     font-size: 20px;
     cursor: pointer;
     border: 2px solid var(--gray);
-    transition: transform 0.2s;
   }
   .flag-btn:active { transform: scale(0.92); }
 
-  .stats-row {
-    display: flex;
-    gap: 14px;
-    align-items: center;
-  }
+  .stats-row { display: flex; gap: 14px; align-items: center; }
 
   .stat-chip {
     display: flex;
@@ -343,7 +306,6 @@
     font-weight: 800;
     font-size: 16px;
     cursor: pointer;
-    transition: transform 0.15s;
   }
   .stat-chip:active { transform: scale(0.95); }
 
@@ -352,19 +314,14 @@
   .gem-chip { color: var(--blue); }
   .heart-chip { color: var(--red); }
 
-  .stat-chip.bump {
-    animation: bump 0.4s var(--ease);
-  }
-
+  .stat-chip.bump { animation: bump 0.4s var(--ease); }
   @keyframes bump {
     0% { transform: scale(1); }
     50% { transform: scale(1.3); }
     100% { transform: scale(1); }
   }
 
-  .units-wrap {
-    padding: 20px 0 100px;
-  }
+  .units-wrap { padding: 20px 0 100px; }
 
   .unit {
     margin: 0 20px 24px;
@@ -382,17 +339,8 @@
     margin-bottom: 20px;
   }
 
-  .unit-info h3 {
-    font-size: 20px;
-    font-weight: 900;
-    margin-bottom: 2px;
-  }
-
-  .unit-info p {
-    font-size: 13px;
-    opacity: 0.9;
-    font-weight: 600;
-  }
+  .unit-info h3 { font-size: 20px; font-weight: 900; margin-bottom: 2px; }
+  .unit-info p { font-size: 13px; opacity: 0.9; font-weight: 600; }
 
   .unit-badge {
     width: 50px;
@@ -403,7 +351,6 @@
     align-items: center;
     justify-content: center;
     font-size: 26px;
-    backdrop-filter: blur(10px);
   }
 
   .unit-1 { background: linear-gradient(135deg, #58CC02, #46A302); }
@@ -422,7 +369,6 @@
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    position: relative;
   }
 
   .lesson-node {
@@ -470,9 +416,7 @@
     border: 3px solid white;
   }
 
-  .lesson-node.current {
-    animation: pulse 2s infinite;
-  }
+  .lesson-node.current { animation: pulse 2s infinite; }
 
   @keyframes pulse {
     0%, 100% { transform: scale(1); box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 0 0 0 rgba(255,255,255,0.6); }
@@ -484,11 +428,11 @@
     top: 80px;
     background: white;
     color: var(--text);
-    padding: 12px 16px;
+    padding: 10px 14px;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     font-weight: 800;
-    font-size: 14px;
+    font-size: 13px;
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
@@ -496,22 +440,7 @@
     z-index: 10;
   }
 
-  .lesson-tooltip::before {
-    content: '';
-    position: absolute;
-    top: -6px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 12px;
-    height: 12px;
-    background: white;
-    transform: translateX(-50%) rotate(45deg);
-  }
-
-  .lesson-node:hover .lesson-tooltip,
-  .lesson-node.current .lesson-tooltip {
-    opacity: 1;
-  }
+  .lesson-node.current .lesson-tooltip { opacity: 1; }
 
   .lesson-node:nth-child(5n+1) { margin-left: 0; }
   .lesson-node:nth-child(5n+2) { margin-left: 60px; }
@@ -519,11 +448,7 @@
   .lesson-node:nth-child(5n+4) { margin-left: 60px; }
   .lesson-node:nth-child(5n+5) { margin-left: 0; }
 
-  /* ============ LESSON SCREEN ============ */
-  #lesson {
-    background: white;
-  }
-
+  /* ============ LESSON ============ */
   .lesson-top {
     padding: 16px 20px;
     display: flex;
@@ -551,7 +476,6 @@
     background: var(--gray);
     border-radius: 10px;
     overflow: hidden;
-    position: relative;
   }
 
   .progress-fill {
@@ -601,11 +525,11 @@
   }
 
   .q-prompt {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 900;
     color: var(--text);
-    margin-bottom: 24px;
-    line-height: 1.2;
+    margin-bottom: 16px;
+    line-height: 1.25;
   }
 
   .speaker-btn {
@@ -618,24 +542,55 @@
     font-size: 14px;
     font-weight: 700;
     color: var(--blue);
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     cursor: pointer;
     border: 2px solid var(--gray);
     transition: all 0.15s;
+    width: fit-content;
   }
 
-  .speaker-btn:active {
-    transform: scale(0.95);
-    background: #E7F7FF;
-  }
-
-  .speaker-btn.playing {
-    animation: speakerPulse 0.6s ease;
-  }
+  .speaker-btn:active { transform: scale(0.95); background: #E7F7FF; }
+  .speaker-btn.playing { animation: speakerPulse 0.6s ease; }
 
   @keyframes speakerPulse {
     0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    50% { transform: scale(1.08); }
+  }
+
+  .hint-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--yellow);
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 14px;
+    cursor: pointer;
+    border: 2px solid var(--yellow-dark);
+    box-shadow: 0 3px 0 var(--yellow-dark);
+    width: fit-content;
+  }
+
+  .hint-btn:active { transform: translateY(3px); box-shadow: none; }
+
+  .hint-text {
+    background: #FFF8DC;
+    color: var(--yellow-dark);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    border: 2px solid var(--yellow);
+    animation: slideDown 0.3s var(--ease);
+  }
+
+  @keyframes slideDown {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
   }
 
   .choices {
@@ -646,28 +601,23 @@
   }
 
   .choice {
-    padding: 18px 14px;
+    padding: 16px 12px;
     border: 2px solid var(--gray);
     border-bottom: 4px solid var(--gray-dark);
     border-radius: 14px;
     background: white;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.15s var(--ease);
     text-align: center;
+    min-height: 80px;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 8px;
-    min-height: 90px;
     justify-content: center;
   }
 
-  .choice:active {
-    transform: translateY(2px);
-    border-bottom-width: 2px;
-  }
+  .choice:active { transform: translateY(2px); border-bottom-width: 2px; }
 
   .choice.selected {
     border-color: var(--blue);
@@ -714,28 +664,24 @@
     font-size: 18px;
     font-weight: 700;
     outline: none;
-    transition: all 0.2s;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
 
-  .type-input:focus {
-    border-color: var(--blue);
-    border-bottom-color: var(--blue-dark);
-  }
+  .type-input:focus { border-color: var(--blue); border-bottom-color: var(--blue-dark); }
 
   .word-bank {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 20px;
-    min-height: 60px;
+    margin-bottom: 16px;
+    min-height: 50px;
     padding: 12px;
     background: var(--bg-soft);
     border-radius: 14px;
   }
 
   .word-chip {
-    padding: 10px 16px;
+    padding: 10px 14px;
     background: white;
     border: 2px solid var(--gray);
     border-bottom: 4px solid var(--gray-dark);
@@ -743,27 +689,19 @@
     font-weight: 700;
     font-size: 15px;
     cursor: pointer;
-    transition: all 0.15s;
   }
 
-  .word-chip:active {
-    transform: translateY(2px);
-    border-bottom-width: 2px;
-  }
-
-  .word-chip.used {
-    opacity: 0.3;
-    pointer-events: none;
-  }
+  .word-chip:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .word-chip.used { opacity: 0.3; pointer-events: none; }
 
   .answer-zone {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    min-height: 60px;
+    min-height: 50px;
     padding: 12px;
     border-bottom: 2px dashed var(--gray);
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 
   .lesson-footer {
@@ -774,9 +712,9 @@
 
   .feedback {
     display: none;
-    padding: 16px;
+    padding: 14px;
     border-radius: 14px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     animation: slideUp 0.3s var(--ease);
   }
 
@@ -786,19 +724,11 @@
   }
 
   .feedback.show { display: block; }
-
-  .feedback.correct {
-    background: var(--green-light);
-    color: var(--green-dark);
-  }
-
-  .feedback.wrong {
-    background: #FFE5E5;
-    color: var(--red-dark);
-  }
+  .feedback.correct { background: var(--green-light); color: var(--green-dark); }
+  .feedback.wrong { background: #FFE5E5; color: var(--red-dark); }
 
   .feedback-title {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 900;
     margin-bottom: 4px;
     display: flex;
@@ -806,10 +736,7 @@
     gap: 8px;
   }
 
-  .feedback-body {
-    font-size: 15px;
-    font-weight: 700;
-  }
+  .feedback-body { font-size: 14px; font-weight: 700; }
 
   .footer-btn {
     width: 100%;
@@ -823,34 +750,54 @@
     letter-spacing: 1px;
     cursor: pointer;
     color: white;
-    transition: all 0.1s;
   }
 
-  .footer-btn:active {
-    transform: translateY(4px);
+  .footer-btn:active { transform: translateY(4px); }
+
+  .footer-btn.check { background: var(--green); box-shadow: 0 4px 0 var(--green-dark); }
+  .footer-btn.check:disabled { background: var(--gray); box-shadow: 0 4px 0 var(--gray-dark); cursor: not-allowed; }
+  .footer-btn.continue-correct { background: var(--green); box-shadow: 0 4px 0 var(--green-dark); }
+  .footer-btn.continue-wrong { background: var(--red); box-shadow: 0 4px 0 var(--red-dark); }
+
+  /* ============ INTRO SCREEN ============ */
+  .intro-word-card {
+    background: white;
+    border: 3px solid var(--gray);
+    border-bottom: 5px solid var(--gray-dark);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 14px;
+    text-align: center;
+    animation: cardPop 0.4s var(--ease);
   }
 
-  .footer-btn.check {
-    background: var(--green);
-    box-shadow: 0 4px 0 var(--green-dark);
-  }
-  .footer-btn.check:disabled {
-    background: var(--gray);
-    box-shadow: 0 4px 0 var(--gray-dark);
-    cursor: not-allowed;
+  @keyframes cardPop {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
   }
 
-  .footer-btn.continue-correct {
-    background: var(--green);
-    box-shadow: 0 4px 0 var(--green-dark);
+  .intro-df {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--green-dark);
+    margin-bottom: 4px;
   }
 
-  .footer-btn.continue-wrong {
-    background: var(--red);
-    box-shadow: 0 4px 0 var(--red-dark);
+  .intro-src {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gray-text);
   }
 
-  /* ============ COMPLETE SCREEN ============ */
+  .intro-phonetic {
+    font-size: 13px;
+    color: var(--blue);
+    font-weight: 700;
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* ============ COMPLETE ============ */
   #complete {
     background: linear-gradient(180deg, #FFF9E0 0%, #FFFFFF 50%);
     justify-content: center;
@@ -871,22 +818,12 @@
     100% { transform: scale(1) rotate(0); opacity: 1; }
   }
 
-  .complete-title {
-    font-size: 32px;
-    font-weight: 900;
-    color: var(--yellow-dark);
-    margin-bottom: 8px;
-  }
-
-  .complete-sub {
-    font-size: 16px;
-    color: var(--gray-text);
-    margin-bottom: 30px;
-  }
+  .complete-title { font-size: 32px; font-weight: 900; color: var(--yellow-dark); margin-bottom: 8px; }
+  .complete-sub { font-size: 16px; color: var(--gray-text); margin-bottom: 30px; }
 
   .reward-row {
     display: flex;
-    gap: 20px;
+    gap: 16px;
     justify-content: center;
     margin-bottom: 40px;
     flex-wrap: wrap;
@@ -894,10 +831,10 @@
 
   .reward {
     background: white;
-    padding: 16px 20px;
+    padding: 14px 18px;
     border-radius: 16px;
     box-shadow: 0 4px 0 var(--gray-dark);
-    min-width: 100px;
+    min-width: 90px;
     animation: rewardPop 0.6s var(--ease);
     animation-fill-mode: both;
   }
@@ -911,11 +848,11 @@
     100% { transform: scale(1); opacity: 1; }
   }
 
-  .reward-icon { font-size: 30px; margin-bottom: 4px; }
-  .reward-val { font-size: 22px; font-weight: 900; color: var(--text); }
-  .reward-label { font-size: 11px; font-weight: 800; color: var(--gray-text); text-transform: uppercase; }
+  .reward-icon { font-size: 28px; margin-bottom: 4px; }
+  .reward-val { font-size: 20px; font-weight: 900; color: var(--text); }
+  .reward-label { font-size: 10px; font-weight: 800; color: var(--gray-text); text-transform: uppercase; }
 
-  /* ============ SETTINGS MODAL ============ */
+  /* ============ MODALS ============ */
   .modal-bg {
     position: fixed;
     inset: 0;
@@ -929,10 +866,7 @@
     transition: opacity 0.3s;
   }
 
-  .modal-bg.show {
-    opacity: 1;
-    pointer-events: all;
-  }
+  .modal-bg.show { opacity: 1; pointer-events: all; }
 
   .modal-sheet {
     background: white;
@@ -946,9 +880,7 @@
     overflow-y: auto;
   }
 
-  .modal-bg.show .modal-sheet {
-    transform: translateY(0);
-  }
+  .modal-bg.show .modal-sheet { transform: translateY(0); }
 
   .modal-handle {
     width: 40px;
@@ -958,24 +890,17 @@
     margin: 0 auto 20px;
   }
 
-  .modal-title {
-    font-size: 22px;
-    font-weight: 900;
-    margin-bottom: 20px;
-  }
+  .modal-title { font-size: 22px; font-weight: 900; margin-bottom: 20px; }
 
   .setting-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 0;
+    padding: 14px 0;
     border-bottom: 1px solid var(--gray);
   }
 
-  .setting-label {
-    font-weight: 700;
-    font-size: 15px;
-  }
+  .setting-label { font-weight: 700; font-size: 15px; }
 
   .setting-value {
     font-weight: 800;
@@ -999,6 +924,36 @@
     text-transform: uppercase;
     margin-top: 20px;
     cursor: pointer;
+  }
+
+  .voice-item {
+    padding: 12px;
+    border: 2px solid var(--gray);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.15s;
+  }
+
+  .voice-item:active { transform: scale(0.98); }
+
+  .voice-item.selected {
+    border-color: var(--blue);
+    background: #E7F7FF;
+    color: var(--blue);
+  }
+
+  .voice-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: var(--green);
+    color: white;
+    font-weight: 800;
   }
 
   .confetti {
@@ -1030,26 +985,9 @@
     font-size: 14px;
   }
 
-  .toast.show {
-    transform: translateX(-50%) translateY(0);
-  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
 
-  .gameover-icon {
-    font-size: 80px;
-    margin-bottom: 16px;
-  }
-
-  .voice-select {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid var(--gray);
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 600;
-    background: white;
-    cursor: pointer;
-  }
+  .gameover-icon { font-size: 80px; margin-bottom: 16px; }
 </style>
 </head>
 <body>
@@ -1057,7 +995,27 @@
 <div class="app">
 
   <div class="screen active" id="onboarding">
-    <div class="ob-mascot">🦉</div>
+    <div class="ob-mascot">
+      <svg viewBox="0 0 120 120" width="130" height="130">
+        <ellipse cx="60" cy="70" rx="42" ry="45" fill="#58CC02"/>
+        <ellipse cx="60" cy="72" rx="36" ry="38" fill="#7ED321"/>
+        <ellipse cx="60" cy="85" rx="22" ry="18" fill="#D7FFB8"/>
+        <circle cx="44" cy="58" r="14" fill="white"/>
+        <circle cx="76" cy="58" r="14" fill="white"/>
+        <circle cx="46" cy="60" r="7" fill="#333"/>
+        <circle cx="78" cy="60" r="7" fill="#333"/>
+        <circle cx="48" cy="58" r="2.5" fill="white"/>
+        <circle cx="80" cy="58" r="2.5" fill="white"/>
+        <path d="M 52 74 L 60 80 L 68 74 Z" fill="#FFC800"/>
+        <path d="M 52 84 Q 60 90 68 84" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="22" cy="60" rx="10" ry="18" fill="#58CC02" transform="rotate(-15 22 60)"/>
+        <ellipse cx="98" cy="60" rx="10" ry="18" fill="#58CC02" transform="rotate(15 98 60)"/>
+        <circle cx="34" cy="78" r="6" fill="#FF9600" opacity="0.5"/>
+        <circle cx="86" cy="78" r="6" fill="#FF9600" opacity="0.5"/>
+        <path d="M 50 30 Q 55 20 60 28" stroke="#58CC02" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M 70 30 Q 65 20 60 28" stroke="#58CC02" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
     <div class="ob-title">Danfrolat</div>
     <div class="ob-sub" id="ob-sub">Learn the magical Danfrolat language!</div>
     <div class="ob-label" id="ob-label">I speak...</div>
@@ -1159,12 +1117,12 @@
         <div class="setting-value" id="langDisplay">English</div>
       </div>
       <div class="setting-row">
-        <div class="setting-label">Learning</div>
-        <div class="setting-value" style="cursor:default;">Danfrolat</div>
+        <div class="setting-label">Voice</div>
+        <div class="setting-value" id="voiceDisplay">Select</div>
       </div>
       <div class="setting-row">
-        <div class="setting-label">Voice</div>
-        <div class="setting-value" id="voiceDisplay" style="cursor:pointer;">Select Voice</div>
+        <div class="setting-label">Speed</div>
+        <div class="setting-value" id="speedDisplay">Normal</div>
       </div>
       <div class="setting-row">
         <div class="setting-label">Total XP</div>
@@ -1179,8 +1137,8 @@
     <div class="modal-sheet">
       <div class="modal-handle"></div>
       <div class="modal-title">Select Voice</div>
-      <div id="voiceList" style="margin-bottom: 20px;"></div>
-      <button class="btn btn-white" style="width:100%;" id="closeVoiceModal">Close</button>
+      <div id="voiceList"></div>
+      <button class="btn btn-white" style="width:100%; margin-top:10px;" id="closeVoiceModal">Close</button>
     </div>
   </div>
 
@@ -1199,6 +1157,11 @@ const VOCAB = {
     {da:"Bedstemor", en:"Grandmother", df:"Grandmora"}, {da:"Bedstefar", en:"Grandfather", df:"Grandpador"},
     {da:"Kvinde", en:"Woman", df:"Femina"}, {da:"Mand", en:"Man", df:"Homaro"}, {da:"Pige", en:"Girl", df:"Puella"},
     {da:"Dreng", en:"Boy", df:"Garçono"}, {da:"Baby", en:"Baby", df:"Bebina"}, {da:"Person", en:"Person", df:"Persona"}
+  ], sentences: [
+    {da:"Hej, hvordan har du det?", en:"Hello, how are you?", df:"Bonhallo, kom va tu?"},
+    {da:"Godmorgen, min ven", en:"Good morning, my friend", df:"Bonmora, mina amivenn"},
+    {da:"Farvel, vi ses", en:"Goodbye, see you", df:"Adevara, nos vidora"},
+    {da:"Min familie er stor", en:"My family is big", df:"Mina familora es grandora"}
   ]},
   2: { title: { en: "Feelings & Love", da: "Følelser og kærlighed" }, icon: "💖", color: 2, words: [
     {da:"Kærlighed", en:"Love", df:"Amorliv"}, {da:"Glæde", en:"Joy", df:"Joyara"}, {da:"Sorg", en:"Sorrow", df:"Dolora"},
@@ -1208,6 +1171,11 @@ const VOCAB = {
     {da:"Vrede", en:"Anger", df:"Iraora"}, {da:"Rolig", en:"Calm", df:"Calmina"}, {da:"Glad", en:"Happy", df:"Joyeux"},
     {da:"Ked af det", en:"Sad", df:"Tristora"}, {da:"Modig", en:"Brave", df:"Corajosa"}, {da:"Stolt", en:"Proud", df:"Fierté"},
     {da:"Ensom", en:"Lonely", df:"Solitara"}, {da:"Forelsket", en:"In love", df:"Amorella"}
+  ], sentences: [
+    {da:"Jeg elsker dig", en:"I love you", df:"Mio amora tua"},
+    {da:"Du gør mig glad", en:"You make me happy", df:"Tua fa mio joyeux"},
+    {da:"Mit hjerte er fuldt", en:"My heart is full", df:"Mina cordehjert es plena"},
+    {da:"Vi er venner", en:"We are friends", df:"Nos es amivenn"}
   ]},
   3: { title: { en: "Nature & World", da: "Natur og verden" }, icon: "🌿", color: 3, words: [
     {da:"Hav", en:"Sea", df:"Maré"}, {da:"Vand", en:"Water", df:"Aqua"}, {da:"Ild", en:"Fire", df:"Fuego"},
@@ -1217,6 +1185,11 @@ const VOCAB = {
     {da:"Sne", en:"Snow", df:"Nivora"}, {da:"Solskin", en:"Sunshine", df:"Solaria"}, {da:"Måneskin", en:"Moonlight", df:"Lunalux"},
     {da:"Strand", en:"Beach", df:"Plajara"}, {da:"Flod", en:"River", df:"Rivora"}, {da:"Sø", en:"Lake", df:"Lakora"},
     {da:"Græs", en:"Grass", df:"Herbina"}, {da:"Sky", en:"Cloud", df:"Nubela"}
+  ], sentences: [
+    {da:"Havet er blåt", en:"The sea is blue", df:"La maré es azula"},
+    {da:"Solen skinner", en:"The sun shines", df:"La solaria brila"},
+    {da:"Blomsterne er smukke", en:"The flowers are beautiful", df:"La florinas es bellskøn"},
+    {da:"Jeg elsker naturen", en:"I love nature", df:"Mio amora la natura"}
   ]},
   4: { title: { en: "Home & Daily Life", da: "Hjem og hverdag" }, icon: "🏠", color: 4, words: [
     {da:"Hus", en:"House", df:"Domora"}, {da:"Værelse", en:"Room", df:"Camara"}, {da:"Seng", en:"Bed", df:"Lectora"},
@@ -1226,6 +1199,11 @@ const VOCAB = {
     {da:"Kaffe", en:"Coffee", df:"Cafora"}, {da:"Bog", en:"Book", df:"Libera"}, {da:"Musik", en:"Music", df:"Musica"},
     {da:"Telefon", en:"Phone", df:"Telefoné"}, {da:"Computer", en:"Computer", df:"Computara"}, {da:"Nøgle", en:"Key", df:"Clavora"},
     {da:"Tøj", en:"Clothes", df:"Vestara"}, {da:"Sko", en:"Shoes", df:"Sapata"}
+  ], sentences: [
+    {da:"Mit hus er stort", en:"My house is big", df:"Mina domora es grandora"},
+    {da:"Jeg spiser mad", en:"I eat food", df:"Mio mangera alimenta"},
+    {da:"Kaffen er varm", en:"The coffee is warm", df:"La cafora es calora"},
+    {da:"Jeg læser en bog", en:"I read a book", df:"Mio legora una libera"}
   ]},
   5: { title: { en: "Colors & Descriptions", da: "Farver og beskrivelser" }, icon: "🎨", color: 5, words: [
     {da:"Rød", en:"Red", df:"Rubina"}, {da:"Blå", en:"Blue", df:"Azula"}, {da:"Grøn", en:"Green", df:"Verdora"},
@@ -1235,6 +1213,11 @@ const VOCAB = {
     {da:"Grå", en:"Gray", df:"Grisia"}, {da:"Smuk", en:"Beautiful", df:"Bellskøn"}, {da:"Stor", en:"Big", df:"Grandora"},
     {da:"Lille", en:"Small", df:"Minora"}, {da:"Hurtig", en:"Fast", df:"Rapida"}, {da:"Langsom", en:"Slow", df:"Lentora"},
     {da:"Varm", en:"Warm", df:"Calora"}, {da:"Kold", en:"Cold", df:"Frigora"}
+  ], sentences: [
+    {da:"Himlen er blå", en:"The sky is blue", df:"La cielum es azula"},
+    {da:"Rosen er rød", en:"The rose is red", df:"La rosa es rubina"},
+    {da:"Sneen er hvid", en:"The snow is white", df:"La nivora es albina"},
+    {da:"Hun er smuk", en:"She is beautiful", df:"Ela es bellskøn"}
   ]},
   6: { title: { en: "Time & Numbers", da: "Tid og tal" }, icon: "⏰", color: 6, words: [
     {da:"Dag", en:"Day", df:"Diara"}, {da:"Nat", en:"Night", df:"Noctara"}, {da:"Morgen", en:"Morning", df:"Matina"},
@@ -1244,6 +1227,11 @@ const VOCAB = {
     {da:"Måned", en:"Month", df:"Mensora"}, {da:"År", en:"Year", df:"Annora"}, {da:"Time", en:"Hour", df:"Horina"},
     {da:"Minut", en:"Minute", df:"Minuta"}, {da:"Sekund", en:"Second", df:"Seconda"}, {da:"Før", en:"Before", df:"Antera"},
     {da:"Efter", en:"After", df:"Postara"}, {da:"Snart", en:"Soon", df:"Proxima"}
+  ], sentences: [
+    {da:"I dag er en god dag", en:"Today is a good day", df:"Hodiera es una bona diara"},
+    {da:"Vi ses i morgen", en:"See you tomorrow", df:"Nos vidora amanora"},
+    {da:"Hvad er klokken?", en:"What time is it?", df:"Quora es la hora?"},
+    {da:"Det er snart tid", en:"It is almost time", df:"Es proxima tempora"}
   ]},
   7: { title: { en: "Important Words", da: "Vigtige ord" }, icon: "🔑", color: 7, words: [
     {da:"Jeg", en:"I", df:"Mio"}, {da:"Du", en:"You", df:"Tua"}, {da:"Han", en:"He", df:"Elo"},
@@ -1253,6 +1241,11 @@ const VOCAB = {
     {da:"Tak", en:"Thank you", df:"Merci tak"}, {da:"Vær så venlig", en:"Please", df:"Por favor"}, {da:"Hvor", en:"Where", df:"Ubara"},
     {da:"Hvem", en:"Who", df:"Quisara"}, {da:"Hvad", en:"What", df:"Quora"}, {da:"Hvorfor", en:"Why", df:"Porqué"},
     {da:"Fordi", en:"Because", df:"Porque"}, {da:"Måske", en:"Maybe", df:"Talvez"}
+  ], sentences: [
+    {da:"Hvor er du?", en:"Where are you?", df:"Ubara es tua?"},
+    {da:"Hvad laver du?", en:"What are you doing?", df:"Quora fa tua?"},
+    {da:"Ja, jeg forstår", en:"Yes, I understand", df:"Oui, mio komprendra"},
+    {da:"Tak for hjælpen", en:"Thank you for the help", df:"Merci tak por la ajuda"}
   ]},
   8: { title: { en: "Actions", da: "Handlinger" }, icon: "🏃", color: 8, words: [
     {da:"Elske", en:"To love", df:"Amora"}, {da:"Le", en:"To laugh", df:"Risora"}, {da:"Græde", en:"To cry", df:"Lacrima"},
@@ -1262,6 +1255,11 @@ const VOCAB = {
     {da:"Se", en:"To see", df:"Vidora"}, {da:"Læse", en:"To read", df:"Legora"}, {da:"Skrive", en:"To write", df:"Scriptora"},
     {da:"Lege", en:"To play", df:"Ludora"}, {da:"Svømme", en:"To swim", df:"Natara"}, {da:"Flyve", en:"To fly", df:"Volara"},
     {da:"Tænke", en:"To think", df:"Pensara"}, {da:"Smile", en:"To smile", df:"Sorrira"}
+  ], sentences: [
+    {da:"Jeg elsker at danse", en:"I love to dance", df:"Mio amora dansara"},
+    {da:"Vi synger sammen", en:"We sing together", df:"Nos cantora junta"},
+    {da:"Han løber hurtigt", en:"He runs fast", df:"Elo currera rapida"},
+    {da:"Jeg tænker på dig", en:"I think about you", df:"Mio pensara de tua"}
   ]},
   9: { title: { en: "Magic Words", da: "Magiske ord" }, icon: "✨", color: 9, words: [
     {da:"Magi", en:"Magic", df:"Magiora"}, {da:"Sjæl", en:"Soul", df:"Anima"}, {da:"Fred", en:"Peace", df:"Pacera"},
@@ -1271,6 +1269,11 @@ const VOCAB = {
     {da:"Eventyr", en:"Adventure", df:"Aventora"}, {da:"Månesjæl", en:"Moonsoul", df:"Lun anima"}, {da:"Solhjerte", en:"Sunheart", df:"Solcorda"},
     {da:"Stjernestøv", en:"Stardust", df:"Estrelpura"}, {da:"Regnbue", en:"Rainbow", df:"Arcobella"}, {da:"Lys", en:"Light", df:"Lumina"},
     {da:"Mørke", en:"Darkness", df:"Obscura"}, {da:"Mirakel", en:"Miracle", df:"Miracula"}, {da:"Fortryllelse", en:"Enchantment", df:"Enchantora"}
+  ], sentences: [
+    {da:"Magien er overalt", en:"Magic is everywhere", df:"La magiora es ubique"},
+    {da:"Min sjæl er fri", en:"My soul is free", df:"Mina anima es libera"},
+    {da:"Lyset vinder", en:"The light wins", df:"La lumina vinka"},
+    {da:"Et mirakel sker", en:"A miracle happens", df:"Una miracula avena"}
   ]},
   10: { title: { en: "New Words", da: "Nye ord" }, icon: "🌟", color: 10, words: [
     {da:"Skole", en:"School", df:"Scholarina"}, {da:"Lærer", en:"Teacher", df:"Magistera"}, {da:"Venlig", en:"Kind", df:"Amicora"},
@@ -1280,7 +1283,217 @@ const VOCAB = {
     {da:"Vinter", en:"Winter", df:"Inverna"}, {da:"Forår", en:"Spring", df:"Primavera"}, {da:"Efterår", en:"Autumn", df:"Autumnara"},
     {da:"By", en:"City", df:"Urbana"}, {da:"Land", en:"Country", df:"Paisora"}, {da:"Verden", en:"World", df:"Mundara"},
     {da:"Rejse", en:"Travel", df:"Viatora"}, {da:"Hjem", en:"Home", df:"Domina"}
+  ], sentences: [
+    {da:"Jeg går i skole", en:"I go to school", df:"Mio ambula a scholarina"},
+    {da:"Min hund er venlig", en:"My dog is kind", df:"Mina canora es amicora"},
+    {da:"Sommeren er varm", en:"Summer is warm", df:"La estivara es calora"},
+    {da:"Jeg rejser verden rundt", en:"I travel the world", df:"Mio viatora la mundara"}
   ]}
+};
+
+// ============ PHONETIC PRONUNCIATION MAP ============
+// Converts Danfrolat words to phonetic approximations for natural TTS
+const PHONETIC_MAP = {
+  // Common patterns
+  'bonhallo': 'bon-HAHL-lo',
+  'bonmora': 'bon-MO-ra',
+  'bonnocta': 'bon-NOCK-ta',
+  'adevara': 'ah-day-VAH-ra',
+  'familora': 'fah-MEE-lo-ra',
+  'madora': 'mah-DO-ra',
+  'padora': 'pah-DO-ra',
+  'sorina': 'so-REE-na',
+  'fratero': 'fra-TEH-ro',
+  'infanto': 'een-FAHN-to',
+  'humano': 'hoo-MAH-no',
+  'amivenn': 'ah-mee-VEN',
+  'grandmora': 'grahnd-MO-ra',
+  'grandpador': 'grahnd-PAH-dor',
+  'femina': 'FEH-mee-na',
+  'homaro': 'ho-MAH-ro',
+  'puella': 'poo-EH-la',
+  'garçono': 'gar-SO-no',
+  'bebina': 'beh-BEE-na',
+  'persona': 'per-SO-na',
+  'amorliv': 'ah-MOR-liv',
+  'joyara': 'joy-AH-ra',
+  'dolora': 'do-LO-ra',
+  'felicia': 'feh-LEE-sha',
+  'amistara': 'ah-mee-STAH-ra',
+  'saudora': 'sow-DO-ra',
+  'somnara': 'som-NAH-ra',
+  'espera': 'es-PE-ra',
+  'timora': 'tee-MO-ra',
+  'sorrisa': 'so-REE-sa',
+  'besora': 'beh-SO-ra',
+  'cordehjert': 'kor-deh-YERT',
+  'iraora': 'ee-rah-O-ra',
+  'calmina': 'kal-MEE-na',
+  'joyeux': 'joy-UH',
+  'tristora': 'tree-STO-ra',
+  'corajosa': 'ko-rah-HO-sa',
+  'fierté': 'fee-er-TAY',
+  'solitara': 'so-lee-TAH-ra',
+  'amorella': 'ah-mo-REH-la',
+  'maré': 'mah-RAY',
+  'aqua': 'AH-kwa',
+  'fuego': 'FWEH-go',
+  'terra': 'TEH-ra',
+  'cielum': 'SEE-lum',
+  'estrela': 'eh-STREH-la',
+  'florina': 'flo-REE-na',
+  'arbor': 'AR-bor',
+  'silvara': 'seel-VAH-ra',
+  'montara': 'mon-TAH-ra',
+  'ventora': 'ven-TOR-a',
+  'pluvia': 'PLOO-vee-a',
+  'nivora': 'nee-VO-ra',
+  'solaria': 'so-LAH-ree-a',
+  'lunalux': 'LOO-na-luks',
+  'plajara': 'plah-HAH-ra',
+  'rivora': 'ree-VO-ra',
+  'lakora': 'lah-KO-ra',
+  'herbina': 'her-BEE-na',
+  'nubela': 'noo-BEH-la',
+  'domora': 'do-MO-ra',
+  'camara': 'kah-MAH-ra',
+  'lectora': 'lek-TO-ra',
+  'sedora': 'seh-DO-ra',
+  'tabora': 'tah-BO-ra',
+  'portara': 'por-TAH-ra',
+  'fenestra': 'feh-NEH-strah',
+  'cozinara': 'ko-zee-NAH-ra',
+  'alimenta': 'ah-lee-MEN-ta',
+  'panora': 'pah-NO-ra',
+  'lacté': 'lak-TAY',
+  'pomara': 'po-MAH-ra',
+  'cafora': 'kah-FO-ra',
+  'libera': 'LEE-beh-ra',
+  'musica': 'MOO-zee-ka',
+  'telefoné': 'teh-leh-fo-NAY',
+  'computara': 'kom-poo-TAH-ra',
+  'clavora': 'klah-VO-ra',
+  'vestara': 'ves-TAH-ra',
+  'sapata': 'sah-PAH-ta',
+  'rubina': 'roo-BEE-na',
+  'azula': 'ah-ZOO-la',
+  'verdora': 'ver-DO-ra',
+  'amarela': 'ah-mah-REH-la',
+  'nigrum': 'NYE-grum',
+  'albina': 'al-BEE-na',
+  'rosalia': 'ro-SAH-lee-a',
+  'violara': 'vee-oh-LAH-ra',
+  'aurum': 'AW-rum',
+  'argenta': 'ar-JEN-ta',
+  'oranja': 'oh-RAHN-ya',
+  'brunora': 'broo-NO-ra',
+  'grisia': 'GREE-see-a',
+  'bellskøn': 'bel-SKUN',
+  'grandora': 'grahn-DO-ra',
+  'minora': 'mee-NO-ra',
+  'rapida': 'rah-PEE-da',
+  'lentora': 'len-TO-ra',
+  'calora': 'kah-LO-ra',
+  'frigora': 'free-GO-ra',
+  'diara': 'dee-AH-ra',
+  'noctara': 'noc-TAH-ra',
+  'matina': 'mah-TEE-na',
+  'vespara': 'ves-PAH-ra',
+  'hodiera': 'ho-DYEH-ra',
+  'amanora': 'ah-mah-NO-ra',
+  'heriora': 'heh-REE-or-a',
+  'tempora': 'TEM-po-ra',
+  'nuncé': 'noon-SAY',
+  'sempre': 'SEM-preh',
+  'nuncquam': 'NOON-kwam',
+  'semanara': 'seh-mah-NAH-ra',
+  'mensora': 'men-SO-ra',
+  'annora': 'ah-NO-ra',
+  'horina': 'ho-REE-na',
+  'minuta': 'mee-NOO-ta',
+  'seconda': 'seh-KON-da',
+  'antera': 'ahn-TE-ra',
+  'postara': 'pos-TAH-ra',
+  'proxima': 'PROK-see-ma',
+  'mio': 'MEE-o',
+  'tua': 'TOO-ah',
+  'elo': 'EH-lo',
+  'ela': 'EH-la',
+  'nos': 'nos',
+  'elar': 'EH-lar',
+  'mina': 'MEE-na',
+  'aqui': 'ah-KEE',
+  'alora': 'ah-LO-ra',
+  'oui': 'wee',
+  'non': 'non',
+  'merci tak': 'MER-see tahk',
+  'por favor': 'por fah-VOR',
+  'ubara': 'oo-BAH-ra',
+  'quisara': 'kee-SAH-ra',
+  'quora': 'KWO-ra',
+  'porqué': 'por-KAY',
+  'porque': 'por-KEH',
+  'talvez': 'tahl-VEZ',
+  'amora': 'ah-MO-ra',
+  'risora': 'ree-SO-ra',
+  'lacrima': 'lah-KREE-ma',
+  'mangera': 'mahn-JEH-ra',
+  'bibera': 'bee-BEH-ra',
+  'dormira': 'dor-MEE-ra',
+  'dansara': 'dahn-SAH-ra',
+  'cantora': 'kahn-TO-ra',
+  'currera': 'koo-REH-ra',
+  'ambular': 'am-boo-LAR',
+  'parlora': 'par-LO-ra',
+  'audira': 'ow-DEE-ra',
+  'vidora': 'vee-DO-ra',
+  'legora': 'leh-GO-ra',
+  'scriptora': 'skreep-TO-ra',
+  'ludora': 'loo-DO-ra',
+  'natara': 'nah-TAH-ra',
+  'volara': 'vo-LAH-ra',
+  'pensara': 'pen-SAH-ra',
+  'sorrira': 'so-REE-ra',
+  'magiora': 'mah-JO-ra',
+  'anima': 'AH-nee-ma',
+  'pacera': 'pah-SE-ra',
+  'libertara': 'lee-ber-TAH-ra',
+  'eternora': 'eh-ter-NO-ra',
+  'secretara': 'seh-kreh-TAH-ra',
+  'bellora': 'beh-LO-ra',
+  'universa': 'oo-nee-VER-sa',
+  'angelora': 'ahn-JEH-lo-ra',
+  'luxespera': 'luks-es-PE-ra',
+  'somniversa': 'som-nee-VER-sa',
+  'aventora': 'ah-ven-TO-ra',
+  'lun anima': 'loon AH-nee-ma',
+  'solcorda': 'sol-KOR-da',
+  'estrelpura': 'eh-strel-POO-ra',
+  'arcobella': 'ar-ko-BEH-la',
+  'lumina': 'LOO-mee-na',
+  'obscura': 'ob-SKOO-ra',
+  'miracula': 'mee-RAH-koo-la',
+  'enchantora': 'en-chan-TO-ra',
+  'scholarina': 'sko-lah-REE-na',
+  'magistera': 'mah-JEES-te-ra',
+  'amicora': 'ah-mee-KO-ra',
+  'aventurosa': 'ah-ven-too-RO-sa',
+  'matinara': 'mah-tee-NAH-ra',
+  'prandora': 'prahn-DO-ra',
+  'cenarina': 'seh-nah-REE-na',
+  'felina': 'feh-LEE-na',
+  'canora': 'kah-NO-ra',
+  'equina': 'eh-KWEE-na',
+  'aviora': 'ah-VEE-o-ra',
+  'estivara': 'es-tee-VAH-ra',
+  'inverna': 'een-VER-na',
+  'primavera': 'pree-mah-VE-ra',
+  'autumnara': 'aw-tum-NAH-ra',
+  'urbana': 'ur-BAH-na',
+  'paisora': 'pay-SO-ra',
+  'mundara': 'moon-DAH-ra',
+  'viatora': 'vee-ah-TO-ra',
+  'domina': 'do-MEE-na'
 };
 
 const UI_TEXT = {
@@ -1290,11 +1503,10 @@ const UI_TEXT = {
     startBtn: "Start Learning",
     unit: "Unit",
     lesson: "Lesson",
-    startLesson: "Start Lesson",
     translateTo: "Translate to Danfrolat",
     writeIn: "Write in Danfrolat",
     whatMeans: "What does this mean?",
-    tapPairs: "Tap the pairs",
+    buildSentence: "Write this in Danfrolat",
     typeTrans: "Type this translation",
     check: "Check",
     continue: "Continue",
@@ -1305,7 +1517,7 @@ const UI_TEXT = {
     greatProgress: "You're making great progress!",
     continueBtn: "Continue",
     outOfHearts: "Out of Hearts!",
-    ranOut: "You ran out of hearts. Refill them to keep learning!",
+    ranOut: "You ran out of hearts.",
     refill: "Refill Hearts",
     goHome: "Go Home",
     settings: "Settings",
@@ -1314,19 +1526,21 @@ const UI_TEXT = {
     totalXP: "Total XP",
     reset: "Reset Progress",
     close: "Close",
-    english: "English",
-    danish: "Dansk",
-    listen: "Listen",
-    speak: "Speak",
-    streakMsg: "🔥 Streak updated!",
-    gemMsg: "💎 Gems earned!",
+    listen: "🔊 Listen",
+    hint: "💡 Hint",
     refillDone: "Hearts refilled!",
-    mascotWelcome: "Hi! I'm Frolo! Let's learn Danfrolat together!",
-    mascotGoodJob: "Great job! You're doing amazing!",
-    mascotKeepGoing: "Keep going! You can do it!",
-    mascotOops: "Oops! Don't worry, let's try again!",
-    mascotAlmost: "Almost there! You're so close!",
-    selectVoice: "Select Voice"
+    mascotWelcome: "Hi! I'm Frolo! Let's learn!",
+    mascotGoodJob: "Amazing! You're a star!",
+    mascotKeepGoing: "Keep going!",
+    mascotOops: "Oops! Try again!",
+    mascotIntro: "Let's learn these words first!",
+    selectVoice: "Select",
+    normal: "Normal",
+    slow: "Slow",
+    fast: "Fast",
+    speed: "Speed",
+    newWords: "New words!",
+    letsPractice: "Let's practice!"
   },
   da: {
     obSub: "Lær det magiske Danfrolat sprog!",
@@ -1334,11 +1548,10 @@ const UI_TEXT = {
     startBtn: "Start læring",
     unit: "Enhed",
     lesson: "Lektion",
-    startLesson: "Start lektion",
     translateTo: "Oversæt til Danfrolat",
     writeIn: "Skriv på Danfrolat",
     whatMeans: "Hvad betyder dette?",
-    tapPairs: "Tryk på parrene",
+    buildSentence: "Skriv dette på Danfrolat",
     typeTrans: "Skriv denne oversættelse",
     check: "Tjek",
     continue: "Fortsæt",
@@ -1349,129 +1562,170 @@ const UI_TEXT = {
     greatProgress: "Du gør det godt!",
     continueBtn: "Fortsæt",
     outOfHearts: "Ingen hjerter!",
-    ranOut: "Du løb tør for hjerter. Fyld dem op for at fortsætte!",
+    ranOut: "Du løb tør for hjerter.",
     refill: "Fyld hjerter",
     goHome: "Gå hjem",
     settings: "Indstillinger",
     myLang: "Mit sprog",
     learning: "Læring",
     totalXP: "Total XP",
-    reset: "Nulstil fremskridt",
+    reset: "Nulstil",
     close: "Luk",
-    english: "English",
-    danish: "Dansk",
-    listen: "Lyt",
-    speak: "Tal",
-    streakMsg: "🔥 Streak opdateret!",
-    gemMsg: "💎 Ædelstene tjent!",
-    refillDone: "Hjerter fyldt op!",
-    mascotWelcome: "Hej! Jeg er Frolo! Lad os lære Danfrolat sammen!",
-    mascotGoodJob: "Godt klaret! Du gør det fantastisk!",
-    mascotKeepGoing: "Bliv ved! Du kan klare det!",
-    mascotOops: "Ups! Bare rolig, lad os prøve igen!",
-    mascotAlmost: "Næsten der! Du er så tæt på!",
-    selectVoice: "Vælg stemme"
+    listen: "🔊 Lyt",
+    hint: "💡 Tip",
+    refillDone: "Hjerter fyldt!",
+    mascotWelcome: "Hej! Jeg er Frolo! Lad os lære!",
+    mascotGoodJob: "Fantastisk! Du er en stjerne!",
+    mascotKeepGoing: "Bliv ved!",
+    mascotOops: "Ups! Prøv igen!",
+    mascotIntro: "Lad os lære disse ord først!",
+    selectVoice: "Vælg",
+    normal: "Normal",
+    slow: "Langsom",
+    fast: "Hurtig",
+    speed: "Hastighed",
+    newWords: "Nye ord!",
+    letsPractice: "Lad os øve!"
   }
 };
 
-// ============ TTS ============
-class SmoothTTS {
+// ============ TTS ENGINE ============
+class NaturalTTS {
   constructor() {
     this.synth = window.speechSynthesis;
     this.voices = [];
-    this.currentUtterance = null;
     this.selectedVoice = null;
+    this.rate = 0.9;
     this.init();
   }
 
   init() {
     if (!this.synth) return;
-    
-    const loadVoices = () => {
+    const load = () => {
       this.voices = this.synth.getVoices();
-      // Prefer high-quality voices
-      this.voices.sort((a, b) => {
-        const aQuality = a.localService ? 1 : 0;
-        const bQuality = b.localService ? 1 : 0;
-        return bQuality - aQuality;
-      });
+      this.sortVoices();
     };
-
-    loadVoices();
+    load();
     if (this.synth.onvoiceschanged !== undefined) {
-      this.synth.onvoiceschanged = loadVoices;
+      this.synth.onvoiceschanged = load;
     }
   }
 
+  sortVoices() {
+    // Prioritize natural/premium voices
+    const premiumKeywords = ['natural', 'enhanced', 'premium', 'google', 'microsoft', 
+                            'samantha', 'daniel', 'karen', 'moira', 'tessa', 'fiona',
+                            'serena', 'oliver', 'ava', 'allison', 'nick', 'alex',
+                            'neural', 'wavenet', 'studio'];
+    this.voices.sort((a, b) => {
+      const aName = a.name.toLowerCase();
+      const bName = b.name.toLowerCase();
+      const aPremium = premiumKeywords.some(k => aName.includes(k)) ? 1 : 0;
+      const bPremium = premiumKeywords.some(k => bName.includes(k)) ? 1 : 0;
+      if (aPremium !== bPremium) return bPremium - aPremium;
+      return a.name.localeCompare(b.name);
+    });
+  }
+
   getBestVoice(lang) {
+    if (this.selectedVoice) return this.selectedVoice;
     const langMap = {
       'en': ['en-US', 'en-GB', 'en-AU', 'en'],
       'da': ['da-DK', 'da'],
       'df': ['en-US', 'en-GB', 'en']
     };
-
-    const preferredLangs = langMap[lang] || ['en'];
-    
-    for (const prefLang of preferredLangs) {
-      const voice = this.voices.find(v => v.lang.startsWith(prefLang));
+    const prefs = langMap[lang] || ['en'];
+    for (const pref of prefs) {
+      const voice = this.voices.find(v => v.lang.startsWith(pref));
       if (voice) return voice;
     }
-    
     return this.voices[0] || null;
   }
 
-  speak(text, lang = 'en', rate = 0.9) {
+  // Convert Danfrolat to phonetic English for natural pronunciation
+  toPhonetic(text) {
+    const words = text.toLowerCase().split(/\s+/);
+    return words.map(w => {
+      // Remove punctuation for lookup
+      const clean = w.replace(/[.,!?]/g, '');
+      if (PHONETIC_MAP[clean]) {
+        return PHONETIC_MAP[clean];
+      }
+      // Fallback: apply basic rules
+      return this.applyRules(clean);
+    }).join(' ');
+  }
+
+  applyRules(word) {
+    // Basic phonetic rules for Danfrolat
+    let result = word;
+    result = result.replace(/ora$/g, 'O-ra');
+    result = result.replace(/ina$/g, 'EE-na');
+    result = result.replace(/ara$/g, 'AH-ra');
+    result = result.replace(/era$/g, 'EH-ra');
+    result = result.replace(/ura$/g, 'OO-ra');
+    return result;
+  }
+
+  speak(text, lang = 'en', onEnd = null) {
     if (!this.synth) return;
-    
     this.stop();
-    
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = rate;
-    utterance.pitch = 1;
-    utterance.volume = 1;
-    
-    // Use selected voice or find best one
-    const voice = this.selectedVoice || this.getBestVoice(lang);
-    if (voice) {
-      utterance.voice = voice;
-    }
-    
-    // For Danfrolat, use slower rate and slight pitch variation for clarity
+
+    let speakText = text;
+    let speakLang = lang;
+
+    // For Danfrolat, convert to phonetic and use English voice
     if (lang === 'df') {
-      utterance.rate = 0.7;
-      utterance.pitch = 1.05;
+      speakText = this.toPhonetic(text);
+      speakLang = 'en';
     }
-    
-    this.currentUtterance = utterance;
-    this.synth.speak(utterance);
-    
-    return utterance;
+
+    const utter = new SpeechSynthesisUtterance(speakText);
+    utter.rate = this.rate * (lang === 'df' ? 0.95 : 1);
+    utter.pitch = lang === 'df' ? 1.05 : 1;
+    utter.volume = 1;
+
+    const voice = this.getBestVoice(speakLang);
+    if (voice) utter.voice = voice;
+
+    if (onEnd) utter.onend = onEnd;
+
+    this.synth.speak(utter);
+    return utter;
+  }
+
+  speakSequence(items, lang, onDone) {
+    if (!items || items.length === 0) {
+      if (onDone) onDone();
+      return;
+    }
+    let idx = 0;
+    const next = () => {
+      if (idx >= items.length) {
+        if (onDone) onDone();
+        return;
+      }
+      this.speak(items[idx], lang, () => {
+        idx++;
+        setTimeout(next, 200);
+      });
+    };
+    next();
   }
 
   stop() {
-    if (this.synth && this.synth.speaking) {
-      this.synth.cancel();
-    }
-    this.currentUtterance = null;
+    if (this.synth && this.synth.speaking) this.synth.cancel();
   }
 
-  isSpeaking() {
-    return this.synth && this.synth.speaking;
-  }
-
-  setVoice(voice) {
-    this.selectedVoice = voice;
-  }
-
-  getAllVoices() {
-    return this.voices;
-  }
+  setVoice(voice) { this.selectedVoice = voice; }
+  setRate(rate) { this.rate = rate; }
+  getAllVoices() { return this.voices; }
 }
 
-const tts = new SmoothTTS();
+const tts = new NaturalTTS();
 
 // ============ STATE ============
-const STATE_KEY = 'danfrolat_state_v2';
+const STATE_KEY = 'danfrolat_state_v3';
 let state = {
   lang: null,
   xp: 0,
@@ -1481,18 +1735,14 @@ let state = {
   lastActive: null,
   progress: {},
   selectedVoiceName: null,
+  speed: 'normal'
 };
 
-function saveState() {
-  localStorage.setItem(STATE_KEY, JSON.stringify(state));
-}
+function saveState() { localStorage.setItem(STATE_KEY, JSON.stringify(state)); }
 
 function loadState() {
   const saved = localStorage.getItem(STATE_KEY);
-  if (saved) {
-    state = { ...state, ...JSON.parse(saved) };
-    return true;
-  }
+  if (saved) { state = { ...state, ...JSON.parse(saved) }; return true; }
   return false;
 }
 
@@ -1501,11 +1751,8 @@ function updateStreak() {
   if (state.lastActive === today) return;
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
-  if (state.lastActive === yesterday.toDateString()) {
-    state.streak += 1;
-  } else if (state.lastActive !== today) {
-    state.streak = 1;
-  }
+  if (state.lastActive === yesterday.toDateString()) state.streak += 1;
+  else if (state.lastActive !== today) state.streak = 1;
   state.lastActive = today;
   saveState();
 }
@@ -1515,9 +1762,7 @@ const $ = id => document.getElementById(id);
 const t = key => UI_TEXT[state.lang][key];
 
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => {
-    s.classList.remove('active');
-  });
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   $(id).classList.add('active');
 }
 
@@ -1528,10 +1773,10 @@ function bumpStat(el) {
 }
 
 function toast(msg) {
-  const toastEl = $('toast');
-  toastEl.textContent = msg;
-  toastEl.classList.add('show');
-  setTimeout(() => toastEl.classList.remove('show'), 2000);
+  const el = $('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
 }
 
 function confetti() {
@@ -1543,7 +1788,6 @@ function confetti() {
     c.style.background = colors[Math.floor(Math.random() * colors.length)];
     c.style.animationDelay = Math.random() * 0.5 + 's';
     c.style.animationDuration = (2 + Math.random() * 2) + 's';
-    c.style.transform = `rotate(${Math.random() * 360}deg)`;
     if (Math.random() > 0.5) c.style.borderRadius = '50%';
     document.body.appendChild(c);
     setTimeout(() => c.remove(), 4000);
@@ -1559,31 +1803,50 @@ function shuffle(arr) {
   return a;
 }
 
-function getSourceWord(w) {
-  return state.lang === 'da' ? w.da : w.en;
-}
+function getSourceWord(w) { return state.lang === 'da' ? w.da : w.en; }
 
 function canAccessUnit(unitId) {
   if (unitId === 1) return true;
-  const prevUnitId = unitId - 1;
-  const prevProgress = state.progress[prevUnitId] || {};
-  const prevLessons = getLessonsForUnit(prevUnitId);
-  const allCompleted = prevLessons.every((_, idx) => prevProgress[idx]?.completed);
-  return allCompleted;
+  const prev = state.progress[unitId - 1] || {};
+  const lessons = getLessonsForUnit(unitId - 1);
+  return lessons.every((_, i) => prev[i]?.completed);
 }
 
-function canSkipToUnit(targetUnitId) {
-  // Must complete all previous units perfectly
-  for (let u = 1; u < targetUnitId; u++) {
-    const progress = state.progress[u] || {};
-    const lessons = getLessonsForUnit(u);
-    const allPerfect = lessons.every((_, idx) => {
-      const lessonProgress = progress[idx];
-      return lessonProgress?.completed && lessonProgress?.best === lessons[idx].length;
-    });
-    if (!allPerfect) return false;
+function getLessonsForUnit(unitId) {
+  const unit = VOCAB[unitId];
+  const lessons = [];
+  // Each lesson: 5 words + 2 sentences
+  const words = unit.words;
+  const sentences = unit.sentences;
+  for (let i = 0; i < words.length; i += 5) {
+    const lessonWords = words.slice(i, i + 5);
+    const lessonSentences = sentences.slice(Math.floor(i / 5) * 2, Math.floor(i / 5) * 2 + 2);
+    lessons.push({ words: lessonWords, sentences: lessonSentences });
   }
-  return true;
+  return lessons;
+}
+
+// ============ MASCOT SVG ============
+function mascotSVG() {
+  return `<svg viewBox="0 0 120 120" width="110" height="110">
+    <ellipse cx="60" cy="70" rx="42" ry="45" fill="#58CC02"/>
+    <ellipse cx="60" cy="72" rx="36" ry="38" fill="#7ED321"/>
+    <ellipse cx="60" cy="85" rx="22" ry="18" fill="#D7FFB8"/>
+    <circle cx="44" cy="58" r="14" fill="white"/>
+    <circle cx="76" cy="58" r="14" fill="white"/>
+    <circle cx="46" cy="60" r="7" fill="#333"/>
+    <circle cx="78" cy="60" r="7" fill="#333"/>
+    <circle cx="48" cy="58" r="2.5" fill="white"/>
+    <circle cx="80" cy="58" r="2.5" fill="white"/>
+    <path d="M 52 74 L 60 80 L 68 74 Z" fill="#FFC800"/>
+    <path d="M 52 84 Q 60 90 68 84" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="22" cy="60" rx="10" ry="18" fill="#58CC02" transform="rotate(-15 22 60)"/>
+    <ellipse cx="98" cy="60" rx="10" ry="18" fill="#58CC02" transform="rotate(15 98 60)"/>
+    <circle cx="34" cy="78" r="6" fill="#FF9600" opacity="0.5"/>
+    <circle cx="86" cy="78" r="6" fill="#FF9600" opacity="0.5"/>
+    <path d="M 50 30 Q 55 20 60 28" stroke="#58CC02" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M 70 30 Q 65 20 60 28" stroke="#58CC02" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </svg>`;
 }
 
 // ============ ONBOARDING ============
@@ -1638,7 +1901,7 @@ function renderHome() {
 
     const lessonsWrap = unitEl.querySelector('.lessons');
 
-    lessons.forEach((lessonWords, idx) => {
+    lessons.forEach((_, idx) => {
       const isCompleted = progress[idx]?.completed;
       const prevCompleted = idx === 0 || progress[idx - 1]?.completed;
       const isCurrent = !isCompleted && prevCompleted && accessible;
@@ -1666,124 +1929,115 @@ function renderHome() {
   });
 }
 
-function getLessonsForUnit(unitId) {
-  const words = VOCAB[unitId].words;
-  const lessons = [];
-  for (let i = 0; i < words.length; i += 5) {
-    lessons.push(words.slice(i, i + 5));
-  }
-  return lessons;
-}
-
 // ============ LESSON ============
 let currentLesson = null;
-let currentQ = 0;
-let questions = [];
+let currentStep = 0;
+let steps = [];
 let correctCount = 0;
 let selectedAnswer = null;
 let feedbackShown = false;
+let hintShown = false;
 
 function startLesson(unitId, lessonIdx) {
-  if (state.hearts <= 0) {
-    showScreen('gameover');
-    return;
-  }
+  if (state.hearts <= 0) { showScreen('gameover'); return; }
 
-  const words = getLessonsForUnit(unitId)[lessonIdx];
-  currentLesson = { unitId, lessonIdx, words };
-  questions = generateQuestions(words);
-  currentQ = 0;
+  const lesson = getLessonsForUnit(unitId)[lessonIdx];
+  currentLesson = { unitId, lessonIdx, ...lesson };
+  steps = buildSteps(lesson);
+  currentStep = 0;
   correctCount = 0;
   selectedAnswer = null;
   feedbackShown = false;
+  hintShown = false;
 
   $('lessonHearts').textContent = state.hearts;
   showScreen('lesson');
-  renderQuestion();
+  renderStep();
 }
 
-function generateQuestions(words) {
-  const qs = [];
+function buildSteps(lesson) {
   const allWords = VOCAB[currentLesson.unitId].words;
+  const stepsList = [];
 
-  const w1 = words[0];
-  qs.push({
-    type: 'mcq',
-    prompt: getSourceWord(w1),
-    promptLabel: t('translateTo'),
-    correct: w1.df,
-    choices: shuffle([w1.df, ...getDistractors(w1, allWords, 3, 'df')]),
-    speakText: w1.df,
-    speakLang: 'df'
+  // Step 1: Intro - show all words with TTS
+  stepsList.push({ type: 'intro', words: lesson.words });
+
+  // Step 2-4: Word practice (MCQ, type, match)
+  lesson.words.forEach((w, i) => {
+    // MCQ: translate source -> Danfrolat
+    stepsList.push({
+      type: 'mcq',
+      prompt: getSourceWord(w),
+      promptLabel: t('translateTo'),
+      correct: w.df,
+      choices: shuffle([w.df, ...getDistractors(w, allWords, 3, 'df')]),
+      speakText: w.df,
+      speakLang: 'df',
+      hint: `${getSourceWord(w)} = ${w.df}`
+    });
+
+    // Type the Danfrolat
+    if (i % 2 === 0) {
+      stepsList.push({
+        type: 'type',
+        prompt: getSourceWord(w),
+        promptLabel: t('writeIn'),
+        correct: w.df,
+        speakText: w.df,
+        speakLang: 'df',
+        hint: w.df
+      });
+    }
+
+    // Reverse: what does Danfrolat mean?
+    if (i % 2 === 1) {
+      stepsList.push({
+        type: 'mcq',
+        prompt: w.df,
+        promptLabel: t('whatMeans'),
+        correct: getSourceWord(w),
+        choices: shuffle([getSourceWord(w), ...getDistractors(w, allWords, 3, state.lang)]),
+        speakText: w.df,
+        speakLang: 'df',
+        hint: `${w.df} = ${getSourceWord(w)}`
+      });
+    }
   });
 
-  const w2 = words[1];
-  qs.push({
-    type: 'type',
-    prompt: getSourceWord(w2),
-    promptLabel: t('writeIn'),
-    correct: w2.df,
-    speakText: w2.df,
-    speakLang: 'df'
+  // Sentence practice
+  lesson.sentences.forEach(s => {
+    stepsList.push({
+      type: 'bank',
+      prompt: getSourceWord(s),
+      promptLabel: t('buildSentence'),
+      correct: s.df,
+      words: shuffle(s.df.split(' ').concat(getSentenceDistractors(s.df, allWords))),
+      speakText: s.df,
+      speakLang: 'df',
+      hint: s.df
+    });
   });
 
-  const w3 = words[2];
-  qs.push({
-    type: 'mcq',
-    prompt: w3.df,
-    promptLabel: t('whatMeans'),
-    correct: getSourceWord(w3),
-    choices: shuffle([getSourceWord(w3), ...getDistractors(w3, allWords, 3, state.lang)]),
-    speakText: w3.df,
-    speakLang: 'df'
-  });
-
-  const w4 = words[3];
-  qs.push({
-    type: 'bank',
-    prompt: getSourceWord(w4),
-    promptLabel: t('translateTo'),
-    correct: w4.df,
-    words: shuffle(w4.df.split(' ').concat(getBankDistractors(w4.df, allWords))),
-    speakText: w4.df,
-    speakLang: 'df'
-  });
-
-  const w5 = words[4];
-  qs.push({
-    type: 'mcq',
-    prompt: getSourceWord(w5),
-    promptLabel: t('translateTo'),
-    correct: w5.df,
-    choices: shuffle([w5.df, ...getDistractors(w5, allWords, 3, 'df')]),
-    speakText: w5.df,
-    speakLang: 'df'
-  });
-
-  return qs;
+  return stepsList;
 }
 
 function getDistractors(word, pool, count, langKey) {
   const others = pool.filter(w => w.df !== word.df);
   const shuffled = shuffle(others);
-  if (langKey === 'df') {
-    return shuffled.slice(0, count).map(w => w.df);
-  } else {
-    return shuffled.slice(0, count).map(w => langKey === 'da' ? w.da : w.en);
-  }
+  if (langKey === 'df') return shuffled.slice(0, count).map(w => w.df);
+  return shuffled.slice(0, count).map(w => langKey === 'da' ? w.da : w.en);
 }
 
-function getBankDistractors(correctWord, pool) {
-  const extras = [];
+function getSentenceDistractors(correctSentence, pool) {
+  const correctWords = correctSentence.split(' ');
   const allWords = pool.flatMap(w => w.df.split(' '));
-  const unique = [...new Set(allWords)].filter(w => w !== correctWord);
-  const shuffled = shuffle(unique);
-  return shuffled.slice(0, 2);
+  const unique = [...new Set(allWords)].filter(w => !correctWords.includes(w));
+  return shuffle(unique).slice(0, 2);
 }
 
-function renderQuestion() {
-  const q = questions[currentQ];
-  const progress = ((currentQ) / questions.length) * 100;
+function renderStep() {
+  const step = steps[currentStep];
+  const progress = (currentStep / steps.length) * 100;
   $('progressFill').style.width = progress + '%';
 
   $('feedback').classList.remove('show', 'correct', 'wrong');
@@ -1792,64 +2046,90 @@ function renderQuestion() {
   $('footerBtn').disabled = true;
   selectedAnswer = null;
   feedbackShown = false;
+  hintShown = false;
 
   const body = $('lessonBody');
   body.innerHTML = '';
+  body.scrollTop = 0;
 
   // Mascot
-  const mascotContainer = document.createElement('div');
-  mascotContainer.className = 'mascot-container';
-  mascotContainer.innerHTML = `
-    <div class="mascot" id="lessonMascot">
-      <svg width="120" height="120" viewBox="0 0 120 120">
-        <ellipse cx="60" cy="75" rx="35" ry="40" fill="#58CC02"/>
-        <ellipse cx="60" cy="75" rx="30" ry="35" fill="#7ED321"/>
-        <circle cx="45" cy="60" r="12" fill="white"/>
-        <circle cx="75" cy="60" r="12" fill="white"/>
-        <circle cx="47" cy="62" r="6" fill="#333"/>
-        <circle cx="77" cy="62" r="6" fill="#333"/>
-        <circle cx="49" cy="60" r="2" fill="white"/>
-        <circle cx="79" cy="60" r="2" fill="white"/>
-        <ellipse cx="60" cy="75" rx="8" ry="6" fill="#FFC800"/>
-        <path d="M 52 85 Q 60 90 68 85" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <ellipse cx="35" cy="50" rx="8" ry="12" fill="#58CC02"/>
-        <ellipse cx="85" cy="50" rx="8" ry="12" fill="#58CC02"/>
-      </svg>
-    </div>
-    <div class="speech-bubble" id="speechBubble">${currentQ === 0 ? t('mascotWelcome') : t('mascotKeepGoing')}</div>
+  const mascotWrap = document.createElement('div');
+  mascotWrap.className = 'mascot-wrap';
+  mascotWrap.innerHTML = `
+    <div class="mascot" id="lessonMascot">${mascotSVG()}</div>
+    <div class="bubble" id="speechBubble">${getMascotMessage(step)}</div>
   `;
-  body.appendChild(mascotContainer);
+  body.appendChild(mascotWrap);
 
-  const typeLabel = document.createElement('div');
-  typeLabel.className = 'q-type';
-  typeLabel.textContent = q.promptLabel;
-  body.appendChild(typeLabel);
-
-  const prompt = document.createElement('div');
-  prompt.className = 'q-prompt';
-  prompt.textContent = q.prompt;
-  body.appendChild(prompt);
-
-  if (q.speakText) {
-    const speaker = document.createElement('div');
-    speaker.className = 'speaker-btn';
-    speaker.innerHTML = `<span>🔊</span> ${t('listen')}`;
-    speaker.addEventListener('click', () => {
-      speaker.classList.add('playing');
-      tts.speak(q.speakText, q.speakLang);
-      setTimeout(() => speaker.classList.remove('playing'), 600);
-    });
-    body.appendChild(speaker);
-    
-    setTimeout(() => {
-      tts.speak(q.speakText, q.speakLang);
-    }, 300);
+  if (step.type === 'intro') {
+    renderIntro(step, body);
+    return;
   }
 
-  if (q.type === 'mcq') {
+  // Question type label
+  const typeLabel = document.createElement('div');
+  typeLabel.className = 'q-type';
+  typeLabel.textContent = step.promptLabel;
+  body.appendChild(typeLabel);
+
+  // Prompt
+  const prompt = document.createElement('div');
+  prompt.className = 'q-prompt';
+  prompt.textContent = step.prompt;
+  body.appendChild(prompt);
+
+  // Speaker
+  if (step.speakText) {
+    const speaker = document.createElement('div');
+    speaker.className = 'speaker-btn';
+    speaker.innerHTML = t('listen');
+    speaker.addEventListener('click', () => {
+      speaker.classList.add('playing');
+      const mascot = $('lessonMascot');
+      if (mascot) mascot.classList.add('talking');
+      tts.speak(step.speakText, step.speakLang, () => {
+        speaker.classList.remove('playing');
+        if (mascot) mascot.classList.remove('talking');
+      });
+      setTimeout(() => {
+        speaker.classList.remove('playing');
+        if (mascot) mascot.classList.remove('talking');
+      }, 2000);
+    });
+    body.appendChild(speaker);
+
+    // Auto-play
+    setTimeout(() => {
+      const mascot = $('lessonMascot');
+      if (mascot) mascot.classList.add('talking');
+      tts.speak(step.speakText, step.speakLang, () => {
+        if (mascot) mascot.classList.remove('talking');
+      });
+    }, 400);
+  }
+
+  // Hint button
+  if (step.hint) {
+    const hintBtn = document.createElement('div');
+    hintBtn.className = 'hint-btn';
+    hintBtn.innerHTML = t('hint');
+    hintBtn.addEventListener('click', () => {
+      if (hintShown) return;
+      hintShown = true;
+      const hintText = document.createElement('div');
+      hintText.className = 'hint-text';
+      hintText.textContent = step.hint;
+      hintBtn.after(hintText);
+      hintBtn.style.opacity = '0.5';
+    });
+    body.appendChild(hintBtn);
+  }
+
+  // Render based on type
+  if (step.type === 'mcq') {
     const choices = document.createElement('div');
     choices.className = 'choices';
-    q.choices.forEach(c => {
+    step.choices.forEach(c => {
       const btn = document.createElement('div');
       btn.className = 'choice';
       btn.textContent = c;
@@ -1863,7 +2143,7 @@ function renderQuestion() {
       choices.appendChild(btn);
     });
     body.appendChild(choices);
-  } else if (q.type === 'type') {
+  } else if (step.type === 'type') {
     const input = document.createElement('input');
     input.type = 'text';
     input.className = 'type-input';
@@ -1876,13 +2156,11 @@ function renderQuestion() {
       $('footerBtn').disabled = selectedAnswer.length === 0;
     });
     input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !$('footerBtn').disabled) {
-        $('footerBtn').click();
-      }
+      if (e.key === 'Enter' && !$('footerBtn').disabled) $('footerBtn').click();
     });
     body.appendChild(input);
     setTimeout(() => input.focus(), 100);
-  } else if (q.type === 'bank') {
+  } else if (step.type === 'bank') {
     const zone = document.createElement('div');
     zone.className = 'answer-zone';
     zone.id = 'answerZone';
@@ -1890,15 +2168,13 @@ function renderQuestion() {
 
     const bank = document.createElement('div');
     bank.className = 'word-bank';
-    bank.id = 'wordBank';
-    q.words.forEach((w, i) => {
+    step.words.forEach((w, i) => {
       const chip = document.createElement('div');
       chip.className = 'word-chip';
       chip.textContent = w;
       chip.dataset.idx = i;
       chip.addEventListener('click', () => {
-        if (feedbackShown) return;
-        if (chip.classList.contains('used')) return;
+        if (feedbackShown || chip.classList.contains('used')) return;
         chip.classList.add('used');
         const inZone = document.createElement('div');
         inZone.className = 'word-chip';
@@ -1919,8 +2195,67 @@ function renderQuestion() {
   }
 }
 
+function renderIntro(step, body) {
+  const title = document.createElement('div');
+  title.className = 'q-type';
+  title.textContent = t('newWords');
+  body.appendChild(title);
+
+  const prompt = document.createElement('div');
+  prompt.className = 'q-prompt';
+  prompt.textContent = t('mascotIntro');
+  body.appendChild(prompt);
+
+  step.words.forEach((w, i) => {
+    const card = document.createElement('div');
+    card.className = 'intro-word-card';
+    card.style.animationDelay = (i * 0.1) + 's';
+    const phonetic = tts.toPhonetic(w.df);
+    card.innerHTML = `
+      <div class="intro-df">${w.df}</div>
+      <div class="intro-phonetic">${phonetic}</div>
+      <div class="intro-src">${getSourceWord(w)}</div>
+    `;
+    card.addEventListener('click', () => {
+      const mascot = $('lessonMascot');
+      if (mascot) mascot.classList.add('talking');
+      tts.speak(w.df, 'df', () => {
+        if (mascot) mascot.classList.remove('talking');
+      });
+    });
+    body.appendChild(card);
+  });
+
+  // Auto-play sequence
+  setTimeout(() => {
+    const words = step.words.map(w => w.df);
+    const mascot = $('lessonMascot');
+    if (mascot) mascot.classList.add('talking');
+    tts.speakSequence(words, 'df', () => {
+      if (mascot) mascot.classList.remove('talking');
+    });
+  }, 500);
+
+  // Enable continue
+  $('footerBtn').disabled = false;
+  $('footerBtn').textContent = t('continue');
+  $('footerBtn').onclick = () => {
+    tts.stop();
+    $('footerBtn').onclick = null;
+    currentStep++;
+    renderStep();
+  };
+}
+
+function getMascotMessage(step) {
+  if (step.type === 'intro') return t('mascotIntro');
+  if (currentStep === 1) return t('letsPractice');
+  return t('mascotKeepGoing');
+}
+
 function updateBankAnswer() {
   const zone = $('answerZone');
+  if (!zone) return;
   const chips = zone.querySelectorAll('.word-chip');
   const answer = Array.from(chips).map(c => c.textContent).join(' ');
   selectedAnswer = answer;
@@ -1929,18 +2264,16 @@ function updateBankAnswer() {
 
 $('footerBtn').addEventListener('click', () => {
   if (feedbackShown) {
-    currentQ++;
-    if (currentQ >= questions.length) {
-      finishLesson();
-    } else {
-      renderQuestion();
-    }
+    currentStep++;
+    if (currentStep >= steps.length) finishLesson();
+    else renderStep();
     return;
   }
 
-  const q = questions[currentQ];
-  const isCorrect = checkAnswer(q, selectedAnswer);
+  const step = steps[currentStep];
+  if (step.type === 'intro') return;
 
+  const isCorrect = checkAnswer(step, selectedAnswer);
   feedbackShown = true;
   const fb = $('feedback');
   fb.classList.add('show');
@@ -1957,13 +2290,12 @@ $('footerBtn').addEventListener('click', () => {
     $('footerBtn').className = 'footer-btn continue-correct';
     $('footerBtn').disabled = false;
 
-    mascot.classList.remove('sad');
-    mascot.classList.add('happy');
-    bubble.textContent = t('mascotGoodJob');
-    setTimeout(() => mascot.classList.remove('happy'), 600);
+    if (mascot) { mascot.classList.remove('sad'); mascot.classList.add('happy'); }
+    if (bubble) bubble.textContent = t('mascotGoodJob');
+    setTimeout(() => { if (mascot) mascot.classList.remove('happy'); }, 700);
 
     document.querySelectorAll('.choice').forEach(c => {
-      if (c.textContent === q.correct) c.classList.add('correct');
+      if (c.textContent === step.correct) c.classList.add('correct');
     });
   } else {
     state.hearts = Math.max(0, state.hearts - 1);
@@ -1973,19 +2305,18 @@ $('footerBtn').addEventListener('click', () => {
 
     fb.classList.add('wrong');
     $('feedbackTitle').innerHTML = `❌ ${t('wrong')}`;
-    $('feedbackBody').innerHTML = `${t('correctAns')} <strong>${q.correct}</strong>`;
+    $('feedbackBody').innerHTML = `${t('correctAns')} <strong>${step.correct}</strong>`;
     $('footerBtn').textContent = t('continue');
     $('footerBtn').className = 'footer-btn continue-wrong';
     $('footerBtn').disabled = false;
 
-    mascot.classList.remove('happy');
-    mascot.classList.add('sad');
-    bubble.textContent = t('mascotOops');
-    setTimeout(() => mascot.classList.remove('sad'), 600);
+    if (mascot) { mascot.classList.remove('happy'); mascot.classList.add('sad'); }
+    if (bubble) bubble.textContent = t('mascotOops');
+    setTimeout(() => { if (mascot) mascot.classList.remove('sad'); }, 700);
 
     document.querySelectorAll('.choice').forEach(c => {
       if (c.textContent === selectedAnswer) c.classList.add('wrong');
-      if (c.textContent === q.correct) c.classList.add('correct');
+      if (c.textContent === step.correct) c.classList.add('correct');
     });
 
     if (state.hearts <= 0) {
@@ -1995,17 +2326,14 @@ $('footerBtn').addEventListener('click', () => {
   }
 
   saveState();
-  $('progressFill').style.width = ((currentQ + 1) / questions.length) * 100 + '%';
+  $('progressFill').style.width = ((currentStep + 1) / steps.length) * 100 + '%';
 });
 
-function checkAnswer(q, answer) {
+function checkAnswer(step, answer) {
   if (!answer) return false;
-  if (q.type === 'mcq') {
-    return answer === q.correct;
-  } else if (q.type === 'type') {
-    return answer.toLowerCase().trim() === q.correct.toLowerCase().trim();
-  } else if (q.type === 'bank') {
-    return answer.trim().toLowerCase() === q.correct.trim().toLowerCase();
+  if (step.type === 'mcq') return answer === step.correct;
+  if (step.type === 'type' || step.type === 'bank') {
+    return answer.trim().toLowerCase() === step.correct.trim().toLowerCase();
   }
   return false;
 }
@@ -2029,7 +2357,7 @@ function finishLesson() {
 
   $('xpEarned').textContent = '+' + xpGain;
   $('gemEarned').textContent = '+' + gemGain;
-  $('accuracyVal').textContent = Math.round((correctCount / questions.length) * 100) + '%';
+  $('accuracyVal').textContent = Math.round((correctCount / steps.length) * 100) + '%';
   $('completeTitle').textContent = t('lessonComplete');
   $('completeSub').textContent = t('greatProgress');
 
@@ -2043,7 +2371,7 @@ $('continueBtn').addEventListener('click', () => {
 });
 
 $('closeLesson').addEventListener('click', () => {
-  if (confirm('Quit lesson? Progress will be lost.')) {
+  if (confirm('Quit lesson?')) {
     tts.stop();
     renderHome();
     showScreen('home');
@@ -2073,6 +2401,8 @@ $('goHomeBtn').addEventListener('click', () => {
 $('flagBtn').addEventListener('click', () => {
   $('langDisplay').textContent = state.lang === 'da' ? 'Dansk' : 'English';
   $('xpDisplay').textContent = state.xp;
+  const speedLabel = state.speed === 'slow' ? t('slow') : state.speed === 'fast' ? t('fast') : t('normal');
+  $('speedDisplay').textContent = speedLabel;
   $('settingsModal').classList.add('show');
 });
 
@@ -2084,6 +2414,18 @@ $('langDisplay').addEventListener('click', () => {
   renderHome();
 });
 
+$('speedDisplay').addEventListener('click', () => {
+  const speeds = ['slow', 'normal', 'fast'];
+  const idx = speeds.indexOf(state.speed);
+  state.speed = speeds[(idx + 1) % speeds.length];
+  const rateMap = { slow: 0.7, normal: 0.9, fast: 1.1 };
+  tts.setRate(rateMap[state.speed]);
+  const label = state.speed === 'slow' ? t('slow') : state.speed === 'fast' ? t('fast') : t('normal');
+  $('speedDisplay').textContent = label;
+  saveState();
+  tts.speak('Hello!', 'en');
+});
+
 $('voiceDisplay').addEventListener('click', () => {
   renderVoiceList();
   $('voiceModal').classList.add('show');
@@ -2093,48 +2435,49 @@ function renderVoiceList() {
   const voices = tts.getAllVoices();
   const list = $('voiceList');
   list.innerHTML = '';
-  
-  voices.forEach((voice, idx) => {
+
+  const premiumKeywords = ['natural', 'enhanced', 'premium', 'google', 'microsoft', 'neural', 'wavenet'];
+
+  voices.forEach((voice) => {
     const item = document.createElement('div');
-    item.style.cssText = 'padding: 12px; border: 2px solid #E5E5E5; border-radius: 10px; margin-bottom: 8px; cursor: pointer; font-weight: 600;';
-    item.textContent = `${voice.name} (${voice.lang})`;
-    
-    if (state.selectedVoiceName === voice.name) {
-      item.style.borderColor = '#1CB0F6';
-      item.style.background = '#E7F7FF';
-    }
-    
+    item.className = 'voice-item';
+    if (state.selectedVoiceName === voice.name) item.classList.add('selected');
+
+    const isPremium = premiumKeywords.some(k => voice.name.toLowerCase().includes(k));
+    const badge = isPremium ? '<span class="voice-badge">HD</span>' : '';
+
+    item.innerHTML = `
+      <div>
+        <div style="font-weight:700;">${voice.name}</div>
+        <div style="font-size:12px; color:#777;">${voice.lang}</div>
+      </div>
+      ${badge}
+    `;
+
     item.addEventListener('click', () => {
       tts.setVoice(voice);
       state.selectedVoiceName = voice.name;
       saveState();
       $('voiceDisplay').textContent = voice.name.split(' ')[0];
       $('voiceModal').classList.remove('show');
-      
-      // Test the voice
       tts.speak('Hello! This is my voice.', 'en');
     });
-    
+
     list.appendChild(item);
   });
 }
 
-$('closeVoiceModal').addEventListener('click', () => {
-  $('voiceModal').classList.remove('show');
-});
-
-$('closeSettings').addEventListener('click', () => {
-  $('settingsModal').classList.remove('show');
-});
-
+$('closeVoiceModal').addEventListener('click', () => $('voiceModal').classList.remove('show'));
+$('closeSettings').addEventListener('click', () => $('settingsModal').classList.remove('show'));
 $('settingsModal').addEventListener('click', (e) => {
-  if (e.target === $('settingsModal')) {
-    $('settingsModal').classList.remove('show');
-  }
+  if (e.target === $('settingsModal')) $('settingsModal').classList.remove('show');
+});
+$('voiceModal').addEventListener('click', (e) => {
+  if (e.target === $('voiceModal')) $('voiceModal').classList.remove('show');
 });
 
 $('resetBtn').addEventListener('click', () => {
-  if (confirm('Reset all progress? This cannot be undone.')) {
+  if (confirm('Reset all progress?')) {
     localStorage.removeItem(STATE_KEY);
     location.reload();
   }
@@ -2143,13 +2486,14 @@ $('resetBtn').addEventListener('click', () => {
 // ============ INIT ============
 if (loadState() && state.lang) {
   if (state.selectedVoiceName) {
-    const voices = tts.getAllVoices();
-    const selectedVoice = voices.find(v => v.name === state.selectedVoiceName);
-    if (selectedVoice) {
-      tts.setVoice(selectedVoice);
-      $('voiceDisplay').textContent = selectedVoice.name.split(' ')[0];
+    const v = tts.getAllVoices().find(v => v.name === state.selectedVoiceName);
+    if (v) {
+      tts.setVoice(v);
+      $('voiceDisplay').textContent = v.name.split(' ')[0];
     }
   }
+  const rateMap = { slow: 0.7, normal: 0.9, fast: 1.1 };
+  tts.setRate(rateMap[state.speed] || 0.9);
   renderHome();
   showScreen('home');
 } else {
