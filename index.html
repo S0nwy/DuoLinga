@@ -547,7 +547,7 @@
     padding: 16px;
     color: white;
     position: relative;
-    overflow: visible;
+    overflow: visible; /* FIXED: removed hidden so tooltips show */
   }
 
   .unit-header {
@@ -660,6 +660,7 @@
     border: 2px solid white;
   }
 
+  /* RESTORED: White pulse ring */
   .lesson-node.current { animation: pulse 2s infinite; }
   .lesson-node.final-node.current { animation: finalGlow 2.2s ease-in-out infinite, pulse 2s infinite; }
 
@@ -668,6 +669,7 @@
     50% { transform: scale(1.05); box-shadow: 0 5px 0 rgba(0,0,0,0.15), 0 0 0 10px rgba(255,255,255,0); }
   }
 
+  /* FIXED: Tooltip now on the right side, with little arrow */
   .lesson-tooltip {
     position: absolute;
     top: 50%;
@@ -1076,6 +1078,7 @@
 
   .type-input:focus { border-color: var(--blue); border-bottom-color: var(--blue-dark); }
   
+  /* NEW: Almost correct state (missing accents) */
   .type-input.almost {
     border-color: var(--yellow);
     border-bottom-color: var(--yellow-dark);
@@ -1141,6 +1144,7 @@
   .feedback.show { display: block; }
   .feedback.correct { background: var(--green-light); color: var(--green-dark); }
   .feedback.wrong { background: #FFE5E5; color: var(--red-dark); }
+  /* NEW: Almost feedback */
   .feedback.almost { background: var(--yellow-light); color: var(--yellow-dark); }
 
   .feedback-title {
@@ -1746,31 +1750,11 @@
   .quit-btn-stay:active { transform: translateY(4px); box-shadow: 0 0 0 var(--green-dark); }
   .quit-btn-leave { background: var(--bg-soft); color: var(--text); border: 2px solid var(--gray); box-shadow: 0 4px 0 var(--gray-dark); }
   .quit-btn-leave:active { transform: translateY(4px); box-shadow: 0 0 0 var(--gray-dark); }
-
-  /* ============ CHEAT SCREEN ============ */
-  #cheatScreen {
-    background: #FFFFFF;
-    justify-content: center;
-    align-items: center;
-    padding: 32px;
-    text-align: center;
-    z-index: 9999;
-  }
-  .cheat-emoji { font-size: 80px; margin-bottom: 20px; animation: shake 0.5s ease-in-out infinite; }
-  .cheat-title { font-size: 32px; font-weight: 900; color: var(--red); margin-bottom: 12px; letter-spacing: -0.5px; }
-  .cheat-msg { font-size: 16px; font-weight: 700; color: var(--gray-text); line-height: 1.5; max-width: 320px; }
 </style>
 </head>
 <body>
 
 <div class="app">
-
-  <!-- Cheat Screen -->
-  <div class="screen" id="cheatScreen">
-    <div class="cheat-emoji">🙅‍♂️</div>
-    <div class="cheat-title">Nuh uh!</div>
-    <div class="cheat-msg">No cheating! You can't be in a lesson and look at the words at the same time.</div>
-  </div>
 
   <div class="screen active" id="auth">
     <div class="auth-box">
@@ -2625,6 +2609,7 @@ function canAccessUnit(unitId) {
   return getLessonsForUnit(unitId - 1).every((_, i) => prev[i]?.completed);
 }
 
+// NEW: Strip accents/diacritics to allow "almost correct" checks
 function normalizeText(str) {
   if (!str) return '';
   return str.toLowerCase()
@@ -2653,82 +2638,6 @@ function getLessonsForUnit(unitId) {
     isFinal: true
   });
   return lessons;
-}
-
-// ============ ANTI-CHEAT SYSTEM ============
-function getDeviceFingerprint() {
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  ctx.textBaseline = "top";
-  ctx.font = "14px 'Arial'";
-  ctx.fillStyle = "#f60";
-  ctx.fillRect(125,1,62,20);
-  ctx.fillStyle = "#069";
-  ctx.fillText("DanfrolatFingerprint", 2, 15);
-  const b64 = canvas.toDataURL().replace(/^data:image\/(png|jpeg);base64,/, "");
-  const bin = atob(b64);
-  let hash = 0;
-  for(let i = 0; i < bin.length; i++) hash = ((hash << 5) - hash) + bin.charCodeAt(i);
-  return Math.abs(hash).toString(36) + navigator.userAgent.length;
-}
-
-const myFingerprint = getDeviceFingerprint();
-let lessonLockInterval = null;
-const bc = new BroadcastChannel('danfrolat_lesson');
-
-bc.onmessage = (event) => {
-  if (event.data.type === 'lesson_started' && event.data.fingerprint === myFingerprint) {
-    if (!$('lesson').classList.contains('active') && !$('cheatScreen').classList.contains('active')) {
-      showScreen('cheatScreen');
-    }
-  }
-  if (event.data.type === 'lesson_ended' && event.data.fingerprint === myFingerprint) {
-    if ($('cheatScreen').classList.contains('active')) {
-      renderHome();
-      showScreen('home');
-    }
-  }
-};
-
-async function acquireLessonLock() {
-  const data = await cloudGet();
-  if (!data.__active_lessons__) data.__active_lessons__ = {};
-  data.__active_lessons__[myFingerprint] = { timestamp: Date.now(), user: currentUser };
-  await cloudSet(data);
-  
-  bc.postMessage({ type: 'lesson_started', fingerprint: myFingerprint });
-  
-  if (lessonLockInterval) clearInterval(lessonLockInterval);
-  lessonLockInterval = setInterval(async () => {
-    const d = await cloudGet();
-    if (d.__active_lessons__ && d.__active_lessons__[myFingerprint]) {
-      d.__active_lessons__[myFingerprint].timestamp = Date.now();
-      await cloudSet(d);
-    }
-  }, 30000);
-}
-
-async function releaseLessonLock() {
-  bc.postMessage({ type: 'lesson_ended', fingerprint: myFingerprint });
-  if (lessonLockInterval) { clearInterval(lessonLockInterval); lessonLockInterval = null; }
-  const data = await cloudGet();
-  if (data.__active_lessons__ && data.__active_lessons__[myFingerprint]) {
-    delete data.__active_lessons__[myFingerprint];
-    await cloudSet(data);
-  }
-}
-
-async function checkLessonLock() {
-  if ($('lesson').classList.contains('active')) return;
-  const data = await cloudGet();
-  if (data.__active_lessons__) {
-    const lock = data.__active_lessons__[myFingerprint];
-    if (lock && (Date.now() - lock.timestamp < 120000)) {
-      showScreen('cheatScreen');
-      return true;
-    }
-  }
-  return false;
 }
 
 // ============ REQUEST FLOW ============
@@ -2857,9 +2766,6 @@ async function enterApp(name) {
     if (!state.lang) { state.lang = 'en'; await saveState(); }
     renderHome();
     showScreen('home');
-    
-    if (await checkLessonLock()) return;
-
     if (state.selectedVoiceName) {
       setTimeout(() => {
         const v = tts.getAllVoices().find(x => x.name === state.selectedVoiceName);
@@ -3034,11 +2940,10 @@ setInterval(checkForgotAttention, 15000);
 function openQuitModal() { $('quitBackdrop').classList.add('show'); }
 function closeQuitModal() { $('quitBackdrop').classList.remove('show'); }
 $('quitStayBtn').addEventListener('click', closeQuitModal);
-$('quitLeaveBtn').addEventListener('click', async () => {
+$('quitLeaveBtn').addEventListener('click', () => {
   closeQuitModal();
   tts.stop();
   stopPolling();
-  await releaseLessonLock();
   renderHome();
   showScreen('home');
 });
@@ -3046,33 +2951,6 @@ $('quitBackdrop').addEventListener('click', (e) => { if (e.target === $('quitBac
 
 $('authMascot').innerHTML = mascotSVG(110);
 getOrCreateDeviceId();
-
-window.addEventListener('beforeunload', () => {
-  if ($('lesson').classList.contains('active')) {
-    const data = { __active_lessons__: {} }; // dummy
-    navigator.sendBeacon(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}`, JSON.stringify({}));
-    // Try to release lock synchronously
-    fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}`, {
-      method: 'GET', headers: { 'X-Master-Key': CLOUD_CONFIG.API_KEY }, keepalive: true
-    }).then(r => r.json()).then(d => {
-       const data = d.record || {};
-       if (data.__active_lessons__ && data.__active_lessons__[myFingerprint]) {
-          delete data.__active_lessons__[myFingerprint];
-          fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}`, {
-            method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': CLOUD_CONFIG.API_KEY }, body: JSON.stringify(data), keepalive: true
-          });
-       }
-    });
-  }
-});
-
-document.addEventListener('visibilitychange', async () => {
-  if (document.visibilityState === 'visible') {
-    if (!$('lesson').classList.contains('active') && currentUser) {
-      await checkLessonLock();
-    }
-  }
-});
 
 async function boot() {
   const myDevice = getOrCreateDeviceId();
@@ -3115,15 +2993,12 @@ async function boot() {
 }
 
 document.querySelectorAll('.nav-item').forEach(item => {
-  item.addEventListener('click', async () => {
+  item.addEventListener('click', () => {
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
     item.classList.add('active');
     const tab = item.dataset.tab;
     if (tab === 'learn') { $('learnTab').style.display = 'block'; $('wordsTab').style.display = 'none'; }
-    else if (tab === 'words') {
-      if (await checkLessonLock()) return;
-      $('learnTab').style.display = 'none'; $('wordsTab').style.display = 'block'; renderWordsList();
-    }
+    else if (tab === 'words') { $('learnTab').style.display = 'none'; $('wordsTab').style.display = 'block'; renderWordsList(); }
   });
 });
 
@@ -3228,13 +3103,8 @@ let firstTryCorrect = 0;
 let selectedAnswer = null;
 let feedbackShown = false;
 
-async function startLesson(unitId, lessonIdx) {
+function startLesson(unitId, lessonIdx) {
   if (state.hearts <= 0) { showScreen('gameover'); return; }
-  
-  if (await checkLessonLock()) return;
-  
-  await acquireLessonLock();
-
   const lesson = getLessonsForUnit(unitId)[lessonIdx];
   currentLesson = { unitId, lessonIdx, ...lesson };
   steps = buildSteps(lesson);
@@ -3557,18 +3427,23 @@ function updateBankAnswer() {
   $('footerBtn').disabled = ans.length === 0;
 }
 
+// NEW: CheckAnswer returns 'correct', 'almost', or 'wrong'
 function checkAnswer(step, answer) {
   if (!answer) return 'wrong';
+  
   if (step.type === 'mcq') {
     return answer === step.correct ? 'correct' : 'wrong';
   }
+  
   if (step.type === 'type' || step.type === 'bank') {
     const user = answer.trim().toLowerCase();
     const correct = step.correct.trim().toLowerCase();
+    
     if (user === correct) return 'correct';
     if (normalizeText(user) === normalizeText(correct)) return 'almost';
     return 'wrong';
   }
+  
   return 'wrong';
 }
 
@@ -3670,7 +3545,6 @@ async function finishLesson() {
   }
   showScreen('complete');
   confetti();
-  await releaseLessonLock();
 }
 
 $('continueBtn').addEventListener('click', () => { renderHome(); showScreen('home'); });
@@ -3734,7 +3608,7 @@ $('closeSettings').addEventListener('click', () => $('settingsModal').classList.
 $('settingsModal').addEventListener('click', (e) => { if (e.target === $('settingsModal')) $('settingsModal').classList.remove('show'); });
 $('voiceModal').addEventListener('click', (e) => { if (e.target === $('voiceModal')) $('voiceModal').classList.remove('show'); });
 
-$('logoutBtn').addEventListener('click', async () => {
+$('logoutBtn').addEventListener('click', () => {
   if (confirm('Log out?')) {
     tts.stop();
     stopPolling();
@@ -3743,7 +3617,6 @@ $('logoutBtn').addEventListener('click', async () => {
     state = { lang: null, xp: 0, gems: 50, hearts: 5, streak: 0, lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal', heartTimerStartedAt: null };
     $('authError').textContent = '';
     setRequestState('idle');
-    await releaseLessonLock();
     showScreen('auth');
     checkForgotAttention();
     setTimeout(() => $('authName').focus(), 300);
