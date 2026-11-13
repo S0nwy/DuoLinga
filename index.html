@@ -447,7 +447,6 @@
     100% { transform: scale(1); }
   }
 
-  /* ============ HEART STATUS BAR ============ */
   .heart-status-bar {
     display: flex;
     align-items: center;
@@ -457,12 +456,6 @@
     background: linear-gradient(180deg, #FFF9F9 0%, #FFFFFF 100%);
     border-bottom: 2px solid var(--gray);
     flex-shrink: 0;
-    animation: heartBarSlideIn 0.35s var(--ease);
-  }
-
-  @keyframes heartBarSlideIn {
-    from { opacity: 0; transform: translateY(-6px); }
-    to { opacity: 1; transform: translateY(0); }
   }
 
   .heart-status-info {
@@ -482,9 +475,7 @@
     line-height: 1;
   }
 
-  .heart-status-count .heart-emoji {
-    font-size: 18px;
-  }
+  .heart-status-count .heart-emoji { font-size: 18px; }
 
   .heart-status-timer {
     color: rgba(119, 119, 119, 0.55);
@@ -521,12 +512,7 @@
     inset: 0;
     border-radius: 10px;
     padding: 2px;
-    background: linear-gradient(90deg, 
-      var(--blue) 0%, 
-      var(--blue) 35%,
-      #8FE8FF 50%,
-      var(--blue) 65%,
-      var(--blue) 100%);
+    background: linear-gradient(90deg, var(--blue) 0%, var(--blue) 35%, #8FE8FF 50%, var(--blue) 65%, var(--blue) 100%);
     background-size: 220% 100%;
     animation: shineBorder 3s linear infinite;
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -537,13 +523,8 @@
     z-index: -1;
   }
 
-  .heart-refill-btn:hover::before {
-    animation-duration: 1.4s;
-  }
-
-  .heart-refill-btn:active {
-    transform: scale(0.96);
-  }
+  .heart-refill-btn:hover::before { animation-duration: 1.4s; }
+  .heart-refill-btn:active { transform: scale(0.96); }
 
   @keyframes shineBorder {
     0% { background-position: 220% 0; }
@@ -644,6 +625,22 @@
     filter: grayscale(0.5);
   }
 
+  .lesson-node.final-node {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    font-size: 32px;
+    animation: finalGlow 2.2s ease-in-out infinite;
+  }
+
+  @keyframes finalGlow {
+    0%, 100% { box-shadow: 0 5px 0 rgba(0,0,0,0.2), 0 0 18px rgba(255, 200, 0, 0.5); }
+    50% { box-shadow: 0 5px 0 rgba(0,0,0,0.2), 0 0 30px rgba(255, 200, 0, 0.85); }
+  }
+
+  .lesson-node.final-node.locked {
+    animation: none;
+    background: linear-gradient(135deg, #E0C060, #B09030);
+  }
+
   .lesson-node.completed::after {
     content: '✓';
     position: absolute;
@@ -663,10 +660,11 @@
   }
 
   .lesson-node.current { animation: pulse 2s infinite; }
+  .lesson-node.final-node.current { animation: finalGlow 2.2s ease-in-out infinite, pulse 2s infinite; }
 
   @keyframes pulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 5px 0 rgba(0,0,0,0.15), 0 0 0 0 rgba(255,255,255,0.6); }
-    50% { transform: scale(1.05); box-shadow: 0 5px 0 rgba(0,0,0,0.15), 0 0 0 10px rgba(255,255,255,0); }
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
   }
 
   .lesson-tooltip {
@@ -684,6 +682,12 @@
     pointer-events: none;
     transition: opacity 0.2s;
     z-index: 10;
+  }
+
+  .lesson-node.final-node .lesson-tooltip {
+    background: #FFD700;
+    color: #7A5C00;
+    font-weight: 900;
   }
 
   .lesson-node.current .lesson-tooltip { opacity: 1; }
@@ -877,6 +881,17 @@
     position: relative;
   }
 
+  .progress-fill.final-fill {
+    background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
+    background-size: 200% 100%;
+    animation: goldShine 2s linear infinite;
+  }
+
+  @keyframes goldShine {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
   .progress-fill::after {
     content: '';
     position: absolute;
@@ -916,7 +931,8 @@
   }
 
   .q-type .review-badge,
-  .q-type .retry-badge {
+  .q-type .retry-badge,
+  .q-type .final-badge {
     display: inline-block;
     padding: 1px 6px;
     border-radius: 4px;
@@ -928,6 +944,11 @@
 
   .q-type .review-badge { background: var(--purple); color: white; }
   .q-type .retry-badge { background: var(--yellow); color: var(--yellow-dark); }
+  .q-type .final-badge {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #7A5C00;
+    letter-spacing: 0.5px;
+  }
 
   .q-prompt {
     font-size: 22px;
@@ -1443,14 +1464,8 @@
     opacity: 1;
   }
 
-  .forgot-content {
-    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
-  }
-
-  .forgot-content.fading {
-    opacity: 0;
-    transform: scale(0.96);
-  }
+  .forgot-content { transition: opacity 0.25s var(--ease), transform 0.25s var(--ease); }
+  .forgot-content.fading { opacity: 0; transform: scale(0.96); }
 
   .forgot-close-x {
     position: absolute;
@@ -1492,30 +1507,9 @@
     50% { transform: translateY(-4px); }
   }
 
-  .forgot-title {
-    font-size: 22px;
-    font-weight: 900;
-    color: var(--text);
-    text-align: center;
-    margin-bottom: 8px;
-    line-height: 1.2;
-  }
-
-  .forgot-subtitle {
-    font-size: 14px;
-    color: var(--gray-text);
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 22px;
-    line-height: 1.5;
-  }
-
-  .forgot-row-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 6px;
-  }
+  .forgot-title { font-size: 22px; font-weight: 900; color: var(--text); text-align: center; margin-bottom: 8px; line-height: 1.2; }
+  .forgot-subtitle { font-size: 14px; color: var(--gray-text); font-weight: 600; text-align: center; margin-bottom: 22px; line-height: 1.5; }
+  .forgot-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px; }
 
   .forgot-action {
     padding: 14px;
@@ -1529,50 +1523,15 @@
     min-height: 48px;
   }
 
-  .forgot-action.yes {
-    background: var(--green);
-    color: white;
-    box-shadow: 0 4px 0 var(--green-dark);
-  }
-  .forgot-action.yes:active {
-    transform: translateY(4px);
-    box-shadow: 0 0 0 var(--green-dark);
-  }
+  .forgot-action.yes { background: var(--green); color: white; box-shadow: 0 4px 0 var(--green-dark); }
+  .forgot-action.yes:active { transform: translateY(4px); box-shadow: 0 0 0 var(--green-dark); }
+  .forgot-action.no { background: var(--bg-soft); color: var(--text); border: 2px solid var(--gray); box-shadow: 0 4px 0 var(--gray-dark); }
+  .forgot-action.no:active { transform: translateY(4px); box-shadow: 0 0 0 var(--gray-dark); }
 
-  .forgot-action.no {
-    background: var(--bg-soft);
-    color: var(--text);
-    border: 2px solid var(--gray);
-    box-shadow: 0 4px 0 var(--gray-dark);
-  }
-  .forgot-action.no:active {
-    transform: translateY(4px);
-    box-shadow: 0 0 0 var(--gray-dark);
-  }
-
-  .forgot-field {
-    margin-bottom: 14px;
-  }
-
-  .forgot-label {
-    display: block;
-    font-size: 12px;
-    font-weight: 800;
-    color: var(--text);
-    margin-bottom: 6px;
-  }
-
-  .forgot-label .req {
-    color: var(--red);
-    margin-left: 2px;
-  }
-
-  .forgot-label .opt {
-    color: var(--gray-text);
-    font-weight: 600;
-    margin-left: 4px;
-    font-size: 11px;
-  }
+  .forgot-field { margin-bottom: 14px; }
+  .forgot-label { display: block; font-size: 12px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+  .forgot-label .req { color: var(--red); margin-left: 2px; }
+  .forgot-label .opt { color: var(--gray-text); font-weight: 600; margin-left: 4px; font-size: 11px; }
 
   .forgot-input {
     width: 100%;
@@ -1588,17 +1547,8 @@
     resize: none;
   }
 
-  .forgot-input:focus {
-    border-color: var(--blue);
-    background: white;
-    box-shadow: 0 0 0 4px rgba(28,176,246,0.12);
-  }
-
-  .forgot-input.textarea {
-    min-height: 70px;
-    font-family: inherit;
-    line-height: 1.4;
-  }
+  .forgot-input:focus { border-color: var(--blue); background: white; box-shadow: 0 0 0 4px rgba(28,176,246,0.12); }
+  .forgot-input.textarea { min-height: 70px; line-height: 1.4; }
 
   .forgot-submit {
     width: 100%;
@@ -1621,32 +1571,11 @@
     gap: 8px;
   }
 
-  .forgot-submit:disabled {
-    background: var(--gray);
-    box-shadow: 0 4px 0 var(--gray-dark);
-    cursor: not-allowed;
-    opacity: 0.7;
-  }
+  .forgot-submit:disabled { background: var(--gray); box-shadow: 0 4px 0 var(--gray-dark); cursor: not-allowed; opacity: 0.7; }
+  .forgot-submit:not(:disabled):active { transform: translateY(4px); box-shadow: 0 0 0 var(--blue-dark); }
 
-  .forgot-submit:not(:disabled):active {
-    transform: translateY(4px);
-    box-shadow: 0 0 0 var(--blue-dark);
-  }
-
-  .forgot-loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 30px 10px;
-    gap: 16px;
-    animation: fadeInUp 0.35s var(--ease);
-  }
-
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  .forgot-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 10px; gap: 16px; animation: fadeInUp 0.35s var(--ease); }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
   .forgot-loading .spinner-lg {
     width: 40px;
@@ -1657,55 +1586,16 @@
     animation: spin 0.9s linear infinite;
   }
 
-  .forgot-loading .loading-text {
-    font-size: 14px;
-    font-weight: 800;
-    color: var(--gray-text);
-    text-align: center;
-    animation: fadeText 1.5s ease-in-out infinite;
-  }
+  .forgot-loading .loading-text { font-size: 14px; font-weight: 800; color: var(--gray-text); text-align: center; animation: fadeText 1.5s ease-in-out infinite; }
+  @keyframes fadeText { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
 
-  @keyframes fadeText {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-  }
+  .forgot-success { text-align: center; padding: 20px 10px; animation: fadeInUp 0.4s var(--ease); }
+  .forgot-success .success-icon { font-size: 56px; margin-bottom: 12px; animation: successPop 0.6s var(--spring); }
+  @keyframes successPop { 0% { transform: scale(0); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
+  .forgot-success .success-title { font-size: 22px; font-weight: 900; color: var(--green-dark); margin-bottom: 6px; }
+  .forgot-success .success-sub { font-size: 13px; color: var(--gray-text); font-weight: 700; line-height: 1.5; }
 
-  .forgot-success {
-    text-align: center;
-    padding: 20px 10px;
-    animation: fadeInUp 0.4s var(--ease);
-  }
-
-  .forgot-success .success-icon {
-    font-size: 56px;
-    margin-bottom: 12px;
-    animation: successPop 0.6s var(--spring);
-  }
-
-  @keyframes successPop {
-    0% { transform: scale(0); }
-    60% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-  }
-
-  .forgot-success .success-title {
-    font-size: 22px;
-    font-weight: 900;
-    color: var(--green-dark);
-    margin-bottom: 6px;
-  }
-
-  .forgot-success .success-sub {
-    font-size: 13px;
-    color: var(--gray-text);
-    font-weight: 700;
-    line-height: 1.5;
-  }
-
-  .forgot-message {
-    padding: 20px 4px 10px;
-    animation: fadeInUp 0.4s var(--ease);
-  }
+  .forgot-message { padding: 20px 4px 10px; animation: fadeInUp 0.4s var(--ease); }
 
   .forgot-message .company-seal {
     display: inline-flex;
@@ -1722,13 +1612,7 @@
     margin-bottom: 14px;
   }
 
-  .forgot-message .letter {
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--text);
-    font-weight: 600;
-  }
-
+  .forgot-message .letter { font-size: 14px; line-height: 1.6; color: var(--text); font-weight: 600; }
   .forgot-message .letter strong { font-weight: 900; }
 
   .forgot-message .letter .username-highlight {
@@ -1752,15 +1636,7 @@
     50% { box-shadow: 0 0 0 8px rgba(88,204,2,0); }
   }
 
-  .forgot-message .signature {
-    margin-top: 16px;
-    padding-top: 14px;
-    border-top: 1px solid var(--gray);
-    font-size: 12px;
-    color: var(--gray-text);
-    font-weight: 800;
-    letter-spacing: 0.3px;
-  }
+  .forgot-message .signature { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--gray); font-size: 12px; color: var(--gray-text); font-weight: 800; letter-spacing: 0.3px; }
 
   .forgot-request-again {
     width: 100%;
@@ -1779,44 +1655,14 @@
     margin-top: 18px;
   }
 
-  .forgot-request-again:active {
-    transform: translateY(3px);
-    box-shadow: 0 0 0 var(--gray-dark);
-  }
+  .forgot-request-again:active { transform: translateY(3px); box-shadow: 0 0 0 var(--gray-dark); }
 
-  .forgot-pending {
-    text-align: center;
-    padding: 20px 10px;
-    animation: fadeInUp 0.4s var(--ease);
-  }
+  .forgot-pending { text-align: center; padding: 20px 10px; animation: fadeInUp 0.4s var(--ease); }
+  .forgot-pending .pending-icon { font-size: 56px; margin-bottom: 12px; animation: pendingBounce 1.6s ease-in-out infinite; }
+  @keyframes pendingBounce { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-6px) rotate(-3deg); } }
+  .forgot-pending .pending-title { font-size: 20px; font-weight: 900; color: var(--yellow-dark); margin-bottom: 8px; }
+  .forgot-pending .pending-sub { font-size: 13px; color: var(--gray-text); font-weight: 700; line-height: 1.5; margin-bottom: 8px; }
 
-  .forgot-pending .pending-icon {
-    font-size: 56px;
-    margin-bottom: 12px;
-    animation: pendingBounce 1.6s ease-in-out infinite;
-  }
-
-  @keyframes pendingBounce {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-6px) rotate(-3deg); }
-  }
-
-  .forgot-pending .pending-title {
-    font-size: 20px;
-    font-weight: 900;
-    color: var(--yellow-dark);
-    margin-bottom: 8px;
-  }
-
-  .forgot-pending .pending-sub {
-    font-size: 13px;
-    color: var(--gray-text);
-    font-weight: 700;
-    line-height: 1.5;
-    margin-bottom: 8px;
-  }
-
-  /* ============ QUIT MODAL ============ */
   .quit-backdrop {
     position: fixed;
     inset: 0;
@@ -1852,37 +1698,11 @@
     text-align: center;
   }
 
-  .quit-backdrop.show .quit-modal {
-    transform: scale(1) translateY(0);
-    opacity: 1;
-  }
-
-  .quit-icon {
-    font-size: 52px;
-    margin-bottom: 12px;
-    animation: floatyIcon 2.5s ease-in-out infinite;
-  }
-
-  .quit-title {
-    font-size: 22px;
-    font-weight: 900;
-    color: var(--text);
-    margin-bottom: 8px;
-  }
-
-  .quit-msg {
-    font-size: 14px;
-    color: var(--gray-text);
-    font-weight: 600;
-    line-height: 1.5;
-    margin-bottom: 22px;
-  }
-
-  .quit-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
+  .quit-backdrop.show .quit-modal { transform: scale(1) translateY(0); opacity: 1; }
+  .quit-icon { font-size: 52px; margin-bottom: 12px; animation: floatyIcon 2.5s ease-in-out infinite; }
+  .quit-title { font-size: 22px; font-weight: 900; color: var(--text); margin-bottom: 8px; }
+  .quit-msg { font-size: 14px; color: var(--gray-text); font-weight: 600; line-height: 1.5; margin-bottom: 22px; }
+  .quit-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
   .quit-btn {
     padding: 13px;
@@ -1896,26 +1716,10 @@
     min-height: 46px;
   }
 
-  .quit-btn-stay {
-    background: var(--green);
-    color: white;
-    box-shadow: 0 4px 0 var(--green-dark);
-  }
-  .quit-btn-stay:active {
-    transform: translateY(4px);
-    box-shadow: 0 0 0 var(--green-dark);
-  }
-
-  .quit-btn-leave {
-    background: var(--bg-soft);
-    color: var(--text);
-    border: 2px solid var(--gray);
-    box-shadow: 0 4px 0 var(--gray-dark);
-  }
-  .quit-btn-leave:active {
-    transform: translateY(4px);
-    box-shadow: 0 0 0 var(--gray-dark);
-  }
+  .quit-btn-stay { background: var(--green); color: white; box-shadow: 0 4px 0 var(--green-dark); }
+  .quit-btn-stay:active { transform: translateY(4px); box-shadow: 0 0 0 var(--green-dark); }
+  .quit-btn-leave { background: var(--bg-soft); color: var(--text); border: 2px solid var(--gray); box-shadow: 0 4px 0 var(--gray-dark); }
+  .quit-btn-leave:active { transform: translateY(4px); box-shadow: 0 0 0 var(--gray-dark); }
 </style>
 </head>
 <body>
@@ -2257,37 +2061,23 @@ function getNextHeartTime() {
 }
 
 function recomputeHearts() {
-  if (state.hearts >= MAX_HEARTS) {
-    state.heartTimerStartedAt = null;
-    return false;
-  }
-  if (!state.heartTimerStartedAt) {
-    state.heartTimerStartedAt = Date.now();
-    return false;
-  }
+  if (state.hearts >= MAX_HEARTS) { state.heartTimerStartedAt = null; return false; }
+  if (!state.heartTimerStartedAt) { state.heartTimerStartedAt = Date.now(); return false; }
   const now = Date.now();
   const elapsed = now - state.heartTimerStartedAt;
   if (elapsed < HEART_REGEN_MS) return false;
-
   const regened = Math.floor(elapsed / HEART_REGEN_MS);
   const before = state.hearts;
   state.hearts = Math.min(MAX_HEARTS, state.hearts + regened);
-  if (state.hearts >= MAX_HEARTS) {
-    state.heartTimerStartedAt = null;
-  } else {
-    state.heartTimerStartedAt = state.heartTimerStartedAt + regened * HEART_REGEN_MS;
-  }
+  if (state.hearts >= MAX_HEARTS) state.heartTimerStartedAt = null;
+  else state.heartTimerStartedAt = state.heartTimerStartedAt + regened * HEART_REGEN_MS;
   return state.hearts !== before;
 }
 
 function loseHeart() {
   if (state.hearts <= 0) return;
-  if (state.hearts >= MAX_HEARTS) {
-    state.heartTimerStartedAt = Date.now();
-  }
-  if (!state.heartTimerStartedAt) {
-    state.heartTimerStartedAt = Date.now();
-  }
+  if (state.hearts >= MAX_HEARTS) state.heartTimerStartedAt = Date.now();
+  if (!state.heartTimerStartedAt) state.heartTimerStartedAt = Date.now();
   state.hearts = Math.max(0, state.hearts - 1);
 }
 
@@ -2296,21 +2086,13 @@ function updateHeartUI() {
   $('lessonHearts').textContent = state.hearts;
   const bar = $('heartStatusBar');
   if (!bar) return;
-
-  if (state.hearts >= MAX_HEARTS) {
-    bar.style.display = 'none';
-  } else {
-    bar.style.display = 'flex';
-    $('heartStatusCount').textContent = `${state.hearts}/${MAX_HEARTS}`;
-    const nextTime = getNextHeartTime();
-    if (nextTime) {
-      const remaining = nextTime - Date.now();
-      $('heartStatusTimer').textContent = `next heart in ${formatCountdown(remaining)}`;
-    }
-  }
+  if (state.hearts >= MAX_HEARTS) { bar.style.display = 'none'; return; }
+  bar.style.display = 'flex';
+  $('heartStatusCount').textContent = `${state.hearts}/${MAX_HEARTS}`;
+  const nextTime = getNextHeartTime();
+  if (nextTime) $('heartStatusTimer').textContent = `next heart in ${formatCountdown(nextTime - Date.now())}`;
 }
 
-// ============ VOCAB (unchanged) ============
 const VOCAB = {
   1: { title: { en: "Greetings & People", da: "Hilsner og mennesker" }, icon: "👋", color: 1, words: [
     {da:"Hej", en:"Hello", df:"Bonhallo"}, {da:"Godmorgen", en:"Good morning", df:"Bonmora"}, {da:"Godnat", en:"Good night", df:"Bonnocta"},
@@ -2582,8 +2364,8 @@ const PHONETIC_MAP = {
 };
 
 const UI_TEXT = {
-  en: { unit:"Unit", lesson:"Lesson", translateTo:"Translate to Danfrolat", writeIn:"Write in Danfrolat", whatMeans:"What does this mean?", buildSentence:"Write this in Danfrolat", typeTrans:"Type this translation", check:"Check", continue:"Continue", correct:"Correct!", wrong:"Not quite!", correctAns:"Correct answer:", lessonComplete:"Lesson Complete!", greatProgress:"You're making great progress!", listen:"🔊 Listen", mascotIntro:"Let's learn these words!", selectVoice:"Select", normal:"Normal", slow:"Slow", fast:"Fast", newWords:"New words!", letsPractice:"Let's practice!", mascotGoodJob:"Amazing! You're a star!", mascotKeepGoing:"Keep going!", mascotOops:"Oops! Try again!", review:"Review", retry:"Retry" },
-  da: { unit:"Enhed", lesson:"Lektion", translateTo:"Oversæt til Danfrolat", writeIn:"Skriv på Danfrolat", whatMeans:"Hvad betyder dette?", buildSentence:"Skriv dette på Danfrolat", typeTrans:"Skriv denne oversættelse", check:"Tjek", continue:"Fortsæt", correct:"Korrekt!", wrong:"Ikke helt!", correctAns:"Korrekt svar:", lessonComplete:"Lektion fuldført!", greatProgress:"Du gør det godt!", listen:"🔊 Lyt", mascotIntro:"Lad os lære disse ord!", selectVoice:"Vælg", normal:"Normal", slow:"Langsom", fast:"Hurtig", newWords:"Nye ord!", letsPractice:"Lad os øve!", mascotGoodJob:"Fantastisk!", mascotKeepGoing:"Bliv ved!", mascotOops:"Ups! Prøv igen!", review:"Repetition", retry:"Igen" }
+  en: { unit:"Unit", lesson:"Lesson", translateTo:"Translate to Danfrolat", writeIn:"Write in Danfrolat", whatMeans:"What does this mean?", buildSentence:"Write this in Danfrolat", typeTrans:"Type this translation", check:"Check", continue:"Continue", correct:"Correct!", wrong:"Not quite!", correctAns:"Correct answer:", lessonComplete:"Lesson Complete!", greatProgress:"You're making great progress!", listen:"🔊 Listen", mascotIntro:"Let's learn these words!", selectVoice:"Select", normal:"Normal", slow:"Slow", fast:"Fast", newWords:"New words!", letsPractice:"Let's practice!", mascotGoodJob:"Amazing! You're a star!", mascotKeepGoing:"Keep going!", mascotOops:"Oops! Try again!", review:"Review", retry:"Retry", finalChallenge:"Final Challenge", typeTheMeaning:"Type the meaning", typeInDanfrolat:"Type in Danfrolat", finalComplete:"Final Challenge Complete!", legendary:"LEGENDARY!" },
+  da: { unit:"Enhed", lesson:"Lektion", translateTo:"Oversæt til Danfrolat", writeIn:"Skriv på Danfrolat", whatMeans:"Hvad betyder dette?", buildSentence:"Skriv dette på Danfrolat", typeTrans:"Skriv denne oversættelse", check:"Tjek", continue:"Fortsæt", correct:"Korrekt!", wrong:"Ikke helt!", correctAns:"Korrekt svar:", lessonComplete:"Lektion fuldført!", greatProgress:"Du gør det godt!", listen:"🔊 Lyt", mascotIntro:"Lad os lære disse ord!", selectVoice:"Vælg", normal:"Normal", slow:"Langsom", fast:"Hurtig", newWords:"Nye ord!", letsPractice:"Lad os øve!", mascotGoodJob:"Fantastisk!", mascotKeepGoing:"Bliv ved!", mascotOops:"Ups! Prøv igen!", review:"Repetition", retry:"Igen", finalChallenge:"Sidste Udfordring", typeTheMeaning:"Skriv betydningen", typeInDanfrolat:"Skriv på Danfrolat", finalComplete:"Udfordring Fuldført!", legendary:"LEGENDAARISK!" }
 };
 
 function mascotSVG(size = 110) {
@@ -2735,9 +2517,7 @@ async function loadUserState(username) {
   if (data[username]?.data) state = { ...defaults, ...data[username].data };
   else state = { ...defaults };
   if (state.hearts >= MAX_HEARTS) state.heartTimerStartedAt = null;
-  if (state.hearts < MAX_HEARTS && !state.heartTimerStartedAt) {
-    state.heartTimerStartedAt = Date.now();
-  }
+  if (state.hearts < MAX_HEARTS && !state.heartTimerStartedAt) state.heartTimerStartedAt = Date.now();
 }
 
 function updateStreak() {
@@ -2799,6 +2579,7 @@ function canAccessUnit(unitId) {
   return getLessonsForUnit(unitId - 1).every((_, i) => prev[i]?.completed);
 }
 
+// ═══════════ UPDATED: adds final lesson at end of every unit ═══════════
 function getLessonsForUnit(unitId) {
   const unit = VOCAB[unitId];
   const lessons = [];
@@ -2806,13 +2587,20 @@ function getLessonsForUnit(unitId) {
   for (let i = 0; i < words.length; i += 5) {
     lessons.push({
       words: words.slice(i, i + 5),
-      sentences: sentences.slice(Math.floor(i / 5) * 2, Math.floor(i / 5) * 2 + 2)
+      sentences: sentences.slice(Math.floor(i / 5) * 2, Math.floor(i / 5) * 2 + 2),
+      isFinal: false
     });
   }
+  // Final Challenge — all words, all sentences, no meaning shown
+  lessons.push({
+    words: [...words],
+    sentences: [...sentences],
+    isFinal: true
+  });
   return lessons;
 }
 
-// ============ REQUEST FLOW ============
+// ═══════════ REQUEST FLOW ═══════════
 let requestState = 'idle';
 let currentRequestName = null;
 let pollTimer = null;
@@ -2823,7 +2611,6 @@ function setRequestState(newState, customMsg) {
   const statusEl = $('authStatus');
   btn.dataset.state = newState;
   btn.disabled = newState === 'requesting' || newState === 'requested';
-
   switch (newState) {
     case 'idle':
       btn.innerHTML = '<span class="request-btn-text">Request Access</span>';
@@ -2862,107 +2649,56 @@ function startPolling(name) {
       const req = data.__requests__?.[name];
       const existing = data[name];
       if (!req) return;
-
       if (req.status === 'approved') {
         if (req.requestingDeviceId === myDevice) {
           await claimOwnership(name, myDevice);
-          stopPolling();
-          setRequestState('approved');
-          toast('Access granted! 🎉');
-          await enterApp(name);
-          return;
+          stopPolling(); setRequestState('approved'); toast('Access granted! 🎉'); await enterApp(name); return;
         }
         if (existing?.ownerDeviceId === myDevice) {
-          stopPolling();
-          setRequestState('approved');
-          await enterApp(name);
-          return;
+          stopPolling(); setRequestState('approved'); await enterApp(name); return;
         }
-        stopPolling();
-        setRequestState('denied', '❌ Name is now owned by another device');
+        stopPolling(); setRequestState('denied', '❌ Name is now owned by another device');
       } else if (req.status === 'denied' && req.requestingDeviceId === myDevice) {
-        stopPolling();
-        setRequestState('denied');
+        stopPolling(); setRequestState('denied');
       } else if (req.status === 'pending' && req.requestingDeviceId !== myDevice) {
-        stopPolling();
-        setRequestState('idle', 'Someone else requested this name.');
+        stopPolling(); setRequestState('idle', 'Someone else requested this name.');
       }
     } catch (e) { console.error('Poll error:', e); }
   }, 8000);
 }
 
-function stopPolling() {
-  if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
-}
+function stopPolling() { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }
 
 async function handleRequestClick() {
   if (requestState === 'approved' && currentRequestName) { await enterApp(currentRequestName); return; }
   if (requestState === 'requesting' || requestState === 'requested') return;
-
   const name = $('authName').value.trim();
   if (!name) { $('authError').textContent = 'Please enter your name'; return; }
   if (name.length < 2) { $('authError').textContent = 'Name must be at least 2 characters'; return; }
   if (name.length > 24) { $('authError').textContent = 'Name is too long'; return; }
   if (!/^[a-zA-Z0-9 _-]+$/.test(name)) { $('authError').textContent = 'Only letters, numbers, spaces, _ and - allowed'; return; }
-
   $('authError').textContent = '';
   currentRequestName = name;
   localStorage.setItem(LASTNAME_KEY, name);
   setRequestState('requesting');
-
   const myDevice = getOrCreateDeviceId();
-
   try {
     const data = await cloudGet();
     const existing = data[name];
     const req = data.__requests__?.[name];
-
     if (existing?.ownerDeviceId === myDevice) {
-      if (existing.data || req?.status === 'approved') {
-        setRequestState('approved');
-        await enterApp(name);
-        return;
-      }
-      if (req?.status === 'pending' && req.requestingDeviceId === myDevice) {
-        setRequestState('requested');
-        startPolling(name);
-        return;
-      }
+      if (existing.data || req?.status === 'approved') { setRequestState('approved'); await enterApp(name); return; }
+      if (req?.status === 'pending' && req.requestingDeviceId === myDevice) { setRequestState('requested'); startPolling(name); return; }
     }
-
     if (existing?.ownerDeviceId && existing.ownerDeviceId !== myDevice) {
-      await setRequestStatus(name, 'pending', {
-        requestingDeviceId: myDevice,
-        isTakeover: true,
-        originalOwner: existing.ownerDeviceId
-      });
+      await setRequestStatus(name, 'pending', { requestingDeviceId: myDevice, isTakeover: true, originalOwner: existing.ownerDeviceId });
       setRequestState('requested', 'This name is on another device. Waiting for admin...');
-      startPolling(name);
-      return;
+      startPolling(name); return;
     }
-
-    if (req?.status === 'pending' && req.requestingDeviceId === myDevice) {
-      setRequestState('requested');
-      startPolling(name);
-      return;
-    }
-
-    if (req?.status === 'approved') {
-      await claimOwnership(name, myDevice);
-      setRequestState('approved');
-      await enterApp(name);
-      return;
-    }
-
-    if (req?.status === 'denied' && req.requestingDeviceId === myDevice) {
-      setRequestState('denied');
-      return;
-    }
-
-    await setRequestStatus(name, 'pending', {
-      requestingDeviceId: myDevice,
-      isTakeover: false
-    });
+    if (req?.status === 'pending' && req.requestingDeviceId === myDevice) { setRequestState('requested'); startPolling(name); return; }
+    if (req?.status === 'approved') { await claimOwnership(name, myDevice); setRequestState('approved'); await enterApp(name); return; }
+    if (req?.status === 'denied' && req.requestingDeviceId === myDevice) { setRequestState('denied'); return; }
+    await setRequestStatus(name, 'pending', { requestingDeviceId: myDevice, isTakeover: false });
     setRequestState('requested');
     startPolling(name);
   } catch (e) {
@@ -2984,9 +2720,7 @@ async function enterApp(name) {
     recomputeHearts();
     const data = await cloudGet();
     if (!data[name]) data[name] = {};
-    if (!data[name].ownerDeviceId || data[name].ownerDeviceId !== getOrCreateDeviceId()) {
-      data[name].ownerDeviceId = getOrCreateDeviceId();
-    }
+    if (!data[name].ownerDeviceId || data[name].ownerDeviceId !== getOrCreateDeviceId()) data[name].ownerDeviceId = getOrCreateDeviceId();
     if (!data[name].createdAt) data[name].createdAt = Date.now();
     await cloudSet(data);
     if (!state.lang) { state.lang = 'en'; await saveState(); }
@@ -3000,9 +2734,7 @@ async function enterApp(name) {
     }
     const rateMap = { slow: 0.7, normal: 0.9, fast: 1.1 };
     tts.setRate(rateMap[state.speed] || 0.9);
-  } finally {
-    enteringApp = false;
-  }
+  } finally { enteringApp = false; }
 }
 
 $('requestBtn').addEventListener('click', handleRequestClick);
@@ -3010,24 +2742,16 @@ $('authName').addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !$('requestBtn').disabled) { e.preventDefault(); handleRequestClick(); }
 });
 
-// ============ HEART CHIP + REFILL ============
 $('heartChip').addEventListener('click', () => {
-  if (state.hearts >= MAX_HEARTS) {
-    toast('You have full hearts! ❤️');
-  } else {
+  if (state.hearts >= MAX_HEARTS) toast('You have full hearts! ❤️');
+  else {
     const nextTime = getNextHeartTime();
-    if (nextTime) {
-      const remaining = nextTime - Date.now();
-      toast(`Next heart in ${formatCountdown(remaining)}`);
-    }
+    if (nextTime) toast(`Next heart in ${formatCountdown(nextTime - Date.now())}`);
   }
 });
 
 async function refillHearts() {
-  if (state.gems < HEART_REFILL_COST) {
-    toast(`Not enough gems (need 💎 ${HEART_REFILL_COST})`);
-    return;
-  }
+  if (state.gems < HEART_REFILL_COST) { toast(`Not enough gems (need 💎 ${HEART_REFILL_COST})`); return; }
   state.gems -= HEART_REFILL_COST;
   state.hearts = MAX_HEARTS;
   state.heartTimerStartedAt = null;
@@ -3039,7 +2763,6 @@ async function refillHearts() {
 
 $('heartRefillBtn').addEventListener('click', refillHearts);
 
-// ============ FORGOT FLOW ============
 const forgotBackdrop = $('forgotBackdrop');
 const forgotContent = $('forgotContent');
 const forgotCloseX = $('forgotCloseX');
@@ -3075,69 +2798,29 @@ function showForgotScreen(screenName, data = {}) {
 
 function getForgotScreenHTML(screenName, data) {
   switch (screenName) {
-    case 'confirm':
-      return `
-        <div class="forgot-icon-big">🤔</div>
-        <div class="forgot-title">Forgot your username?</div>
-        <div class="forgot-subtitle">Are you sure? We'll help you find it again.</div>
-        <div class="forgot-row-2">
-          <button class="forgot-action yes" id="forgotYes">Yes</button>
-          <button class="forgot-action no" id="forgotNo">No</button>
-        </div>
-      `;
-    case 'loading':
-      return `<div class="forgot-loading"><div class="spinner-lg"></div><div class="loading-text">${data.text || 'Preparing...'}</div></div>`;
-    case 'form':
-      return `
-        <div class="forgot-icon-big">✏️</div>
-        <div class="forgot-title">Help us find you</div>
-        <div class="forgot-subtitle">Tell us a few things so we can match you to your account.</div>
-        <div class="forgot-field">
-          <label class="forgot-label">What's your name?<span class="req">*</span></label>
-          <input type="text" class="forgot-input" id="forgotName" placeholder="Your real name" maxlength="40" />
-        </div>
-        <div class="forgot-field">
-          <label class="forgot-label">What do you remember from your username?<span class="req">*</span></label>
-          <input type="text" class="forgot-input" id="forgotRemembered" placeholder="e.g. it had 'alex' in it" maxlength="40" />
-        </div>
-        <div class="forgot-field">
-          <label class="forgot-label">Anything else you want us to know?<span class="opt">(optional)</span></label>
-          <textarea class="forgot-input textarea" id="forgotExplain" placeholder="e.g. I created it around March" maxlength="300"></textarea>
-        </div>
-        <button class="forgot-submit" id="forgotSubmit" disabled><span>Send Request</span></button>
-      `;
-    case 'sending':
-      return `<div class="forgot-loading"><div class="spinner-lg"></div><div class="loading-text">Sending your request...</div></div>`;
-    case 'sent':
-      return `<div class="forgot-success"><div class="success-icon">✅</div><div class="success-title">Sent!</div><div class="success-sub">Our team will review your request and get back to you soon.</div></div>`;
-    case 'pending':
-      return `<div class="forgot-pending"><div class="pending-icon">⏳</div><div class="pending-title">Pending Review</div><div class="pending-sub">Our team is looking into your request.</div><div class="pending-sub" style="font-size:12px;opacity:0.7;">Submitted ${data.timeAgo || 'recently'}</div></div>`;
-    case 'answered':
-      return `
-        <div class="forgot-message">
-          <div class="company-seal">📬 Message from Danfrolat</div>
-          <div class="letter">
-            We noticed that you asked about your username.<br><br>
-            After checking our records, we found your account. Your username is:
-            <span class="username-highlight">${escapeHtmlHTML(data.answer)}</span>
-            Welcome back — we're glad you're here.
-          </div>
-          <div class="signature">— The Danfrolat Team 💚</div>
-        </div>
-        <button class="forgot-request-again" id="forgotRequestAgain">↺ Send another request</button>
-      `;
-    case 'declined':
-      return `
-        <div class="forgot-message">
-          <div class="company-seal">📬 Message from Danfrolat</div>
-          <div class="letter">
-            We received your request about a forgotten username.<br><br>
-            Unfortunately, after careful review, we weren't able to verify that this request came from the account owner.
-          </div>
-          <div class="signature">— The Danfrolat Team 💚</div>
-        </div>
-        <button class="forgot-request-again" id="forgotRequestAgain">↺ Try again</button>
-      `;
+    case 'confirm': return `<div class="forgot-icon-big">🤔</div><div class="forgot-title">Forgot your username?</div><div class="forgot-subtitle">Are you sure? We'll help you find it again.</div><div class="forgot-row-2"><button class="forgot-action yes" id="forgotYes">Yes</button><button class="forgot-action no" id="forgotNo">No</button></div>`;
+    case 'loading': return `<div class="forgot-loading"><div class="spinner-lg"></div><div class="loading-text">${data.text || 'Preparing...'}</div></div>`;
+    case 'form': return `
+      <div class="forgot-icon-big">✏️</div><div class="forgot-title">Help us find you</div>
+      <div class="forgot-subtitle">Tell us a few things so we can match you to your account.</div>
+      <div class="forgot-field"><label class="forgot-label">What's your name?<span class="req">*</span></label><input type="text" class="forgot-input" id="forgotName" placeholder="Your real name" maxlength="40" /></div>
+      <div class="forgot-field"><label class="forgot-label">What do you remember from your username?<span class="req">*</span></label><input type="text" class="forgot-input" id="forgotRemembered" placeholder="e.g. it had 'alex' in it" maxlength="40" /></div>
+      <div class="forgot-field"><label class="forgot-label">Anything else you want us to know?<span class="opt">(optional)</span></label><textarea class="forgot-input textarea" id="forgotExplain" placeholder="e.g. I created it around March" maxlength="300"></textarea></div>
+      <button class="forgot-submit" id="forgotSubmit" disabled><span>Send Request</span></button>`;
+    case 'sending': return `<div class="forgot-loading"><div class="spinner-lg"></div><div class="loading-text">Sending your request...</div></div>`;
+    case 'sent': return `<div class="forgot-success"><div class="success-icon">✅</div><div class="success-title">Sent!</div><div class="success-sub">Our team will review your request and get back to you soon.</div></div>`;
+    case 'pending': return `<div class="forgot-pending"><div class="pending-icon">⏳</div><div class="pending-title">Pending Review</div><div class="pending-sub">Our team is looking into your request.</div><div class="pending-sub" style="font-size:12px;opacity:0.7;">Submitted ${data.timeAgo || 'recently'}</div></div>`;
+    case 'answered': return `
+      <div class="forgot-message"><div class="company-seal">📬 Message from Danfrolat</div>
+      <div class="letter">We noticed that you asked about your username.<br><br>After checking our records, we found your account. Your username is:
+      <span class="username-highlight">${escapeHtmlHTML(data.answer)}</span>
+      Welcome back — we're glad you're here.</div><div class="signature">— The Danfrolat Team 💚</div></div>
+      <button class="forgot-request-again" id="forgotRequestAgain">↺ Send another request</button>`;
+    case 'declined': return `
+      <div class="forgot-message"><div class="company-seal">📬 Message from Danfrolat</div>
+      <div class="letter">We received your request about a forgotten username.<br><br>Unfortunately, after careful review, we weren't able to verify that this request came from the account owner.</div>
+      <div class="signature">— The Danfrolat Team 💚</div></div>
+      <button class="forgot-request-again" id="forgotRequestAgain">↺ Try again</button>`;
     default: return '';
   }
 }
@@ -3148,10 +2831,7 @@ function escapeHtmlHTML(s) {
 
 function bindForgotScreenEvents(screenName, data) {
   if (screenName === 'confirm') {
-    $('forgotYes').addEventListener('click', () => {
-      showForgotScreen('loading', { text: 'Checking...' });
-      setTimeout(() => showForgotScreen('form'), 1200);
-    });
+    $('forgotYes').addEventListener('click', () => { showForgotScreen('loading', { text: 'Checking...' }); setTimeout(() => showForgotScreen('form'), 1200); });
     $('forgotNo').addEventListener('click', closeForgotModal);
   }
   if (screenName === 'form') {
@@ -3159,21 +2839,13 @@ function bindForgotScreenEvents(screenName, data) {
     const rememberedInput = $('forgotRemembered');
     const explainInput = $('forgotExplain');
     const submitBtn = $('forgotSubmit');
-    const updateSubmit = () => {
-      const valid = nameInput.value.trim().length >= 2 && rememberedInput.value.trim().length >= 1;
-      submitBtn.disabled = !valid;
-    };
+    const updateSubmit = () => { submitBtn.disabled = !(nameInput.value.trim().length >= 2 && rememberedInput.value.trim().length >= 1); };
     nameInput.addEventListener('input', updateSubmit);
     rememberedInput.addEventListener('input', updateSubmit);
     setTimeout(() => nameInput.focus(), 200);
     submitBtn.addEventListener('click', async () => {
       if (submitBtn.disabled) return;
-      const payload = {
-        name: nameInput.value.trim(),
-        remembered: rememberedInput.value.trim(),
-        explanation: explainInput.value.trim(),
-        status: 'pending'
-      };
+      const payload = { name: nameInput.value.trim(), remembered: rememberedInput.value.trim(), explanation: explainInput.value.trim(), status: 'pending' };
       showForgotScreen('sending');
       try {
         await setForgotRecord(getOrCreateDeviceId(), payload);
@@ -3184,12 +2856,7 @@ function bindForgotScreenEvents(screenName, data) {
   }
   if (screenName === 'answered' || screenName === 'declined') {
     const againBtn = $('forgotRequestAgain');
-    if (againBtn) {
-      againBtn.addEventListener('click', async () => {
-        showForgotScreen('loading', { text: 'Opening form...' });
-        setTimeout(() => showForgotScreen('form'), 700);
-      });
-    }
+    if (againBtn) againBtn.addEventListener('click', async () => { showForgotScreen('loading', { text: 'Opening form...' }); setTimeout(() => showForgotScreen('form'), 700); });
     markForgotRead(getOrCreateDeviceId()).then(() => $('forgotBtn').classList.remove('attention'));
   }
 }
@@ -3198,31 +2865,9 @@ async function openForgotFlow() {
   try {
     const rec = await getForgotRecord(getOrCreateDeviceId());
     if (rec) {
-      if (rec.status === 'pending') {
-        const ago = formatTimeAgo(rec.timestamp);
-        openForgotModal('pending');
-        setTimeout(() => {
-          forgotContent.innerHTML = getForgotScreenHTML('pending', { timeAgo: ago });
-          bindForgotScreenEvents('pending', {});
-        }, 250);
-        return;
-      }
-      if (rec.status === 'answered' && rec.answer) {
-        openForgotModal('answered');
-        setTimeout(() => {
-          forgotContent.innerHTML = getForgotScreenHTML('answered', { answer: rec.answer });
-          bindForgotScreenEvents('answered', { answer: rec.answer });
-        }, 250);
-        return;
-      }
-      if (rec.status === 'declined') {
-        openForgotModal('declined');
-        setTimeout(() => {
-          forgotContent.innerHTML = getForgotScreenHTML('declined', {});
-          bindForgotScreenEvents('declined', {});
-        }, 250);
-        return;
-      }
+      if (rec.status === 'pending') { const ago = formatTimeAgo(rec.timestamp); openForgotModal('pending'); setTimeout(() => { forgotContent.innerHTML = getForgotScreenHTML('pending', { timeAgo: ago }); bindForgotScreenEvents('pending', {}); }, 250); return; }
+      if (rec.status === 'answered' && rec.answer) { openForgotModal('answered'); setTimeout(() => { forgotContent.innerHTML = getForgotScreenHTML('answered', { answer: rec.answer }); bindForgotScreenEvents('answered', { answer: rec.answer }); }, 250); return; }
+      if (rec.status === 'declined') { openForgotModal('declined'); setTimeout(() => { forgotContent.innerHTML = getForgotScreenHTML('declined', {}); bindForgotScreenEvents('declined', {}); }, 250); return; }
     }
     openForgotModal('confirm');
   } catch (e) { openForgotModal('confirm'); }
@@ -3245,23 +2890,15 @@ async function checkForgotAttention() {
   if ($('auth').classList.contains('active') === false) return;
   try {
     const rec = await getForgotRecord(getOrCreateDeviceId());
-    if (rec && (rec.status === 'answered' || rec.status === 'declined') && !rec.read) {
-      $('forgotBtn').classList.add('attention');
-    } else {
-      $('forgotBtn').classList.remove('attention');
-    }
+    if (rec && (rec.status === 'answered' || rec.status === 'declined') && !rec.read) $('forgotBtn').classList.add('attention');
+    else $('forgotBtn').classList.remove('attention');
   } catch (e) {}
 }
 
 setInterval(checkForgotAttention, 15000);
 
-// ============ QUIT MODAL ============
-function openQuitModal() {
-  $('quitBackdrop').classList.add('show');
-}
-function closeQuitModal() {
-  $('quitBackdrop').classList.remove('show');
-}
+function openQuitModal() { $('quitBackdrop').classList.add('show'); }
+function closeQuitModal() { $('quitBackdrop').classList.remove('show'); }
 $('quitStayBtn').addEventListener('click', closeQuitModal);
 $('quitLeaveBtn').addEventListener('click', () => {
   closeQuitModal();
@@ -3272,83 +2909,49 @@ $('quitLeaveBtn').addEventListener('click', () => {
 });
 $('quitBackdrop').addEventListener('click', (e) => { if (e.target === $('quitBackdrop')) closeQuitModal(); });
 
-// ============ BOOT ============
 $('authMascot').innerHTML = mascotSVG(110);
 getOrCreateDeviceId();
 
 async function boot() {
   const myDevice = getOrCreateDeviceId();
   const session = getSession();
-
   if (session) {
     try {
       const data = await cloudGet();
       const existing = data[session];
       const req = data.__requests__?.[session];
-
-      if (existing?.ownerDeviceId === myDevice && (existing.data || req?.status === 'approved')) {
-        await enterApp(session);
-        return;
-      }
+      if (existing?.ownerDeviceId === myDevice && (existing.data || req?.status === 'approved')) { await enterApp(session); return; }
       if (existing?.ownerDeviceId && existing.ownerDeviceId !== myDevice) {
-        clearSession();
-        showScreen('auth');
-        $('authName').value = session;
-        currentRequestName = session;
-        setRequestState('idle', '🔒 This name is on another device');
-        checkForgotAttention();
-        return;
+        clearSession(); showScreen('auth'); $('authName').value = session; currentRequestName = session;
+        setRequestState('idle', '🔒 This name is on another device'); checkForgotAttention(); return;
       }
       if (req?.status === 'pending' && req.requestingDeviceId === myDevice) {
-        currentRequestName = session;
-        $('authName').value = session;
-        setRequestState('requested');
-        startPolling(session);
-        showScreen('auth');
-        checkForgotAttention();
-        return;
+        currentRequestName = session; $('authName').value = session;
+        setRequestState('requested'); startPolling(session); showScreen('auth'); checkForgotAttention(); return;
       }
-      if (req?.status === 'approved') {
-        await claimOwnership(session, myDevice);
-        await enterApp(session);
-        return;
-      }
+      if (req?.status === 'approved') { await claimOwnership(session, myDevice); await enterApp(session); return; }
       clearSession();
-    } catch (e) {
-      showScreen('auth');
-      checkForgotAttention();
-      return;
-    }
+    } catch (e) { showScreen('auth'); checkForgotAttention(); return; }
   }
-
   showScreen('auth');
   const lastName = localStorage.getItem(LASTNAME_KEY);
   if (lastName) {
-    $('authName').value = lastName;
-    currentRequestName = lastName;
+    $('authName').value = lastName; currentRequestName = lastName;
     try {
       const data = await cloudGet();
       const existing = data[lastName];
       const req = data.__requests__?.[lastName];
-      if (existing?.ownerDeviceId === myDevice && (existing.data || req?.status === 'approved')) {
-        setRequestState('approved');
-      } else if (existing?.ownerDeviceId && existing.ownerDeviceId !== myDevice) {
-        setRequestState('idle', '🔒 This name is on another device');
-      } else if (req?.status === 'pending' && req.requestingDeviceId === myDevice) {
-        setRequestState('requested');
-        startPolling(lastName);
-      } else if (req?.status === 'approved' && req.requestingDeviceId === myDevice) {
-        setRequestState('approved');
-      } else if (req?.status === 'denied' && req.requestingDeviceId === myDevice) {
-        setRequestState('denied');
-      }
+      if (existing?.ownerDeviceId === myDevice && (existing.data || req?.status === 'approved')) setRequestState('approved');
+      else if (existing?.ownerDeviceId && existing.ownerDeviceId !== myDevice) setRequestState('idle', '🔒 This name is on another device');
+      else if (req?.status === 'pending' && req.requestingDeviceId === myDevice) { setRequestState('requested'); startPolling(lastName); }
+      else if (req?.status === 'approved' && req.requestingDeviceId === myDevice) setRequestState('approved');
+      else if (req?.status === 'denied' && req.requestingDeviceId === myDevice) setRequestState('denied');
     } catch (e) {}
   }
   setTimeout(() => $('authName')?.focus(), 350);
   checkForgotAttention();
 }
 
-// ============ NAV ============
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', () => {
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -3380,12 +2983,7 @@ function renderWordsList() {
   units.forEach(unitId => {
     const unit = VOCAB[unitId];
     let words = unit.words;
-    if (searchQuery) {
-      words = words.filter(w =>
-        w.da.toLowerCase().includes(searchQuery) ||
-        w.en.toLowerCase().includes(searchQuery) ||
-        w.df.toLowerCase().includes(searchQuery));
-    }
+    if (searchQuery) words = words.filter(w => w.da.toLowerCase().includes(searchQuery) || w.en.toLowerCase().includes(searchQuery) || w.df.toLowerCase().includes(searchQuery));
     if (words.length === 0) return;
     hasResults = true;
     const cat = document.createElement('div');
@@ -3407,6 +3005,7 @@ function renderWordsList() {
   if (!hasResults) list.innerHTML = '<div class="no-results">No words found</div>';
 }
 
+// ═══════════ HOME — renders final lesson with special styling ═══════════
 function renderHome() {
   recomputeHearts();
   $('streakVal').textContent = state.streak;
@@ -3435,17 +3034,20 @@ function renderHome() {
       </div>
       <div class="lessons"></div>`;
     const lessonsWrap = unitEl.querySelector('.lessons');
-    lessons.forEach((_, idx) => {
+    lessons.forEach((lesson, idx) => {
       const isCompleted = progress[idx]?.completed;
       const prevCompleted = idx === 0 || progress[idx - 1]?.completed;
       const isCurrent = !isCompleted && prevCompleted && accessible;
       const isLocked = !accessible || (!prevCompleted && !isCompleted);
       const node = document.createElement('div');
       node.className = 'lesson-node';
+      if (lesson.isFinal) node.classList.add('final-node');
       if (isCompleted) node.classList.add('completed');
       if (isCurrent) node.classList.add('current');
       if (isLocked) node.classList.add('locked');
-      node.innerHTML = `<span>${isLocked ? '🔒' : unit.icon}</span><div class="lesson-tooltip">${t('lesson')} ${idx + 1}</div>`;
+      const icon = isLocked ? '🔒' : (lesson.isFinal ? '🏆' : unit.icon);
+      const tip = lesson.isFinal ? `🏆 ${t('finalChallenge')}` : `${t('lesson')} ${idx + 1}`;
+      node.innerHTML = `<span>${icon}</span><div class="lesson-tooltip">${tip}</div>`;
       if (!isLocked) node.addEventListener('click', () => startLesson(parseInt(unitId), idx));
       lessonsWrap.appendChild(node);
     });
@@ -3474,15 +3076,20 @@ function startLesson(unitId, lessonIdx) {
   selectedAnswer = null;
   feedbackShown = false;
   $('lessonHearts').textContent = state.hearts;
+  const pf = $('progressFill');
+  if (lesson.isFinal) pf.classList.add('final-fill'); else pf.classList.remove('final-fill');
   showScreen('lesson');
   renderStep();
 }
 
+// ═══════════ BUILD STEPS ═══════════
 function buildSteps(lesson) {
   const cumulativeWords = [];
   for (let u = 1; u <= currentLesson.unitId; u++) {
     if (VOCAB[u]) cumulativeWords.push(...VOCAB[u].words);
   }
+  if (lesson.isFinal) return buildFinalSteps(lesson, cumulativeWords);
+
   const list = [];
   list.push({ type: 'intro', words: lesson.words });
   lesson.words.forEach((w, i) => {
@@ -3491,16 +3098,12 @@ function buildSteps(lesson) {
       choices: shuffle([w.df, ...getDistractors(w, cumulativeWords, 3, 'df')]),
       speakText: w.df, speakLang: 'df'
     });
-    if (i % 2 === 0) {
-      list.push({ type: 'type', prompt: getSourceWord(w), promptLabel: t('writeIn'), correct: w.df, speakText: w.df, speakLang: 'df' });
-    }
-    if (i % 2 === 1) {
-      list.push({
-        type: 'mcq', prompt: w.df, promptLabel: t('whatMeans'), correct: getSourceWord(w),
-        choices: shuffle([getSourceWord(w), ...getDistractors(w, cumulativeWords, 3, state.lang)]),
-        speakText: w.df, speakLang: 'df'
-      });
-    }
+    if (i % 2 === 0) list.push({ type: 'type', prompt: getSourceWord(w), promptLabel: t('writeIn'), correct: w.df, speakText: w.df, speakLang: 'df' });
+    if (i % 2 === 1) list.push({
+      type: 'mcq', prompt: w.df, promptLabel: t('whatMeans'), correct: getSourceWord(w),
+      choices: shuffle([getSourceWord(w), ...getDistractors(w, cumulativeWords, 3, state.lang)]),
+      speakText: w.df, speakLang: 'df'
+    });
   });
   lesson.sentences.forEach(s => {
     list.push({
@@ -3519,21 +3122,117 @@ function buildSteps(lesson) {
       const reviewWords = VOCAB[randomUnitId].words;
       if (!reviewWords || reviewWords.length === 0) continue;
       const randomWord = reviewWords[Math.floor(Math.random() * reviewWords.length)];
-      if (r % 2 === 0) {
-        list.push({
-          type: 'mcq', prompt: getSourceWord(randomWord), promptLabel: t('translateTo'), isReview: true,
-          correct: randomWord.df,
-          choices: shuffle([randomWord.df, ...getDistractors(randomWord, cumulativeWords, 3, 'df')]),
-          speakText: randomWord.df, speakLang: 'df'
-        });
-      } else {
-        list.push({
-          type: 'type', prompt: getSourceWord(randomWord), promptLabel: t('writeIn'), isReview: true,
-          correct: randomWord.df, speakText: randomWord.df, speakLang: 'df'
-        });
-      }
+      if (r % 2 === 0) list.push({
+        type: 'mcq', prompt: getSourceWord(randomWord), promptLabel: t('translateTo'), isReview: true,
+        correct: randomWord.df,
+        choices: shuffle([randomWord.df, ...getDistractors(randomWord, cumulativeWords, 3, 'df')]),
+        speakText: randomWord.df, speakLang: 'df'
+      });
+      else list.push({
+        type: 'type', prompt: getSourceWord(randomWord), promptLabel: t('writeIn'), isReview: true,
+        correct: randomWord.df, speakText: randomWord.df, speakLang: 'df'
+      });
     }
   }
+  return list;
+}
+
+// ═══════════ FINAL CHALLENGE BUILDER — no intro, all words tested, no meaning hints ═══════════
+function buildFinalSteps(lesson, cumulativeWords) {
+  const list = [];
+  const allWords = lesson.words;
+  const allSentences = lesson.sentences;
+
+  // Phase 1 — Recognition: every word as MCQ (Danfrolat → Meaning) — no translation shown upfront
+  const phase1 = shuffle([...allWords]).slice(0, Math.min(25, allWords.length));
+  phase1.forEach(w => {
+    const sourceWord = getSourceWord(w);
+    const others = shuffle(cumulativeWords.filter(x => x.df !== w.df));
+    const choices = shuffle([
+      sourceWord,
+      ...others.slice(0, 3).map(x => state.lang === 'da' ? x.da : x.en)
+    ]);
+    list.push({
+      type: 'mcq',
+      prompt: w.df,
+      promptLabel: t('whatMeans'),
+      correct: sourceWord,
+      choices,
+      isFinal: true,
+      speakText: w.df,
+      speakLang: 'df'
+    });
+  });
+
+  // Phase 2 — Recall: type the meaning for a sample of words
+  const phase2 = shuffle([...allWords]).slice(0, Math.min(8, Math.ceil(allWords.length * 0.4)));
+  phase2.forEach(w => {
+    list.push({
+      type: 'type',
+      prompt: w.df,
+      promptLabel: t('typeTheMeaning'),
+      correct: getSourceWord(w),
+      isFinal: true,
+      speakText: w.df,
+      speakLang: 'df'
+    });
+  });
+
+  // Phase 3 — Production: type the Danfrolat for a sample of meanings (no hints)
+  const phase3 = shuffle([...allWords]).slice(0, Math.min(6, Math.ceil(allWords.length * 0.3)));
+  phase3.forEach(w => {
+    list.push({
+      type: 'type',
+      prompt: getSourceWord(w),
+      promptLabel: t('typeInDanfrolat'),
+      correct: w.df,
+      isFinal: true
+    });
+  });
+
+  // Phase 4 — Sentences (up to 3)
+  const phase4 = allSentences.slice(0, 3);
+  phase4.forEach(s => {
+    list.push({
+      type: 'bank',
+      prompt: getSourceWord(s),
+      promptLabel: t('buildSentence'),
+      correct: s.df,
+      words: shuffle(s.df.split(' ').concat(getSentenceDistractors(s.df, cumulativeWords))),
+      isFinal: true,
+      speakText: s.df,
+      speakLang: 'df'
+    });
+  });
+
+  // Phase 5 — Cross-unit review (3 hard MCQs from earlier units)
+  if (currentLesson.unitId > 1) {
+    const previousUnits = [];
+    for (let u = 1; u < currentLesson.unitId; u++) previousUnits.push(u);
+    for (let r = 0; r < 3; r++) {
+      if (previousUnits.length === 0) break;
+      const rid = previousUnits[Math.floor(Math.random() * previousUnits.length)];
+      const rw = VOCAB[rid].words[Math.floor(Math.random() * VOCAB[rid].words.length)];
+      const sourceWord = getSourceWord(rw);
+      const others = shuffle(cumulativeWords.filter(x => x.df !== rw.df));
+      const choices = shuffle([
+        sourceWord,
+        ...others.slice(0, 3).map(x => state.lang === 'da' ? x.da : x.en)
+      ]);
+      list.push({
+        type: 'mcq',
+        prompt: rw.df,
+        promptLabel: t('whatMeans'),
+        correct: sourceWord,
+        choices,
+        isFinal: true,
+        isReview: true,
+        speakText: rw.df,
+        speakLang: 'df'
+      });
+    }
+  }
+
   return list;
 }
 
@@ -3576,6 +3275,12 @@ function renderStep() {
   const label = document.createElement('div');
   label.className = 'q-type';
   label.textContent = step.promptLabel;
+  if (step.isFinal) {
+    const badge = document.createElement('span');
+    badge.className = 'final-badge';
+    badge.textContent = '🏆 FINAL';
+    label.appendChild(badge);
+  }
   if (step.isReview) {
     const badge = document.createElement('span');
     badge.className = 'review-badge';
@@ -3677,12 +3382,10 @@ function renderIntro(step, body) {
   title.className = 'q-type';
   title.textContent = t('newWords');
   body.appendChild(title);
-
   const prompt = document.createElement('div');
   prompt.className = 'q-prompt';
   prompt.textContent = t('mascotIntro');
   body.appendChild(prompt);
-
   step.words.forEach((w, i) => {
     const card = document.createElement('div');
     card.className = 'intro-word-card';
@@ -3695,7 +3398,6 @@ function renderIntro(step, body) {
     });
     body.appendChild(card);
   });
-
   $('footerBtn').disabled = false;
   $('footerBtn').textContent = t('continue');
   $('footerBtn').onclick = () => {
@@ -3707,6 +3409,10 @@ function renderIntro(step, body) {
 }
 
 function getMascotMessage(step) {
+  if (currentLesson?.isFinal) {
+    if (currentStep === 0) return '🏆 Final Challenge! No hints — trust your memory!';
+    return 'Stay sharp — you got this!';
+  }
   if (step.type === 'intro') return t('mascotIntro');
   if (currentStep === 1) return t('letsPractice');
   return t('mascotKeepGoing');
@@ -3768,13 +3474,9 @@ $('footerBtn').addEventListener('click', async () => {
       if (c.textContent === selectedAnswer) c.classList.add('wrong');
       if (c.textContent === step.correct) c.classList.add('correct');
     });
+    if (state.hearts <= 0) { setTimeout(() => showScreen('gameover'), 1200); return; }
 
-    if (state.hearts <= 0) {
-      setTimeout(() => showScreen('gameover'), 1200);
-      return;
-    }
-
-    // RE-QUEUE THE MISTAKE TO THE END
+    // Re-queue the mistake
     const retryStep = JSON.parse(JSON.stringify(step));
     retryStep.isRetry = true;
     if (retryStep.choices) retryStep.choices = shuffle(retryStep.choices);
@@ -3807,8 +3509,13 @@ async function finishLesson() {
   $('gemEarned').textContent = '+' + gemGain;
   const acc = initialStepsCount > 0 ? Math.round((firstTryCorrect / initialStepsCount) * 100) : 100;
   $('accuracyVal').textContent = acc + '%';
-  $('completeTitle').textContent = t('lessonComplete');
-  $('completeSub').textContent = t('greatProgress');
+  if (currentLesson.isFinal) {
+    $('completeTitle').textContent = '🏆 ' + t('finalComplete');
+    $('completeSub').textContent = t('legendary');
+  } else {
+    $('completeTitle').textContent = t('lessonComplete');
+    $('completeSub').textContent = t('greatProgress');
+  }
   showScreen('complete');
   confetti();
 }
@@ -3880,11 +3587,7 @@ $('logoutBtn').addEventListener('click', () => {
     stopPolling();
     clearSession();
     currentUser = null;
-    state = {
-      lang: null, xp: 0, gems: 50, hearts: 5, streak: 0,
-      lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal',
-      heartTimerStartedAt: null
-    };
+    state = { lang: null, xp: 0, gems: 50, hearts: 5, streak: 0, lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal', heartTimerStartedAt: null };
     $('authError').textContent = '';
     setRequestState('idle');
     showScreen('auth');
@@ -3893,21 +3596,13 @@ $('logoutBtn').addEventListener('click', () => {
   }
 });
 
-// ============ LIVE HEART TICK ============
 setInterval(() => {
   if (!currentUser) return;
-  const before = state.hearts;
   const changed = recomputeHearts();
-  if (changed) {
-    updateHeartUI();
-    saveState();
-  } else if (state.hearts < MAX_HEARTS) {
-    // Update countdown text
+  if (changed) { updateHeartUI(); saveState(); }
+  else if (state.hearts < MAX_HEARTS && $('heartStatusBar').style.display !== 'none') {
     const nextTime = getNextHeartTime();
-    if (nextTime && $('heartStatusBar').style.display !== 'none') {
-      const remaining = nextTime - Date.now();
-      $('heartStatusTimer').textContent = `next heart in ${formatCountdown(remaining)}`;
-    }
+    if (nextTime) $('heartStatusTimer').textContent = `next heart in ${formatCountdown(nextTime - Date.now())}`;
   }
 }, 1000);
 
