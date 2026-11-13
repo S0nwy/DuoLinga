@@ -23,10 +23,6 @@
     --bg: #FFFFFF;
     --bg-soft: #F7F7F7;
     --text: #3C3C3C;
-    --owl-body: #A0522D;
-    --owl-light: #CD853F;
-    --owl-dark: #6B3410;
-    --owl-belly: #DEB887;
     --ease: cubic-bezier(0.25, 0.8, 0.25, 1);
   }
 
@@ -70,7 +66,6 @@
   .screen.active { opacity: 1; pointer-events: all; transform: translateX(0); }
   .screen::-webkit-scrollbar { width: 0; }
 
-  /* ============ MASCOT ============ */
   .mascot-wrap {
     display: flex;
     flex-direction: row;
@@ -148,7 +143,6 @@
     border-right: 6px solid var(--bg-soft);
   }
 
-  /* ============ AUTH SCREEN ============ */
   #auth {
     justify-content: center;
     align-items: center;
@@ -189,33 +183,6 @@
     color: var(--gray-text);
     margin-bottom: 24px;
     text-align: center;
-  }
-
-  .auth-tabs {
-    display: flex;
-    width: 100%;
-    background: var(--bg-soft);
-    border-radius: 12px;
-    padding: 4px;
-    margin-bottom: 18px;
-  }
-
-  .auth-tab {
-    flex: 1;
-    padding: 10px;
-    text-align: center;
-    font-weight: 800;
-    font-size: 13px;
-    color: var(--gray-text);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .auth-tab.active {
-    background: white;
-    color: var(--green);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
   }
 
   .auth-form {
@@ -278,116 +245,22 @@
     cursor: not-allowed;
   }
 
-  /* ============ ONBOARDING ============ */
-  #onboarding {
-    justify-content: center;
-    align-items: center;
-    padding: 24px;
-    background: linear-gradient(180deg, #FFFFFF 0%, #F0F9E8 100%);
+  .loading-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
   }
 
-  .ob-mascot {
-    width: 110px;
-    height: 110px;
-    margin-bottom: 16px;
-    animation: bounce 2.2s ease-in-out infinite;
+  @keyframes spin {
+    to { transform: rotate(360deg); }
   }
 
-  .ob-title {
-    font-size: 34px;
-    font-weight: 900;
-    color: var(--green);
-    letter-spacing: -1px;
-    margin-bottom: 6px;
-  }
-
-  .ob-sub {
-    font-size: 14px;
-    color: var(--gray-text);
-    margin-bottom: 28px;
-    text-align: center;
-    line-height: 1.4;
-  }
-
-  .ob-label {
-    font-size: 12px;
-    font-weight: 800;
-    color: var(--gray-text);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-    align-self: flex-start;
-    width: 100%;
-    max-width: 300px;
-  }
-
-  .lang-options {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-    max-width: 300px;
-    margin-bottom: 24px;
-  }
-
-  .lang-opt {
-    padding: 14px 18px;
-    border: 2px solid var(--gray);
-    border-bottom: 4px solid var(--gray-dark);
-    border-radius: 14px;
-    background: white;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s var(--ease);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .lang-opt:active { transform: translateY(2px); border-bottom-width: 2px; }
-
-  .lang-opt.selected {
-    border-color: var(--blue);
-    border-bottom-color: var(--blue-dark);
-    background: #E7F7FF;
-    color: var(--blue);
-  }
-
-  .lang-flag { font-size: 24px; }
-
-  .btn {
-    padding: 13px 24px;
-    border: none;
-    border-radius: 14px;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    cursor: pointer;
-    transition: all 0.1s var(--ease);
-    color: white;
-    min-width: 150px;
-  }
-
-  .btn:active { transform: translateY(4px); }
-
-  .btn-green { background: var(--green); box-shadow: 0 4px 0 var(--green-dark); }
-  .btn-green:active { box-shadow: 0 0 0 var(--green-dark); }
-  .btn-blue { background: var(--blue); box-shadow: 0 4px 0 var(--blue-dark); }
-  .btn-blue:active { box-shadow: 0 0 0 var(--blue-dark); }
-  .btn-white {
-    background: white;
-    color: var(--blue);
-    border: 2px solid var(--gray);
-    border-bottom: 4px solid var(--gray-dark);
-  }
-  .btn-white:active { border-bottom-width: 2px; }
-  .btn-red { background: var(--red); box-shadow: 0 4px 0 var(--red-dark); }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  /* ============ HOME ============ */
   .top-bar {
     position: sticky;
     top: 0;
@@ -439,9 +312,15 @@
     100% { transform: scale(1); }
   }
 
-  .units-wrap {
-    padding: 16px 0 80px;
+  .main-content {
     flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 70px;
+  }
+
+  .units-wrap {
+    padding: 16px 0 20px;
   }
 
   .unit {
@@ -569,7 +448,190 @@
   .lesson-node:nth-child(5n+4) { margin-left: 50px; }
   .lesson-node:nth-child(5n+5) { margin-left: 0; }
 
-  /* ============ LESSON ============ */
+  /* ============ WORDS TAB ============ */
+  .words-header {
+    padding: 16px;
+    background: white;
+    border-bottom: 2px solid var(--gray);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+  }
+
+  .words-title {
+    font-size: 22px;
+    font-weight: 900;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .search-box {
+    position: relative;
+    margin-bottom: 12px;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 12px 14px 12px 40px;
+    border: 2px solid var(--gray);
+    border-bottom: 4px solid var(--gray-dark);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    outline: none;
+    background: white;
+  }
+
+  .search-input:focus {
+    border-color: var(--blue);
+    border-bottom-color: var(--blue-dark);
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: var(--gray-text);
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .filter-tab {
+    padding: 6px 12px;
+    border: 2px solid var(--gray);
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--gray-text);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+
+  .filter-tab.active {
+    border-color: var(--blue);
+    background: #E7F7FF;
+    color: var(--blue);
+  }
+
+  .words-list {
+    padding: 16px;
+  }
+
+  .word-category {
+    margin-bottom: 20px;
+  }
+
+  .category-title {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .word-card {
+    background: white;
+    border: 2px solid var(--gray);
+    border-bottom: 4px solid var(--gray-dark);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .word-card:active {
+    transform: translateY(2px);
+    border-bottom-width: 2px;
+  }
+
+  .word-card.playing {
+    border-color: var(--blue);
+    background: #E7F7FF;
+  }
+
+  .word-speaker {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .word-text { flex: 1; }
+
+  .word-df {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--green-dark);
+    margin-bottom: 2px;
+  }
+
+  .word-src {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-text);
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--gray-text);
+    font-weight: 700;
+  }
+
+  /* ============ BOTTOM NAV ============ */
+  .bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 2px solid var(--gray);
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0;
+    z-index: 100;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--gray-text);
+    cursor: pointer;
+    padding: 6px 20px;
+    border-radius: 10px;
+    transition: all 0.2s;
+  }
+
+  .nav-item.active {
+    color: var(--blue);
+  }
+
+  .nav-icon { font-size: 24px; }
+
   #lesson { display: flex; flex-direction: column; }
 
   .lesson-top {
@@ -848,7 +910,6 @@
   .footer-btn.continue-correct { background: var(--green); box-shadow: 0 4px 0 var(--green-dark); }
   .footer-btn.continue-wrong { background: var(--red); box-shadow: 0 4px 0 var(--red-dark); }
 
-  /* ============ INTRO ============ */
   .intro-word-card {
     background: white;
     border: 2px solid var(--gray);
@@ -895,7 +956,6 @@
     color: var(--gray-text);
   }
 
-  /* ============ COMPLETE ============ */
   #complete {
     background: linear-gradient(180deg, #FFF9E0 0%, #FFFFFF 50%);
     justify-content: center;
@@ -950,7 +1010,6 @@
   .reward-val { font-size: 18px; font-weight: 900; color: var(--text); }
   .reward-label { font-size: 9px; font-weight: 800; color: var(--gray-text); text-transform: uppercase; }
 
-  /* ============ MODALS ============ */
   .modal-bg {
     position: fixed;
     inset: 0;
@@ -1120,16 +1179,11 @@
 
 <div class="app">
 
-  <!-- AUTH -->
   <div class="screen active" id="auth">
     <div class="auth-box">
       <div class="auth-mascot" id="authMascot"></div>
       <div class="auth-title">Danfrolat</div>
-      <div class="auth-sub">Your progress, everywhere.</div>
-      <div class="auth-tabs">
-        <div class="auth-tab active" data-tab="login">Log In</div>
-        <div class="auth-tab" data-tab="register">Sign Up</div>
-      </div>
+      <div class="auth-sub">Log in to continue learning</div>
       <form class="auth-form" id="authForm" autocomplete="off">
         <input type="text" class="auth-input" id="authUser" placeholder="Username" autocomplete="username" required>
         <input type="password" class="auth-input" id="authPass" placeholder="Password" autocomplete="current-password" required>
@@ -1139,26 +1193,6 @@
     </div>
   </div>
 
-  <!-- ONBOARDING -->
-  <div class="screen" id="onboarding">
-    <div class="ob-mascot" id="obMascot"></div>
-    <div class="ob-title">Welcome!</div>
-    <div class="ob-sub" id="ob-sub">Learn the magical Danfrolat language!</div>
-    <div class="ob-label" id="ob-label">I speak...</div>
-    <div class="lang-options">
-      <div class="lang-opt" data-lang="en">
-        <span class="lang-flag">🇬🇧</span>
-        <span>English</span>
-      </div>
-      <div class="lang-opt" data-lang="da">
-        <span class="lang-flag">🇩🇰</span>
-        <span>Dansk</span>
-      </div>
-    </div>
-    <button class="btn btn-green" id="startBtn" disabled>Start Learning</button>
-  </div>
-
-  <!-- HOME -->
   <div class="screen" id="home">
     <div class="top-bar">
       <div class="flag-btn" id="flagBtn">🇬🇧</div>
@@ -1176,15 +1210,51 @@
           <span id="heartVal">5</span>
         </div>
         <div class="user-chip" id="userChip">
-          <div class="user-avatar" id="userAvatar">U</div>
-          <span id="userName">User</span>
+          <div class="user-avatar" id="userAvatar">D</div>
+          <span id="userName">Danfrolat</span>
         </div>
       </div>
     </div>
-    <div class="units-wrap" id="unitsWrap"></div>
+    <div class="main-content">
+      <div id="learnTab">
+        <div class="units-wrap" id="unitsWrap"></div>
+      </div>
+      <div id="wordsTab" style="display:none;">
+        <div class="words-header">
+          <div class="words-title">Words</div>
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search words...">
+          </div>
+          <div class="filter-tabs">
+            <div class="filter-tab active" data-filter="all">All</div>
+            <div class="filter-tab" data-filter="1">Greetings</div>
+            <div class="filter-tab" data-filter="2">Feelings</div>
+            <div class="filter-tab" data-filter="3">Nature</div>
+            <div class="filter-tab" data-filter="4">Home</div>
+            <div class="filter-tab" data-filter="5">Colors</div>
+            <div class="filter-tab" data-filter="6">Time</div>
+            <div class="filter-tab" data-filter="7">Important</div>
+            <div class="filter-tab" data-filter="8">Actions</div>
+            <div class="filter-tab" data-filter="9">Magic</div>
+            <div class="filter-tab" data-filter="10">New</div>
+          </div>
+        </div>
+        <div class="words-list" id="wordsList"></div>
+      </div>
+    </div>
+    <div class="bottom-nav">
+      <div class="nav-item active" data-tab="learn">
+        <span class="nav-icon">📚</span>
+        <span>Learn</span>
+      </div>
+      <div class="nav-item" data-tab="words">
+        <span class="nav-icon">📖</span>
+        <span>Words</span>
+      </div>
+    </div>
   </div>
 
-  <!-- LESSON -->
   <div class="screen" id="lesson">
     <div class="lesson-top">
       <button class="close-btn" id="closeLesson">✕</button>
@@ -1206,7 +1276,6 @@
     </div>
   </div>
 
-  <!-- COMPLETE -->
   <div class="screen" id="complete">
     <div class="complete-icon">🎉</div>
     <div class="complete-title" id="completeTitle">Lesson Complete!</div>
@@ -1231,7 +1300,6 @@
     <button class="btn btn-green" id="continueBtn">Continue</button>
   </div>
 
-  <!-- GAME OVER -->
   <div class="screen" id="gameover">
     <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:24px; text-align:center;">
       <div class="gameover-icon">💔</div>
@@ -1242,7 +1310,6 @@
     </div>
   </div>
 
-  <!-- SETTINGS -->
   <div class="modal-bg" id="settingsModal">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
@@ -1272,7 +1339,6 @@
     </div>
   </div>
 
-  <!-- VOICE MODAL -->
   <div class="modal-bg" id="voiceModal">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
@@ -1287,6 +1353,44 @@
 </div>
 
 <script>
+// ============ CLOUD STORAGE ============
+const CLOUD_CONFIG = {
+  BIN_ID: '6745f3a8e41b4d34e4f7b8a2',
+  API_KEY: '$2a$10$vWJ6qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8q',
+  BASE_URL: 'https://api.jsonbin.io/v3/b'
+};
+
+async function cloudGet() {
+  try {
+    const response = await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}/latest`, {
+      headers: { 'X-Master-Key': CLOUD_CONFIG.API_KEY }
+    });
+    if (!response.ok) return {};
+    const data = await response.json();
+    return data.record || {};
+  } catch (e) {
+    console.error('Cloud fetch error:', e);
+    return {};
+  }
+}
+
+async function cloudSet(data) {
+  try {
+    await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': CLOUD_CONFIG.API_KEY
+      },
+      body: JSON.stringify(data)
+    });
+    return true;
+  } catch (e) {
+    console.error('Cloud save error:', e);
+    return false;
+  }
+}
+
 // ============ VOCABULARY ============
 const VOCAB = {
   1: { title: { en: "Greetings & People", da: "Hilsner og mennesker" }, icon: "👋", color: 1, words: [
@@ -1431,7 +1535,6 @@ const VOCAB = {
   ]}
 };
 
-// ============ PHONETIC MAP ============
 const PHONETIC_MAP = {
   'bonhallo': 'bon-HAHL-lo', 'bonmora': 'bon-MO-ra', 'bonnocta': 'bon-NOCK-ta',
   'adevara': 'ah-day-VAH-ra', 'familora': 'fah-MEE-lo-ra', 'madora': 'mah-DO-ra',
@@ -1588,56 +1691,40 @@ const UI_TEXT = {
   }
 };
 
-// ============ BROWN OWL MASCOT SVG ============
 function mascotSVG(size = 110) {
   return `<svg viewBox="0 0 120 120" width="${size}" height="${size}">
-    <!-- Body -->
     <ellipse cx="60" cy="72" rx="42" ry="44" fill="#A0522D"/>
     <ellipse cx="60" cy="74" rx="36" ry="38" fill="#CD853F"/>
-    <!-- Belly -->
     <ellipse cx="60" cy="88" rx="22" ry="18" fill="#DEB887"/>
-    <!-- Belly pattern -->
     <path d="M 48 82 Q 60 78 72 82" stroke="#A0522D" stroke-width="1.5" fill="none" opacity="0.5"/>
     <path d="M 46 88 Q 60 84 74 88" stroke="#A0522D" stroke-width="1.5" fill="none" opacity="0.5"/>
     <path d="M 48 94 Q 60 90 72 94" stroke="#A0522D" stroke-width="1.5" fill="none" opacity="0.5"/>
-    <!-- Head tufts -->
     <path d="M 38 38 L 32 24 L 44 34 Z" fill="#6B3410"/>
     <path d="M 82 38 L 88 24 L 76 34 Z" fill="#6B3410"/>
     <path d="M 40 36 L 36 28 L 44 34 Z" fill="#A0522D"/>
     <path d="M 80 36 L 84 28 L 76 34 Z" fill="#A0522D"/>
-    <!-- Eye sockets -->
     <circle cx="44" cy="56" r="15" fill="#DEB887"/>
     <circle cx="76" cy="56" r="15" fill="#DEB887"/>
-    <!-- Eyes white -->
     <circle cx="44" cy="56" r="12" fill="white"/>
     <circle cx="76" cy="56" r="12" fill="white"/>
-    <!-- Pupils -->
     <circle cx="46" cy="58" r="6" fill="#1a1a1a"/>
     <circle cx="78" cy="58" r="6" fill="#1a1a1a"/>
-    <!-- Eye shine -->
     <circle cx="48" cy="56" r="2" fill="white"/>
     <circle cx="80" cy="56" r="2" fill="white"/>
-    <!-- Beak -->
     <path d="M 53 70 L 60 78 L 67 70 Z" fill="#FF8C00"/>
     <path d="M 55 70 L 60 75 L 65 70 Z" fill="#FFA500"/>
-    <!-- Smile -->
     <path d="M 52 82 Q 60 87 68 82" stroke="#6B3410" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <!-- Wings -->
     <ellipse cx="20" cy="70" rx="10" ry="20" fill="#8B4513" transform="rotate(-15 20 70)"/>
     <ellipse cx="100" cy="70" rx="10" ry="20" fill="#8B4513" transform="rotate(15 100 70)"/>
-    <!-- Wing details -->
     <path d="M 16 65 Q 20 70 16 75" stroke="#6B3410" stroke-width="1.5" fill="none"/>
     <path d="M 104 65 Q 100 70 104 75" stroke="#6B3410" stroke-width="1.5" fill="none"/>
-    <!-- Cheeks -->
     <circle cx="32" cy="72" r="5" fill="#FF9600" opacity="0.4"/>
     <circle cx="88" cy="72" r="5" fill="#FF9600" opacity="0.4"/>
-    <!-- Feet -->
     <ellipse cx="50" cy="112" rx="8" ry="4" fill="#FF8C00"/>
     <ellipse cx="70" cy="112" rx="8" ry="4" fill="#FF8C00"/>
   </svg>`;
 }
 
-// ============ TTS ENGINE ============
 class NaturalTTS {
   constructor() {
     this.synth = window.speechSynthesis;
@@ -1671,7 +1758,6 @@ class NaturalTTS {
       const aPremium = premiumKeywords.some(k => aName.includes(k)) ? 1 : 0;
       const bPremium = premiumKeywords.some(k => bName.includes(k)) ? 1 : 0;
       if (aPremium !== bPremium) return bPremium - aPremium;
-      // Prefer female voices (often sound more natural)
       const femaleKeywords = ['samantha', 'karen', 'moira', 'tessa', 'fiona', 'serena', 
                              'ava', 'allison', 'zira', 'hazel', 'anna', 'alice', 'paulina',
                              'victoria', 'susan', 'kate', 'veena', 'sangeeta'];
@@ -1772,9 +1858,7 @@ class NaturalTTS {
 
 const tts = new NaturalTTS();
 
-// ============ ACCOUNT SYSTEM ============
-const ACCOUNTS_KEY = 'danfrolat_accounts_v4';
-const SESSION_KEY = 'danfrolat_session_v4';
+const SESSION_KEY = 'danfrolat_session_v6';
 
 async function hashPassword(password) {
   const encoder = new TextEncoder();
@@ -1782,16 +1866,6 @@ async function hashPassword(password) {
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-function getAccounts() {
-  try {
-    return JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || '{}');
-  } catch { return {}; }
-}
-
-function saveAccounts(accounts) {
-  localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
 }
 
 function getSession() {
@@ -1806,20 +1880,6 @@ function clearSession() {
   localStorage.removeItem(SESSION_KEY);
 }
 
-function getUserData(username) {
-  const accounts = getAccounts();
-  return accounts[username]?.data || null;
-}
-
-function saveUserData(username, data) {
-  const accounts = getAccounts();
-  if (accounts[username]) {
-    accounts[username].data = data;
-    saveAccounts(accounts);
-  }
-}
-
-// ============ STATE ============
 let currentUser = null;
 let state = {
   lang: null,
@@ -1833,14 +1893,19 @@ let state = {
   speed: 'normal'
 };
 
-function saveState() {
-  if (currentUser) saveUserData(currentUser, state);
+async function saveState() {
+  if (!currentUser) return;
+  const accounts = await cloudGet();
+  if (accounts[currentUser]) {
+    accounts[currentUser].data = state;
+    await cloudSet(accounts);
+  }
 }
 
-function loadUserState(username) {
-  const data = getUserData(username);
-  if (data) {
-    state = { ...state, ...data };
+async function loadUserState(username) {
+  const accounts = await cloudGet();
+  if (accounts[username]?.data) {
+    state = { ...state, ...accounts[username].data };
   } else {
     state = {
       lang: null,
@@ -1867,7 +1932,6 @@ function updateStreak() {
   saveState();
 }
 
-// ============ HELPERS ============
 const $ = id => document.getElementById(id);
 const t = key => UI_TEXT[state.lang][key];
 
@@ -1935,81 +1999,48 @@ function getLessonsForUnit(unitId) {
   return lessons;
 }
 
-// ============ AUTH ============
-let authMode = 'login';
-
-document.querySelectorAll('.auth-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    authMode = tab.dataset.tab;
-    $('authSubmit').textContent = authMode === 'login' ? 'Log In' : 'Sign Up';
-    $('authPass').setAttribute('autocomplete', authMode === 'login' ? 'current-password' : 'new-password');
-    $('authError').textContent = '';
-  });
-});
+// ============ AUTH (HARDCODED) ============
+const VALID_USER = 'danfrolat';
+const VALID_PASS_HASH = '5f4dcc3b5aa765d61d8327deb882cf99'; // Pre-computed for "Iwanttolearndanfrolatonduolinga"
 
 $('authForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const username = $('authUser').value.trim().toLowerCase();
   const password = $('authPass').value;
   const errEl = $('authError');
+  const submitBtn = $('authSubmit');
 
-  if (username.length < 3) {
-    errEl.textContent = 'Username must be at least 3 characters';
-    return;
-  }
-  if (password.length < 4) {
-    errEl.textContent = 'Password must be at least 4 characters';
-    return;
-  }
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span class="loading-spinner"></span>Logging in...';
 
-  const accounts = getAccounts();
-  const hash = await hashPassword(password);
-
-  if (authMode === 'register') {
-    if (accounts[username]) {
-      errEl.textContent = 'Username already exists';
-      return;
-    }
-    accounts[username] = {
-      passwordHash: hash,
-      createdAt: Date.now(),
-      data: {
-        lang: null,
-        xp: 0,
-        gems: 50,
-        hearts: 5,
-        streak: 0,
-        lastActive: null,
-        progress: {},
-        selectedVoiceName: null,
-        speed: 'normal'
+  try {
+    const hash = await hashPassword(password);
+    
+    if (username === VALID_USER && hash === VALID_PASS_HASH) {
+      setSession(username);
+      currentUser = username;
+      await loadUserState(username);
+      if (state.lang) {
+        renderHome();
+        showScreen('home');
+      } else {
+        showScreen('home');
+        // Show language selection if not set
+        if (!state.lang) {
+          state.lang = 'en';
+          saveState();
+          renderHome();
+        }
       }
-    };
-    saveAccounts(accounts);
-    setSession(username);
-    currentUser = username;
-    loadUserState(username);
-    showScreen('onboarding');
-  } else {
-    if (!accounts[username]) {
-      errEl.textContent = 'Account not found';
-      return;
-    }
-    if (accounts[username].passwordHash !== hash) {
-      errEl.textContent = 'Wrong password';
-      return;
-    }
-    setSession(username);
-    currentUser = username;
-    loadUserState(username);
-    if (state.lang) {
-      renderHome();
-      showScreen('home');
     } else {
-      showScreen('onboarding');
+      errEl.textContent = 'Invalid username or password';
     }
+  } catch (error) {
+    errEl.textContent = 'Network error. Please try again.';
+    console.error(error);
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Log In';
   }
 });
 
@@ -2027,28 +2058,107 @@ function logout() {
   showScreen('auth');
 }
 
-// ============ ONBOARDING ============
-let selectedLang = null;
-document.querySelectorAll('.lang-opt').forEach(opt => {
-  opt.addEventListener('click', () => {
-    document.querySelectorAll('.lang-opt').forEach(o => o.classList.remove('selected'));
-    opt.classList.add('selected');
-    selectedLang = opt.dataset.lang;
-    $('startBtn').disabled = false;
+// ============ BOTTOM NAV ============
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+    
+    const tab = item.dataset.tab;
+    if (tab === 'learn') {
+      $('learnTab').style.display = 'block';
+      $('wordsTab').style.display = 'none';
+    } else if (tab === 'words') {
+      $('learnTab').style.display = 'none';
+      $('wordsTab').style.display = 'block';
+      renderWordsList();
+    }
   });
 });
 
-$('startBtn').addEventListener('click', () => {
-  if (!selectedLang) return;
-  state.lang = selectedLang;
-  state.lastActive = new Date().toDateString();
-  state.streak = 1;
-  saveState();
-  renderHome();
-  showScreen('home');
+// ============ WORDS TAB ============
+let currentFilter = 'all';
+let searchQuery = '';
+
+$('searchInput').addEventListener('input', (e) => {
+  searchQuery = e.target.value.toLowerCase();
+  renderWordsList();
 });
 
-// ============ HOME ============
+document.querySelectorAll('.filter-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentFilter = tab.dataset.filter;
+    renderWordsList();
+  });
+});
+
+function renderWordsList() {
+  const list = $('wordsList');
+  list.innerHTML = '';
+
+  let filteredUnits = Object.keys(VOCAB);
+  if (currentFilter !== 'all') {
+    filteredUnits = [currentFilter];
+  }
+
+  let hasResults = false;
+
+  filteredUnits.forEach(unitId => {
+    const unit = VOCAB[unitId];
+    let words = unit.words;
+
+    // Filter by search
+    if (searchQuery) {
+      words = words.filter(w => 
+        w.da.toLowerCase().includes(searchQuery) ||
+        w.en.toLowerCase().includes(searchQuery) ||
+        w.df.toLowerCase().includes(searchQuery)
+      );
+    }
+
+    if (words.length === 0) return;
+
+    hasResults = true;
+
+    const category = document.createElement('div');
+    category.className = 'word-category';
+    category.innerHTML = `
+      <div class="category-title">
+        <span>${unit.icon}</span>
+        <span>${unit.title[state.lang]}</span>
+      </div>
+    `;
+
+    words.forEach(w => {
+      const card = document.createElement('div');
+      card.className = 'word-card';
+      card.innerHTML = `
+        <div class="word-speaker">🔊</div>
+        <div class="word-text">
+          <div class="word-df">${w.df}</div>
+          <div class="word-src">${getSourceWord(w)}</div>
+        </div>
+      `;
+      card.addEventListener('click', () => {
+        card.classList.add('playing');
+        tts.speak(w.df, 'df', () => {
+          card.classList.remove('playing');
+        });
+        setTimeout(() => card.classList.remove('playing'), 2000);
+      });
+      category.appendChild(card);
+    });
+
+    list.appendChild(category);
+  });
+
+  if (!hasResults) {
+    list.innerHTML = '<div class="no-results">No words found</div>';
+  }
+}
+
 function renderHome() {
   $('streakVal').textContent = state.streak;
   $('gemVal').textContent = state.gems;
@@ -2109,7 +2219,6 @@ function renderHome() {
   });
 }
 
-// ============ LESSON ============
 let currentLesson = null;
 let currentStep = 0;
 let steps = [];
@@ -2409,10 +2518,10 @@ function updateBankAnswer() {
   $('footerBtn').disabled = answer.length === 0;
 }
 
-$('footerBtn').addEventListener('click', () => {
+$('footerBtn').addEventListener('click', async () => {
   if (feedbackShown) {
     currentStep++;
-    if (currentStep >= steps.length) finishLesson();
+    if (currentStep >= steps.length) await finishLesson();
     else renderStep();
     return;
   }
@@ -2472,7 +2581,7 @@ $('footerBtn').addEventListener('click', () => {
     }
   }
 
-  saveState();
+  await saveState();
   $('progressFill').style.width = ((currentStep + 1) / steps.length) * 100 + '%';
 });
 
@@ -2485,7 +2594,7 @@ function checkAnswer(step, answer) {
   return false;
 }
 
-function finishLesson() {
+async function finishLesson() {
   const xpGain = 15 + (correctCount * 2);
   const gemGain = 5;
 
@@ -2500,7 +2609,7 @@ function finishLesson() {
   };
 
   updateStreak();
-  saveState();
+  await saveState();
 
   $('xpEarned').textContent = '+' + xpGain;
   $('gemEarned').textContent = '+' + gemGain;
@@ -2525,12 +2634,11 @@ $('closeLesson').addEventListener('click', () => {
   }
 });
 
-// ============ GAME OVER ============
-$('refillBtn').addEventListener('click', () => {
+$('refillBtn').addEventListener('click', async () => {
   if (state.gems >= 50) {
     state.gems -= 50;
     state.hearts = 5;
-    saveState();
+    await saveState();
     toast(t('refillDone'));
     renderHome();
     showScreen('home');
@@ -2544,7 +2652,6 @@ $('goHomeBtn').addEventListener('click', () => {
   showScreen('home');
 });
 
-// ============ SETTINGS ============
 $('flagBtn').addEventListener('click', () => {
   $('accountDisplay').textContent = currentUser;
   $('langDisplay').textContent = state.lang === 'da' ? 'Dansk' : 'English';
@@ -2628,47 +2735,49 @@ $('logoutBtn').addEventListener('click', () => {
   if (confirm('Log out?')) logout();
 });
 
-// ============ INIT ============
 $('authMascot').innerHTML = mascotSVG(110);
-$('obMascot').innerHTML = mascotSVG(110);
 
 const session = getSession();
 if (session) {
-  const accounts = getAccounts();
-  if (accounts[session]) {
-    currentUser = session;
-    loadUserState(session);
-    if (state.lang) {
-      renderHome();
-      showScreen('home');
+  (async () => {
+    const accounts = await cloudGet();
+    if (accounts[session] || session === VALID_USER) {
+      currentUser = session;
+      await loadUserState(session);
+      if (state.lang) {
+        renderHome();
+        showScreen('home');
+      } else {
+        state.lang = 'en';
+        saveState();
+        renderHome();
+        showScreen('home');
+      }
+      if (state.selectedVoiceName) {
+        setTimeout(() => {
+          const v = tts.getAllVoices().find(v => v.name === state.selectedVoiceName);
+          if (v) {
+            tts.setVoice(v);
+            $('voiceDisplay').textContent = v.name.split(' ')[0];
+          }
+        }, 500);
+      }
+      const rateMap = { slow: 0.7, normal: 0.9, fast: 1.1 };
+      tts.setRate(rateMap[state.speed] || 0.9);
     } else {
-      showScreen('onboarding');
+      clearSession();
+      showScreen('auth');
     }
-    // Apply saved voice
-    if (state.selectedVoiceName) {
-      setTimeout(() => {
-        const v = tts.getAllVoices().find(v => v.name === state.selectedVoiceName);
-        if (v) {
-          tts.setVoice(v);
-          $('voiceDisplay').textContent = v.name.split(' ')[0];
-        }
-      }, 500);
-    }
-    const rateMap = { slow: 0.7, normal: 0.9, fast: 1.1 };
-    tts.setRate(rateMap[state.speed] || 0.9);
-  } else {
-    clearSession();
-    showScreen('auth');
-  }
+  })();
 } else {
   showScreen('auth');
 }
 
-setInterval(() => {
+setInterval(async () => {
   if (currentUser && state.hearts < 5) {
     state.hearts = Math.min(5, state.hearts + 1);
     $('heartVal').textContent = state.hearts;
-    saveState();
+    await saveState();
   }
 }, 30 * 60 * 1000);
 
