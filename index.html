@@ -54,7 +54,6 @@
     background: var(--bg);
   }
 
-  /* Screens */
   .screen {
     position: absolute;
     inset: 0;
@@ -75,6 +74,98 @@
   }
 
   .screen::-webkit-scrollbar { width: 0; }
+
+  /* ============ MASCOT ============ */
+  .mascot-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .mascot {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    animation: mascotIdle 3s ease-in-out infinite;
+  }
+
+  @keyframes mascotIdle {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-5px) rotate(-2deg); }
+    75% { transform: translateY(-5px) rotate(2deg); }
+  }
+
+  .mascot.happy {
+    animation: mascotHappy 0.6s var(--ease);
+  }
+
+  @keyframes mascotHappy {
+    0% { transform: scale(1) rotate(0); }
+    25% { transform: scale(1.2) rotate(-10deg); }
+    50% { transform: scale(1.1) rotate(10deg); }
+    75% { transform: scale(1.15) rotate(-5deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+
+  .mascot.sad {
+    animation: mascotSad 0.6s var(--ease);
+  }
+
+  @keyframes mascotSad {
+    0%, 100% { transform: translateY(0); }
+    25% { transform: translateY(-10px) rotate(-5deg); }
+    50% { transform: translateY(0) rotate(5deg); }
+    75% { transform: translateY(-5px) rotate(-3deg); }
+  }
+
+  .speech-bubble {
+    background: white;
+    border: 3px solid var(--gray);
+    border-radius: 20px;
+    padding: 12px 16px;
+    margin-top: 10px;
+    position: relative;
+    max-width: 280px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text);
+    box-shadow: 0 4px 0 var(--gray-dark);
+    animation: bubblePop 0.3s var(--ease);
+  }
+
+  .speech-bubble::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 12px solid var(--gray);
+  }
+
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 10px solid white;
+  }
+
+  @keyframes bubblePop {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
 
   /* ============ ONBOARDING ============ */
   #onboarding {
@@ -271,7 +362,6 @@
     100% { transform: scale(1); }
   }
 
-  /* Units */
   .units-wrap {
     padding: 20px 0 100px;
   }
@@ -423,7 +513,6 @@
     opacity: 1;
   }
 
-  /* Zigzag */
   .lesson-node:nth-child(5n+1) { margin-left: 0; }
   .lesson-node:nth-child(5n+2) { margin-left: 60px; }
   .lesson-node:nth-child(5n+3) { margin-left: 90px; }
@@ -853,6 +942,8 @@
     padding: 24px;
     transform: translateY(100%);
     transition: transform 0.35s var(--ease);
+    max-height: 80vh;
+    overflow-y: auto;
   }
 
   .modal-bg.show .modal-sheet {
@@ -910,7 +1001,6 @@
     cursor: pointer;
   }
 
-  /* Confetti */
   .confetti {
     position: fixed;
     width: 10px;
@@ -925,7 +1015,6 @@
     100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
   }
 
-  /* Toast */
   .toast {
     position: fixed;
     top: 20px;
@@ -945,10 +1034,21 @@
     transform: translateX(-50%) translateY(0);
   }
 
-  /* Game Over */
   .gameover-icon {
     font-size: 80px;
     margin-bottom: 16px;
+  }
+
+  .voice-select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid var(--gray);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    background: white;
+    cursor: pointer;
   }
 </style>
 </head>
@@ -956,7 +1056,6 @@
 
 <div class="app">
 
-  <!-- ONBOARDING -->
   <div class="screen active" id="onboarding">
     <div class="ob-mascot">🦉</div>
     <div class="ob-title">Danfrolat</div>
@@ -975,7 +1074,6 @@
     <button class="btn btn-green" id="startBtn" disabled>Start Learning</button>
   </div>
 
-  <!-- HOME -->
   <div class="screen" id="home">
     <div class="top-bar">
       <div class="flag-btn" id="flagBtn">🇬🇧</div>
@@ -997,7 +1095,6 @@
     <div class="units-wrap" id="unitsWrap"></div>
   </div>
 
-  <!-- LESSON -->
   <div class="screen" id="lesson">
     <div class="lesson-top">
       <button class="close-btn" id="closeLesson">✕</button>
@@ -1019,7 +1116,6 @@
     </div>
   </div>
 
-  <!-- COMPLETE -->
   <div class="screen" id="complete">
     <div class="complete-icon">🎉</div>
     <div class="complete-title" id="completeTitle">Lesson Complete!</div>
@@ -1044,7 +1140,6 @@
     <button class="btn btn-green" id="continueBtn">Continue</button>
   </div>
 
-  <!-- GAME OVER -->
   <div class="screen" id="gameover">
     <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:30px; text-align:center;">
       <div class="gameover-icon">💔</div>
@@ -1055,7 +1150,6 @@
     </div>
   </div>
 
-  <!-- SETTINGS MODAL -->
   <div class="modal-bg" id="settingsModal">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
@@ -1069,11 +1163,24 @@
         <div class="setting-value" style="cursor:default;">Danfrolat</div>
       </div>
       <div class="setting-row">
+        <div class="setting-label">Voice</div>
+        <div class="setting-value" id="voiceDisplay" style="cursor:pointer;">Select Voice</div>
+      </div>
+      <div class="setting-row">
         <div class="setting-label">Total XP</div>
         <div class="setting-value" id="xpDisplay" style="cursor:default;">0</div>
       </div>
       <button class="danger-btn" id="resetBtn">Reset Progress</button>
       <button class="btn btn-white" style="width:100%; margin-top:10px;" id="closeSettings">Close</button>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="voiceModal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Select Voice</div>
+      <div id="voiceList" style="margin-bottom: 20px;"></div>
+      <button class="btn btn-white" style="width:100%;" id="closeVoiceModal">Close</button>
     </div>
   </div>
 
@@ -1213,7 +1320,13 @@ const UI_TEXT = {
     speak: "Speak",
     streakMsg: "🔥 Streak updated!",
     gemMsg: "💎 Gems earned!",
-    refillDone: "Hearts refilled!"
+    refillDone: "Hearts refilled!",
+    mascotWelcome: "Hi! I'm Frolo! Let's learn Danfrolat together!",
+    mascotGoodJob: "Great job! You're doing amazing!",
+    mascotKeepGoing: "Keep going! You can do it!",
+    mascotOops: "Oops! Don't worry, let's try again!",
+    mascotAlmost: "Almost there! You're so close!",
+    selectVoice: "Select Voice"
   },
   da: {
     obSub: "Lær det magiske Danfrolat sprog!",
@@ -1251,7 +1364,13 @@ const UI_TEXT = {
     speak: "Tal",
     streakMsg: "🔥 Streak opdateret!",
     gemMsg: "💎 Ædelstene tjent!",
-    refillDone: "Hjerter fyldt op!"
+    refillDone: "Hjerter fyldt op!",
+    mascotWelcome: "Hej! Jeg er Frolo! Lad os lære Danfrolat sammen!",
+    mascotGoodJob: "Godt klaret! Du gør det fantastisk!",
+    mascotKeepGoing: "Bliv ved! Du kan klare det!",
+    mascotOops: "Ups! Bare rolig, lad os prøve igen!",
+    mascotAlmost: "Næsten der! Du er så tæt på!",
+    selectVoice: "Vælg stemme"
   }
 };
 
@@ -1261,6 +1380,7 @@ class SmoothTTS {
     this.synth = window.speechSynthesis;
     this.voices = [];
     this.currentUtterance = null;
+    this.selectedVoice = null;
     this.init();
   }
 
@@ -1269,12 +1389,35 @@ class SmoothTTS {
     
     const loadVoices = () => {
       this.voices = this.synth.getVoices();
+      // Prefer high-quality voices
+      this.voices.sort((a, b) => {
+        const aQuality = a.localService ? 1 : 0;
+        const bQuality = b.localService ? 1 : 0;
+        return bQuality - aQuality;
+      });
     };
 
     loadVoices();
     if (this.synth.onvoiceschanged !== undefined) {
       this.synth.onvoiceschanged = loadVoices;
     }
+  }
+
+  getBestVoice(lang) {
+    const langMap = {
+      'en': ['en-US', 'en-GB', 'en-AU', 'en'],
+      'da': ['da-DK', 'da'],
+      'df': ['en-US', 'en-GB', 'en']
+    };
+
+    const preferredLangs = langMap[lang] || ['en'];
+    
+    for (const prefLang of preferredLangs) {
+      const voice = this.voices.find(v => v.lang.startsWith(prefLang));
+      if (voice) return voice;
+    }
+    
+    return this.voices[0] || null;
   }
 
   speak(text, lang = 'en', rate = 0.9) {
@@ -1287,26 +1430,16 @@ class SmoothTTS {
     utterance.pitch = 1;
     utterance.volume = 1;
     
-    // Try to find appropriate voice
-    const voiceMap = {
-      'en': ['en-US', 'en-GB', 'en'],
-      'da': ['da-DK', 'da'],
-      'df': ['en-US', 'en-GB', 'en'] // Danfrolat uses English voice with slower rate
-    };
-    
-    const preferredLangs = voiceMap[lang] || ['en'];
-    
-    for (const prefLang of preferredLangs) {
-      const voice = this.voices.find(v => v.lang.startsWith(prefLang));
-      if (voice) {
-        utterance.voice = voice;
-        break;
-      }
+    // Use selected voice or find best one
+    const voice = this.selectedVoice || this.getBestVoice(lang);
+    if (voice) {
+      utterance.voice = voice;
     }
     
-    // For Danfrolat, use slower rate for clarity
+    // For Danfrolat, use slower rate and slight pitch variation for clarity
     if (lang === 'df') {
-      utterance.rate = 0.75;
+      utterance.rate = 0.7;
+      utterance.pitch = 1.05;
     }
     
     this.currentUtterance = utterance;
@@ -1325,12 +1458,20 @@ class SmoothTTS {
   isSpeaking() {
     return this.synth && this.synth.speaking;
   }
+
+  setVoice(voice) {
+    this.selectedVoice = voice;
+  }
+
+  getAllVoices() {
+    return this.voices;
+  }
 }
 
 const tts = new SmoothTTS();
 
 // ============ STATE ============
-const STATE_KEY = 'danfrolat_state_v1';
+const STATE_KEY = 'danfrolat_state_v2';
 let state = {
   lang: null,
   xp: 0,
@@ -1339,6 +1480,7 @@ let state = {
   streak: 0,
   lastActive: null,
   progress: {},
+  selectedVoiceName: null,
 };
 
 function saveState() {
@@ -1386,10 +1528,10 @@ function bumpStat(el) {
 }
 
 function toast(msg) {
-  const t = $('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
+  const toastEl = $('toast');
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  setTimeout(() => toastEl.classList.remove('show'), 2000);
 }
 
 function confetti() {
@@ -1419,6 +1561,29 @@ function shuffle(arr) {
 
 function getSourceWord(w) {
   return state.lang === 'da' ? w.da : w.en;
+}
+
+function canAccessUnit(unitId) {
+  if (unitId === 1) return true;
+  const prevUnitId = unitId - 1;
+  const prevProgress = state.progress[prevUnitId] || {};
+  const prevLessons = getLessonsForUnit(prevUnitId);
+  const allCompleted = prevLessons.every((_, idx) => prevProgress[idx]?.completed);
+  return allCompleted;
+}
+
+function canSkipToUnit(targetUnitId) {
+  // Must complete all previous units perfectly
+  for (let u = 1; u < targetUnitId; u++) {
+    const progress = state.progress[u] || {};
+    const lessons = getLessonsForUnit(u);
+    const allPerfect = lessons.every((_, idx) => {
+      const lessonProgress = progress[idx];
+      return lessonProgress?.completed && lessonProgress?.best === lessons[idx].length;
+    });
+    if (!allPerfect) return false;
+  }
+  return true;
 }
 
 // ============ ONBOARDING ============
@@ -1456,7 +1621,7 @@ function renderHome() {
     const unit = VOCAB[unitId];
     const progress = state.progress[unitId] || {};
     const lessons = getLessonsForUnit(unitId);
-    const completedCount = lessons.filter((_, i) => progress[i]?.completed).length;
+    const accessible = canAccessUnit(parseInt(unitId));
 
     const unitEl = document.createElement('div');
     unitEl.className = `unit unit-${unit.color}`;
@@ -1476,8 +1641,8 @@ function renderHome() {
     lessons.forEach((lessonWords, idx) => {
       const isCompleted = progress[idx]?.completed;
       const prevCompleted = idx === 0 || progress[idx - 1]?.completed;
-      const isCurrent = !isCompleted && prevCompleted;
-      const isLocked = !prevCompleted && !isCompleted;
+      const isCurrent = !isCompleted && prevCompleted && accessible;
+      const isLocked = !accessible || (!prevCompleted && !isCompleted);
 
       const node = document.createElement('div');
       node.className = 'lesson-node';
@@ -1541,7 +1706,6 @@ function generateQuestions(words) {
   const qs = [];
   const allWords = VOCAB[currentLesson.unitId].words;
 
-  // Q1: Multiple choice - translate source to Danfrolat
   const w1 = words[0];
   qs.push({
     type: 'mcq',
@@ -1553,7 +1717,6 @@ function generateQuestions(words) {
     speakLang: 'df'
   });
 
-  // Q2: Type the Danfrolat translation
   const w2 = words[1];
   qs.push({
     type: 'type',
@@ -1564,7 +1727,6 @@ function generateQuestions(words) {
     speakLang: 'df'
   });
 
-  // Q3: Multiple choice - what does Danfrolat mean
   const w3 = words[2];
   qs.push({
     type: 'mcq',
@@ -1576,7 +1738,6 @@ function generateQuestions(words) {
     speakLang: 'df'
   });
 
-  // Q4: Word bank
   const w4 = words[3];
   qs.push({
     type: 'bank',
@@ -1588,7 +1749,6 @@ function generateQuestions(words) {
     speakLang: 'df'
   });
 
-  // Q5: Multiple choice again
   const w5 = words[4];
   qs.push({
     type: 'mcq',
@@ -1636,6 +1796,30 @@ function renderQuestion() {
   const body = $('lessonBody');
   body.innerHTML = '';
 
+  // Mascot
+  const mascotContainer = document.createElement('div');
+  mascotContainer.className = 'mascot-container';
+  mascotContainer.innerHTML = `
+    <div class="mascot" id="lessonMascot">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <ellipse cx="60" cy="75" rx="35" ry="40" fill="#58CC02"/>
+        <ellipse cx="60" cy="75" rx="30" ry="35" fill="#7ED321"/>
+        <circle cx="45" cy="60" r="12" fill="white"/>
+        <circle cx="75" cy="60" r="12" fill="white"/>
+        <circle cx="47" cy="62" r="6" fill="#333"/>
+        <circle cx="77" cy="62" r="6" fill="#333"/>
+        <circle cx="49" cy="60" r="2" fill="white"/>
+        <circle cx="79" cy="60" r="2" fill="white"/>
+        <ellipse cx="60" cy="75" rx="8" ry="6" fill="#FFC800"/>
+        <path d="M 52 85 Q 60 90 68 85" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <ellipse cx="35" cy="50" rx="8" ry="12" fill="#58CC02"/>
+        <ellipse cx="85" cy="50" rx="8" ry="12" fill="#58CC02"/>
+      </svg>
+    </div>
+    <div class="speech-bubble" id="speechBubble">${currentQ === 0 ? t('mascotWelcome') : t('mascotKeepGoing')}</div>
+  `;
+  body.appendChild(mascotContainer);
+
   const typeLabel = document.createElement('div');
   typeLabel.className = 'q-type';
   typeLabel.textContent = q.promptLabel;
@@ -1646,7 +1830,6 @@ function renderQuestion() {
   prompt.textContent = q.prompt;
   body.appendChild(prompt);
 
-  // Speaker button
   if (q.speakText) {
     const speaker = document.createElement('div');
     speaker.className = 'speaker-btn';
@@ -1658,7 +1841,6 @@ function renderQuestion() {
     });
     body.appendChild(speaker);
     
-    // Auto-play on question start
     setTimeout(() => {
       tts.speak(q.speakText, q.speakLang);
     }, 300);
@@ -1763,6 +1945,9 @@ $('footerBtn').addEventListener('click', () => {
   const fb = $('feedback');
   fb.classList.add('show');
 
+  const mascot = $('lessonMascot');
+  const bubble = $('speechBubble');
+
   if (isCorrect) {
     correctCount++;
     fb.classList.add('correct');
@@ -1771,6 +1956,11 @@ $('footerBtn').addEventListener('click', () => {
     $('footerBtn').textContent = t('continue');
     $('footerBtn').className = 'footer-btn continue-correct';
     $('footerBtn').disabled = false;
+
+    mascot.classList.remove('sad');
+    mascot.classList.add('happy');
+    bubble.textContent = t('mascotGoodJob');
+    setTimeout(() => mascot.classList.remove('happy'), 600);
 
     document.querySelectorAll('.choice').forEach(c => {
       if (c.textContent === q.correct) c.classList.add('correct');
@@ -1787,6 +1977,11 @@ $('footerBtn').addEventListener('click', () => {
     $('footerBtn').textContent = t('continue');
     $('footerBtn').className = 'footer-btn continue-wrong';
     $('footerBtn').disabled = false;
+
+    mascot.classList.remove('happy');
+    mascot.classList.add('sad');
+    bubble.textContent = t('mascotOops');
+    setTimeout(() => mascot.classList.remove('sad'), 600);
 
     document.querySelectorAll('.choice').forEach(c => {
       if (c.textContent === selectedAnswer) c.classList.add('wrong');
@@ -1889,6 +2084,45 @@ $('langDisplay').addEventListener('click', () => {
   renderHome();
 });
 
+$('voiceDisplay').addEventListener('click', () => {
+  renderVoiceList();
+  $('voiceModal').classList.add('show');
+});
+
+function renderVoiceList() {
+  const voices = tts.getAllVoices();
+  const list = $('voiceList');
+  list.innerHTML = '';
+  
+  voices.forEach((voice, idx) => {
+    const item = document.createElement('div');
+    item.style.cssText = 'padding: 12px; border: 2px solid #E5E5E5; border-radius: 10px; margin-bottom: 8px; cursor: pointer; font-weight: 600;';
+    item.textContent = `${voice.name} (${voice.lang})`;
+    
+    if (state.selectedVoiceName === voice.name) {
+      item.style.borderColor = '#1CB0F6';
+      item.style.background = '#E7F7FF';
+    }
+    
+    item.addEventListener('click', () => {
+      tts.setVoice(voice);
+      state.selectedVoiceName = voice.name;
+      saveState();
+      $('voiceDisplay').textContent = voice.name.split(' ')[0];
+      $('voiceModal').classList.remove('show');
+      
+      // Test the voice
+      tts.speak('Hello! This is my voice.', 'en');
+    });
+    
+    list.appendChild(item);
+  });
+}
+
+$('closeVoiceModal').addEventListener('click', () => {
+  $('voiceModal').classList.remove('show');
+});
+
 $('closeSettings').addEventListener('click', () => {
   $('settingsModal').classList.remove('show');
 });
@@ -1908,6 +2142,14 @@ $('resetBtn').addEventListener('click', () => {
 
 // ============ INIT ============
 if (loadState() && state.lang) {
+  if (state.selectedVoiceName) {
+    const voices = tts.getAllVoices();
+    const selectedVoice = voices.find(v => v.name === state.selectedVoiceName);
+    if (selectedVoice) {
+      tts.setVoice(selectedVoice);
+      $('voiceDisplay').textContent = selectedVoice.name.split(' ')[0];
+    }
+  }
   renderHome();
   showScreen('home');
 } else {
