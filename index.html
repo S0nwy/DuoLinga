@@ -109,6 +109,19 @@
     font-weight: 600;
     margin-bottom: 28px;
     text-align: center;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: color 0.2s, transform 0.2s;
+  }
+
+  .auth-sub:active { transform: scale(0.97); }
+  .auth-sub.tap { animation: tapGlow 0.8s var(--ease); }
+
+  @keyframes tapGlow {
+    0% { color: #777; }
+    40% { color: #58CC02; }
+    100% { color: #777; }
   }
 
   .auth-card {
@@ -192,8 +205,8 @@
   .request-btn[data-state="requested"] {
     background: #2D5A00;
     box-shadow: 0 2px 0 #1E3D00;
-    cursor: default;
-    opacity: 0.9;
+    cursor: not-allowed;
+    opacity: 0.85;
   }
 
   .request-btn[data-state="approved"] {
@@ -205,6 +218,8 @@
   .request-btn[data-state="denied"] {
     background: #FF4B4B;
     box-shadow: 0 4px 0 #EA2B2B;
+    cursor: not-allowed;
+    opacity: 0.85;
   }
 
   .auth-status {
@@ -1217,7 +1232,7 @@
     <div class="auth-box">
       <div class="auth-mascot" id="authMascot"></div>
       <div class="auth-title">Danfrolat</div>
-      <div class="auth-sub">Learn the magical Danfrolat language ✨</div>
+      <div class="auth-sub" id="authSub">Learn the magical Danfrolat language ✨</div>
 
       <div class="auth-card">
         <div class="auth-label">What should we call you?</div>
@@ -1395,17 +1410,20 @@
 <script>
 // ============ CONFIG ============
 const CLOUD_CONFIG = {
-  BIN_ID: '6745f3a8e41b4d34e4f7b8a2',
-  API_KEY: '$2a$10$vWJ6qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8q',
+  BIN_ID: '6af727e7ac6210605a853a74',
+  API_KEY: '$2a$10$0Iv/9aI8ROmnVBDmYP/W0eDFZkS22TfFItJPz07yKsEpiKuU7pLSu',
   BASE_URL: 'https://api.jsonbin.io/v3/b'
 };
 
 const SESSION_KEY = 'danfrolat_session_v6';
 const LASTNAME_KEY = 'danfrolat_lastname';
+const DEVICE_ID_KEY = 'danfrolat_device_id';
+const ADMIN_URL = 'admin.html';
 
+// ============ CLOUD ============
 async function cloudGet() {
   try {
-    const res = await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}/latest`, {
+    const res = await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}/latest?t=${Date.now()}`, {
       headers: { 'X-Master-Key': CLOUD_CONFIG.API_KEY }
     });
     if (!res.ok) return {};
@@ -1428,7 +1446,12 @@ async function cloudSet(data) {
 async function setRequestStatus(name, status) {
   const data = await cloudGet();
   if (!data.__requests__) data.__requests__ = {};
-  data.__requests__[name] = { status, timestamp: Date.now(), name };
+  data.__requests__[name] = {
+    status,
+    name,
+    timestamp: Date.now(),
+    lastRequestDate: parisDateStr()
+  };
   return await cloudSet(data);
 }
 
@@ -1437,6 +1460,47 @@ async function getRequestStatus(name) {
   return data.__requests__?.[name]?.status || null;
 }
 
+async function getRequestRecord(name) {
+  const data = await cloudGet();
+  return data.__requests__?.[name] || null;
+}
+
+// ============ DEVICE ID ============
+function getOrCreateDeviceId() {
+  let id = localStorage.getItem(DEVICE_ID_KEY);
+  if (!id) {
+    const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = 'DF-';
+    for (let i = 0; i < 4; i++) code += c[Math.floor(Math.random() * c.length)];
+    code += '-';
+    for (let i = 0; i < 4; i++) code += c[Math.floor(Math.random() * c.length)];
+    id = code;
+    localStorage.setItem(DEVICE_ID_KEY, id);
+  }
+  return id;
+}
+
+async function isDeviceAdmin() {
+  try {
+    const data = await cloudGet();
+    return (data.__admin_devices__ || []).includes(getOrCreateDeviceId());
+  } catch (e) { return false; }
+}
+
+// ============ PARIS DATE (CET/CEST) ============
+function parisDateStr(ts = Date.now()) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Europe/Paris',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(new Date(ts));
+  return parts.find(p => p.type === 'year').value + '-' +
+         parts.find(p => p.type === 'month').value + '-' +
+         parts.find(p => p.type === 'day').value;
+}
+
+// ============ SESSION ============
 function getSession() { return localStorage.getItem(SESSION_KEY); }
 function setSession(u) { localStorage.setItem(SESSION_KEY, u); }
 function clearSession() { localStorage.removeItem(SESSION_KEY); }
@@ -1804,34 +1868,36 @@ let requestState = 'idle';
 let currentRequestName = null;
 let pollTimer = null;
 
-function setRequestState(newState) {
+function setRequestState(newState, message) {
   requestState = newState;
   const btn = $('requestBtn');
   const statusEl = $('authStatus');
   btn.dataset.state = newState;
-  btn.disabled = newState === 'requesting' || newState === 'requested';
+  btn.disabled = newState === 'requesting' || newState === 'requested' || newState === 'denied';
   statusEl.style.color = '';
   statusEl.innerHTML = '';
 
   switch (newState) {
     case 'idle':
       btn.innerHTML = '<span class="request-btn-text">Request Access</span>';
+      if (message) statusEl.textContent = message;
       break;
     case 'requesting':
       btn.innerHTML = '<span class="loading-spinner"></span><span class="request-btn-text">Requesting...</span>';
       break;
     case 'requested':
-      btn.innerHTML = '<span class="request-btn-text">✓ Requested</span>';
-      statusEl.innerHTML = '<span class="pulse-dot"></span> Waiting for approval...';
+      btn.innerHTML = '<span class="request-btn-text">✓ Requested Today</span>';
+      statusEl.innerHTML = '<span class="pulse-dot"></span> Waiting for approval... (resets 00:00 Paris)';
       break;
     case 'approved':
       btn.innerHTML = '<span class="request-btn-text">Enter App →</span>';
+      btn.disabled = false;
       statusEl.textContent = '✅ Access granted!';
       statusEl.style.color = 'var(--green-dark)';
       break;
     case 'denied':
-      btn.innerHTML = '<span class="request-btn-text">Try Again</span>';
-      statusEl.textContent = '❌ Access was denied';
+      btn.innerHTML = '<span class="request-btn-text">Denied</span>';
+      statusEl.textContent = message || '❌ Request was denied. Try again tomorrow.';
       statusEl.style.color = 'var(--red-dark)';
       break;
   }
@@ -1841,13 +1907,14 @@ function startPolling(name) {
   stopPolling();
   pollTimer = setInterval(async () => {
     try {
-      const status = await getRequestStatus(name);
-      if (status === 'approved') {
+      const req = await getRequestRecord(name);
+      if (!req) return;
+      if (req.status === 'approved') {
         stopPolling();
         setRequestState('approved');
         toast('Access granted! 🎉');
         await enterApp(name);
-      } else if (status === 'denied') {
+      } else if (req.status === 'denied') {
         stopPolling();
         setRequestState('denied');
       }
@@ -1859,9 +1926,35 @@ function stopPolling() {
   if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
 }
 
+async function refreshRequestUI(name) {
+  if (!name) { setRequestState('idle'); return; }
+  try {
+    const req = await getRequestRecord(name);
+    if (!req) { setRequestState('idle'); return; }
+
+    const today = parisDateStr();
+    const requestedToday = req.lastRequestDate === today;
+
+    if (req.status === 'approved') { setRequestState('approved'); return; }
+
+    if (req.status === 'denied') {
+      if (requestedToday) setRequestState('denied');
+      else setRequestState('idle', 'You can try again today.');
+      return;
+    }
+
+    if (requestedToday) {
+      setRequestState('requested');
+      startPolling(name);
+    } else {
+      setRequestState('idle', 'You can request again today!');
+    }
+  } catch (e) { setRequestState('idle'); }
+}
+
 async function handleRequestClick() {
   if (requestState === 'approved' && currentRequestName) { await enterApp(currentRequestName); return; }
-  if (requestState === 'requesting' || requestState === 'requested') return;
+  if (requestState === 'requesting' || requestState === 'requested' || requestState === 'denied') return;
 
   const name = $('authName').value.trim();
   if (!name) { $('authError').textContent = 'Please enter your name'; return; }
@@ -1875,8 +1968,19 @@ async function handleRequestClick() {
   setRequestState('requesting');
 
   try {
-    const existing = await getRequestStatus(name);
-    if (existing === 'approved') { setRequestState('approved'); await enterApp(name); return; }
+    const existing = await getRequestRecord(name);
+    const today = parisDateStr();
+
+    if (existing?.status === 'approved') {
+      setRequestState('approved');
+      await enterApp(name);
+      return;
+    }
+    if (existing?.lastRequestDate === today) {
+      if (existing.status === 'denied') setRequestState('denied');
+      else { setRequestState('requested'); startPolling(name); }
+      return;
+    }
 
     await setRequestStatus(name, 'pending');
     setRequestState('requested');
@@ -1918,24 +2022,40 @@ $('authName').addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !$('requestBtn').disabled) { e.preventDefault(); handleRequestClick(); }
 });
 
+// ============ SECRET ADMIN GESTURE ============
+$('authSub').addEventListener('click', async () => {
+  const sub = $('authSub');
+  sub.classList.remove('tap');
+  void sub.offsetWidth;
+  sub.classList.add('tap');
+  try {
+    const authorized = await isDeviceAdmin();
+    if (authorized) {
+      toast('🔓 Admin access');
+      setTimeout(() => { window.location.href = ADMIN_URL; }, 400);
+    }
+  } catch (e) { /* silent */ }
+});
+
 // ============ BOOT ============
 $('authMascot').innerHTML = mascotSVG(110);
+getOrCreateDeviceId();
 
 async function boot() {
   const session = getSession();
   if (session) {
     try {
-      const status = await getRequestStatus(session);
-      if (status === 'approved') { await enterApp(session); return; }
-      if (status === null) {
-        const data = await cloudGet();
-        if (data[session]?.data) { await enterApp(session); return; }
+      const req = await getRequestRecord(session);
+      if (req?.status === 'approved') { await enterApp(session); return; }
+      if (req?.status === 'pending' || req?.status === 'denied') {
+        currentRequestName = session;
+        $('authName').value = session;
+        await refreshRequestUI(session);
+        showScreen('auth');
+        return;
       }
       clearSession();
-    } catch (e) {
-      await enterApp(session);
-      return;
-    }
+    } catch (e) {}
   }
 
   showScreen('auth');
@@ -1943,12 +2063,7 @@ async function boot() {
   if (lastName) {
     $('authName').value = lastName;
     currentRequestName = lastName;
-    try {
-      const status = await getRequestStatus(lastName);
-      if (status === 'approved') setRequestState('approved');
-      else if (status === 'pending') { setRequestState('requested'); startPolling(lastName); }
-      else if (status === 'denied') setRequestState('denied');
-    } catch (e) { /* offline */ }
+    await refreshRequestUI(lastName);
   }
   setTimeout(() => $('authName')?.focus(), 350);
 }
