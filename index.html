@@ -74,11 +74,6 @@
     transform: translateX(0);
   }
 
-  .screen.slide-left {
-    transform: translateX(-30px);
-  }
-
-  /* Scrollbar */
   .screen::-webkit-scrollbar { width: 0; }
 
   /* ============ ONBOARDING ============ */
@@ -265,7 +260,6 @@
   .streak-chip { color: var(--red); }
   .gem-chip { color: var(--blue); }
   .heart-chip { color: var(--red); }
-  .xp-chip { color: var(--yellow-dark); }
 
   .stat-chip.bump {
     animation: bump 0.4s var(--ease);
@@ -525,18 +519,34 @@
     line-height: 1.2;
   }
 
-  .q-speaker {
+  .speaker-btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     background: var(--bg-soft);
-    padding: 8px 14px;
+    padding: 10px 16px;
     border-radius: 12px;
     font-size: 14px;
     font-weight: 700;
     color: var(--blue);
     margin-bottom: 20px;
     cursor: pointer;
+    border: 2px solid var(--gray);
+    transition: all 0.15s;
+  }
+
+  .speaker-btn:active {
+    transform: scale(0.95);
+    background: #E7F7FF;
+  }
+
+  .speaker-btn.playing {
+    animation: speakerPulse 0.6s ease;
+  }
+
+  @keyframes speakerPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
   }
 
   .choices {
@@ -604,8 +614,6 @@
     25% { transform: translateX(-8px); }
     75% { transform: translateX(8px); }
   }
-
-  .choice-emoji { font-size: 32px; }
 
   .type-input {
     width: 100%;
@@ -952,7 +960,7 @@
   <div class="screen active" id="onboarding">
     <div class="ob-mascot">🦉</div>
     <div class="ob-title">Danfrolat</div>
-    <div class="ob-sub" id="ob-sub">Free, fun, and effective language learning!</div>
+    <div class="ob-sub" id="ob-sub">Learn the magical Danfrolat language!</div>
     <div class="ob-label" id="ob-label">I speak...</div>
     <div class="lang-options">
       <div class="lang-opt" data-lang="en">
@@ -1077,106 +1085,106 @@
 // ============ VOCABULARY ============
 const VOCAB = {
   1: { title: { en: "Greetings & People", da: "Hilsner og mennesker" }, icon: "👋", color: 1, words: [
-    {da:"Hej", en:"Hello"}, {da:"Godmorgen", en:"Good morning"}, {da:"Godnat", en:"Good night"},
-    {da:"Farvel", en:"Goodbye"}, {da:"Familie", en:"Family"}, {da:"Mor", en:"Mother"},
-    {da:"Far", en:"Father"}, {da:"Søster", en:"Sister"}, {da:"Bror", en:"Brother"},
-    {da:"Barn", en:"Child"}, {da:"Menneske", en:"Human"}, {da:"Ven", en:"Friend"},
-    {da:"Bedstemor", en:"Grandmother"}, {da:"Bedstefar", en:"Grandfather"},
-    {da:"Kvinde", en:"Woman"}, {da:"Mand", en:"Man"}, {da:"Pige", en:"Girl"},
-    {da:"Dreng", en:"Boy"}, {da:"Baby", en:"Baby"}, {da:"Person", en:"Person"}
+    {da:"Hej", en:"Hello", df:"Bonhallo"}, {da:"Godmorgen", en:"Good morning", df:"Bonmora"}, {da:"Godnat", en:"Good night", df:"Bonnocta"},
+    {da:"Farvel", en:"Goodbye", df:"Adevara"}, {da:"Familie", en:"Family", df:"Familora"}, {da:"Mor", en:"Mother", df:"Madora"},
+    {da:"Far", en:"Father", df:"Padora"}, {da:"Søster", en:"Sister", df:"Sorina"}, {da:"Bror", en:"Brother", df:"Fratero"},
+    {da:"Barn", en:"Child", df:"Infanto"}, {da:"Menneske", en:"Human", df:"Humano"}, {da:"Ven", en:"Friend", df:"Amivenn"},
+    {da:"Bedstemor", en:"Grandmother", df:"Grandmora"}, {da:"Bedstefar", en:"Grandfather", df:"Grandpador"},
+    {da:"Kvinde", en:"Woman", df:"Femina"}, {da:"Mand", en:"Man", df:"Homaro"}, {da:"Pige", en:"Girl", df:"Puella"},
+    {da:"Dreng", en:"Boy", df:"Garçono"}, {da:"Baby", en:"Baby", df:"Bebina"}, {da:"Person", en:"Person", df:"Persona"}
   ]},
   2: { title: { en: "Feelings & Love", da: "Følelser og kærlighed" }, icon: "💖", color: 2, words: [
-    {da:"Kærlighed", en:"Love"}, {da:"Glæde", en:"Joy"}, {da:"Sorg", en:"Sorrow"},
-    {da:"Lykke", en:"Happiness"}, {da:"Venskab", en:"Friendship"}, {da:"Savn", en:"Longing"},
-    {da:"Drøm", en:"Dream"}, {da:"Håb", en:"Hope"}, {da:"Frygt", en:"Fear"},
-    {da:"Smil", en:"Smile"}, {da:"Kys", en:"Kiss"}, {da:"Hjerte", en:"Heart"},
-    {da:"Vrede", en:"Anger"}, {da:"Rolig", en:"Calm"}, {da:"Glad", en:"Happy"},
-    {da:"Ked af det", en:"Sad"}, {da:"Modig", en:"Brave"}, {da:"Stolt", en:"Proud"},
-    {da:"Ensom", en:"Lonely"}, {da:"Forelsket", en:"In love"}
+    {da:"Kærlighed", en:"Love", df:"Amorliv"}, {da:"Glæde", en:"Joy", df:"Joyara"}, {da:"Sorg", en:"Sorrow", df:"Dolora"},
+    {da:"Lykke", en:"Happiness", df:"Felicia"}, {da:"Venskab", en:"Friendship", df:"Amistara"}, {da:"Savn", en:"Longing", df:"Saudora"},
+    {da:"Drøm", en:"Dream", df:"Somnara"}, {da:"Håb", en:"Hope", df:"Espera"}, {da:"Frygt", en:"Fear", df:"Timora"},
+    {da:"Smil", en:"Smile", df:"Sorrisa"}, {da:"Kys", en:"Kiss", df:"Besora"}, {da:"Hjerte", en:"Heart", df:"Cordehjert"},
+    {da:"Vrede", en:"Anger", df:"Iraora"}, {da:"Rolig", en:"Calm", df:"Calmina"}, {da:"Glad", en:"Happy", df:"Joyeux"},
+    {da:"Ked af det", en:"Sad", df:"Tristora"}, {da:"Modig", en:"Brave", df:"Corajosa"}, {da:"Stolt", en:"Proud", df:"Fierté"},
+    {da:"Ensom", en:"Lonely", df:"Solitara"}, {da:"Forelsket", en:"In love", df:"Amorella"}
   ]},
   3: { title: { en: "Nature & World", da: "Natur og verden" }, icon: "🌿", color: 3, words: [
-    {da:"Hav", en:"Sea"}, {da:"Vand", en:"Water"}, {da:"Ild", en:"Fire"},
-    {da:"Jord", en:"Earth"}, {da:"Himmel", en:"Sky"}, {da:"Stjerne", en:"Star"},
-    {da:"Blomst", en:"Flower"}, {da:"Træ", en:"Tree"}, {da:"Skov", en:"Forest"},
-    {da:"Bjerg", en:"Mountain"}, {da:"Vind", en:"Wind"}, {da:"Regn", en:"Rain"},
-    {da:"Sne", en:"Snow"}, {da:"Solskin", en:"Sunshine"}, {da:"Måneskin", en:"Moonlight"},
-    {da:"Strand", en:"Beach"}, {da:"Flod", en:"River"}, {da:"Sø", en:"Lake"},
-    {da:"Græs", en:"Grass"}, {da:"Sky", en:"Cloud"}
+    {da:"Hav", en:"Sea", df:"Maré"}, {da:"Vand", en:"Water", df:"Aqua"}, {da:"Ild", en:"Fire", df:"Fuego"},
+    {da:"Jord", en:"Earth", df:"Terra"}, {da:"Himmel", en:"Sky", df:"Cielum"}, {da:"Stjerne", en:"Star", df:"Estrela"},
+    {da:"Blomst", en:"Flower", df:"Florina"}, {da:"Træ", en:"Tree", df:"Arbor"}, {da:"Skov", en:"Forest", df:"Silvara"},
+    {da:"Bjerg", en:"Mountain", df:"Montara"}, {da:"Vind", en:"Wind", df:"Ventora"}, {da:"Regn", en:"Rain", df:"Pluvia"},
+    {da:"Sne", en:"Snow", df:"Nivora"}, {da:"Solskin", en:"Sunshine", df:"Solaria"}, {da:"Måneskin", en:"Moonlight", df:"Lunalux"},
+    {da:"Strand", en:"Beach", df:"Plajara"}, {da:"Flod", en:"River", df:"Rivora"}, {da:"Sø", en:"Lake", df:"Lakora"},
+    {da:"Græs", en:"Grass", df:"Herbina"}, {da:"Sky", en:"Cloud", df:"Nubela"}
   ]},
   4: { title: { en: "Home & Daily Life", da: "Hjem og hverdag" }, icon: "🏠", color: 4, words: [
-    {da:"Hus", en:"House"}, {da:"Værelse", en:"Room"}, {da:"Seng", en:"Bed"},
-    {da:"Stol", en:"Chair"}, {da:"Bord", en:"Table"}, {da:"Dør", en:"Door"},
-    {da:"Vindue", en:"Window"}, {da:"Køkken", en:"Kitchen"}, {da:"Mad", en:"Food"},
-    {da:"Brød", en:"Bread"}, {da:"Mælk", en:"Milk"}, {da:"Æble", en:"Apple"},
-    {da:"Kaffe", en:"Coffee"}, {da:"Bog", en:"Book"}, {da:"Musik", en:"Music"},
-    {da:"Telefon", en:"Phone"}, {da:"Computer", en:"Computer"}, {da:"Nøgle", en:"Key"},
-    {da:"Tøj", en:"Clothes"}, {da:"Sko", en:"Shoes"}
+    {da:"Hus", en:"House", df:"Domora"}, {da:"Værelse", en:"Room", df:"Camara"}, {da:"Seng", en:"Bed", df:"Lectora"},
+    {da:"Stol", en:"Chair", df:"Sedora"}, {da:"Bord", en:"Table", df:"Tabora"}, {da:"Dør", en:"Door", df:"Portara"},
+    {da:"Vindue", en:"Window", df:"Fenestra"}, {da:"Køkken", en:"Kitchen", df:"Cozinara"}, {da:"Mad", en:"Food", df:"Alimenta"},
+    {da:"Brød", en:"Bread", df:"Panora"}, {da:"Mælk", en:"Milk", df:"Lacté"}, {da:"Æble", en:"Apple", df:"Pomara"},
+    {da:"Kaffe", en:"Coffee", df:"Cafora"}, {da:"Bog", en:"Book", df:"Libera"}, {da:"Musik", en:"Music", df:"Musica"},
+    {da:"Telefon", en:"Phone", df:"Telefoné"}, {da:"Computer", en:"Computer", df:"Computara"}, {da:"Nøgle", en:"Key", df:"Clavora"},
+    {da:"Tøj", en:"Clothes", df:"Vestara"}, {da:"Sko", en:"Shoes", df:"Sapata"}
   ]},
   5: { title: { en: "Colors & Descriptions", da: "Farver og beskrivelser" }, icon: "🎨", color: 5, words: [
-    {da:"Rød", en:"Red"}, {da:"Blå", en:"Blue"}, {da:"Grøn", en:"Green"},
-    {da:"Gul", en:"Yellow"}, {da:"Sort", en:"Black"}, {da:"Hvid", en:"White"},
-    {da:"Lyserød", en:"Pink"}, {da:"Lilla", en:"Purple"}, {da:"Guld", en:"Gold"},
-    {da:"Sølv", en:"Silver"}, {da:"Orange", en:"Orange"}, {da:"Brun", en:"Brown"},
-    {da:"Grå", en:"Gray"}, {da:"Smuk", en:"Beautiful"}, {da:"Stor", en:"Big"},
-    {da:"Lille", en:"Small"}, {da:"Hurtig", en:"Fast"}, {da:"Langsom", en:"Slow"},
-    {da:"Varm", en:"Warm"}, {da:"Kold", en:"Cold"}
+    {da:"Rød", en:"Red", df:"Rubina"}, {da:"Blå", en:"Blue", df:"Azula"}, {da:"Grøn", en:"Green", df:"Verdora"},
+    {da:"Gul", en:"Yellow", df:"Amarela"}, {da:"Sort", en:"Black", df:"Nigrum"}, {da:"Hvid", en:"White", df:"Albina"},
+    {da:"Lyserød", en:"Pink", df:"Rosalia"}, {da:"Lilla", en:"Purple", df:"Violara"}, {da:"Guld", en:"Gold", df:"Aurum"},
+    {da:"Sølv", en:"Silver", df:"Argenta"}, {da:"Orange", en:"Orange", df:"Oranja"}, {da:"Brun", en:"Brown", df:"Brunora"},
+    {da:"Grå", en:"Gray", df:"Grisia"}, {da:"Smuk", en:"Beautiful", df:"Bellskøn"}, {da:"Stor", en:"Big", df:"Grandora"},
+    {da:"Lille", en:"Small", df:"Minora"}, {da:"Hurtig", en:"Fast", df:"Rapida"}, {da:"Langsom", en:"Slow", df:"Lentora"},
+    {da:"Varm", en:"Warm", df:"Calora"}, {da:"Kold", en:"Cold", df:"Frigora"}
   ]},
   6: { title: { en: "Time & Numbers", da: "Tid og tal" }, icon: "⏰", color: 6, words: [
-    {da:"Dag", en:"Day"}, {da:"Nat", en:"Night"}, {da:"Morgen", en:"Morning"},
-    {da:"Aften", en:"Evening"}, {da:"I dag", en:"Today"}, {da:"I morgen", en:"Tomorrow"},
-    {da:"I går", en:"Yesterday"}, {da:"Tid", en:"Time"}, {da:"Nu", en:"Now"},
-    {da:"Altid", en:"Always"}, {da:"Aldrig", en:"Never"}, {da:"Uge", en:"Week"},
-    {da:"Måned", en:"Month"}, {da:"År", en:"Year"}, {da:"Time", en:"Hour"},
-    {da:"Minut", en:"Minute"}, {da:"Sekund", en:"Second"}, {da:"Før", en:"Before"},
-    {da:"Efter", en:"After"}, {da:"Snart", en:"Soon"}
+    {da:"Dag", en:"Day", df:"Diara"}, {da:"Nat", en:"Night", df:"Noctara"}, {da:"Morgen", en:"Morning", df:"Matina"},
+    {da:"Aften", en:"Evening", df:"Vespara"}, {da:"I dag", en:"Today", df:"Hodiera"}, {da:"I morgen", en:"Tomorrow", df:"Amanora"},
+    {da:"I går", en:"Yesterday", df:"Heriora"}, {da:"Tid", en:"Time", df:"Tempora"}, {da:"Nu", en:"Now", df:"Nuncé"},
+    {da:"Altid", en:"Always", df:"Sempre"}, {da:"Aldrig", en:"Never", df:"Nuncquam"}, {da:"Uge", en:"Week", df:"Semanara"},
+    {da:"Måned", en:"Month", df:"Mensora"}, {da:"År", en:"Year", df:"Annora"}, {da:"Time", en:"Hour", df:"Horina"},
+    {da:"Minut", en:"Minute", df:"Minuta"}, {da:"Sekund", en:"Second", df:"Seconda"}, {da:"Før", en:"Before", df:"Antera"},
+    {da:"Efter", en:"After", df:"Postara"}, {da:"Snart", en:"Soon", df:"Proxima"}
   ]},
   7: { title: { en: "Important Words", da: "Vigtige ord" }, icon: "🔑", color: 7, words: [
-    {da:"Jeg", en:"I"}, {da:"Du", en:"You"}, {da:"Han", en:"He"},
-    {da:"Hun", en:"She"}, {da:"Vi", en:"We"}, {da:"De", en:"They"},
-    {da:"Min", en:"My"}, {da:"Din", en:"Your"}, {da:"Her", en:"Here"},
-    {da:"Der", en:"There"}, {da:"Ja", en:"Yes"}, {da:"Nej", en:"No"},
-    {da:"Tak", en:"Thank you"}, {da:"Vær så venlig", en:"Please"}, {da:"Hvor", en:"Where"},
-    {da:"Hvem", en:"Who"}, {da:"Hvad", en:"What"}, {da:"Hvorfor", en:"Why"},
-    {da:"Fordi", en:"Because"}, {da:"Måske", en:"Maybe"}
+    {da:"Jeg", en:"I", df:"Mio"}, {da:"Du", en:"You", df:"Tua"}, {da:"Han", en:"He", df:"Elo"},
+    {da:"Hun", en:"She", df:"Ela"}, {da:"Vi", en:"We", df:"Nos"}, {da:"De", en:"They", df:"Elar"},
+    {da:"Min", en:"My", df:"Mina"}, {da:"Din", en:"Your", df:"Tua"}, {da:"Her", en:"Here", df:"Aqui"},
+    {da:"Der", en:"There", df:"Alora"}, {da:"Ja", en:"Yes", df:"Oui"}, {da:"Nej", en:"No", df:"Non"},
+    {da:"Tak", en:"Thank you", df:"Merci tak"}, {da:"Vær så venlig", en:"Please", df:"Por favor"}, {da:"Hvor", en:"Where", df:"Ubara"},
+    {da:"Hvem", en:"Who", df:"Quisara"}, {da:"Hvad", en:"What", df:"Quora"}, {da:"Hvorfor", en:"Why", df:"Porqué"},
+    {da:"Fordi", en:"Because", df:"Porque"}, {da:"Måske", en:"Maybe", df:"Talvez"}
   ]},
   8: { title: { en: "Actions", da: "Handlinger" }, icon: "🏃", color: 8, words: [
-    {da:"Elske", en:"To love"}, {da:"Le", en:"To laugh"}, {da:"Græde", en:"To cry"},
-    {da:"Spise", en:"To eat"}, {da:"Drikke", en:"To drink"}, {da:"Sove", en:"To sleep"},
-    {da:"Danse", en:"To dance"}, {da:"Synge", en:"To sing"}, {da:"Løbe", en:"To run"},
-    {da:"Gå", en:"To walk"}, {da:"Tale", en:"To speak"}, {da:"Lytte", en:"To listen"},
-    {da:"Se", en:"To see"}, {da:"Læse", en:"To read"}, {da:"Skrive", en:"To write"},
-    {da:"Lege", en:"To play"}, {da:"Svømme", en:"To swim"}, {da:"Flyve", en:"To fly"},
-    {da:"Tænke", en:"To think"}, {da:"Smile", en:"To smile"}
+    {da:"Elske", en:"To love", df:"Amora"}, {da:"Le", en:"To laugh", df:"Risora"}, {da:"Græde", en:"To cry", df:"Lacrima"},
+    {da:"Spise", en:"To eat", df:"Mangera"}, {da:"Drikke", en:"To drink", df:"Bibera"}, {da:"Sove", en:"To sleep", df:"Dormira"},
+    {da:"Danse", en:"To dance", df:"Dansara"}, {da:"Synge", en:"To sing", df:"Cantora"}, {da:"Løbe", en:"To run", df:"Currera"},
+    {da:"Gå", en:"To walk", df:"Ambular"}, {da:"Tale", en:"To speak", df:"Parlora"}, {da:"Lytte", en:"To listen", df:"Audira"},
+    {da:"Se", en:"To see", df:"Vidora"}, {da:"Læse", en:"To read", df:"Legora"}, {da:"Skrive", en:"To write", df:"Scriptora"},
+    {da:"Lege", en:"To play", df:"Ludora"}, {da:"Svømme", en:"To swim", df:"Natara"}, {da:"Flyve", en:"To fly", df:"Volara"},
+    {da:"Tænke", en:"To think", df:"Pensara"}, {da:"Smile", en:"To smile", df:"Sorrira"}
   ]},
   9: { title: { en: "Magic Words", da: "Magiske ord" }, icon: "✨", color: 9, words: [
-    {da:"Magi", en:"Magic"}, {da:"Sjæl", en:"Soul"}, {da:"Fred", en:"Peace"},
-    {da:"Frihed", en:"Freedom"}, {da:"Evighed", en:"Eternity"}, {da:"Hemmelighed", en:"Secret"},
-    {da:"Skønhed", en:"Beauty"}, {da:"Univers", en:"Universe"}, {da:"Engel", en:"Angel"},
-    {da:"Håbets lys", en:"Light of hope"}, {da:"Drømmeverden", en:"Dreamworld"},
-    {da:"Eventyr", en:"Adventure"}, {da:"Månesjæl", en:"Moonsoul"}, {da:"Solhjerte", en:"Sunheart"},
-    {da:"Stjernestøv", en:"Stardust"}, {da:"Regnbue", en:"Rainbow"}, {da:"Lys", en:"Light"},
-    {da:"Mørke", en:"Darkness"}, {da:"Mirakel", en:"Miracle"}, {da:"Fortryllelse", en:"Enchantment"}
+    {da:"Magi", en:"Magic", df:"Magiora"}, {da:"Sjæl", en:"Soul", df:"Anima"}, {da:"Fred", en:"Peace", df:"Pacera"},
+    {da:"Frihed", en:"Freedom", df:"Libertara"}, {da:"Evighed", en:"Eternity", df:"Eternora"}, {da:"Hemmelighed", en:"Secret", df:"Secretara"},
+    {da:"Skønhed", en:"Beauty", df:"Bellora"}, {da:"Univers", en:"Universe", df:"Universa"}, {da:"Engel", en:"Angel", df:"Angelora"},
+    {da:"Håbets lys", en:"Light of hope", df:"Luxespera"}, {da:"Drømmeverden", en:"Dreamworld", df:"Somniversa"},
+    {da:"Eventyr", en:"Adventure", df:"Aventora"}, {da:"Månesjæl", en:"Moonsoul", df:"Lun anima"}, {da:"Solhjerte", en:"Sunheart", df:"Solcorda"},
+    {da:"Stjernestøv", en:"Stardust", df:"Estrelpura"}, {da:"Regnbue", en:"Rainbow", df:"Arcobella"}, {da:"Lys", en:"Light", df:"Lumina"},
+    {da:"Mørke", en:"Darkness", df:"Obscura"}, {da:"Mirakel", en:"Miracle", df:"Miracula"}, {da:"Fortryllelse", en:"Enchantment", df:"Enchantora"}
   ]},
   10: { title: { en: "New Words", da: "Nye ord" }, icon: "🌟", color: 10, words: [
-    {da:"Skole", en:"School"}, {da:"Lærer", en:"Teacher"}, {da:"Venlig", en:"Kind"},
-    {da:"Eventyrlysten", en:"Adventurous"}, {da:"Morgenmad", en:"Breakfast"}, {da:"Frokost", en:"Lunch"},
-    {da:"Aftensmad", en:"Dinner"}, {da:"Kat", en:"Cat"}, {da:"Hund", en:"Dog"},
-    {da:"Hest", en:"Horse"}, {da:"Fugl", en:"Bird"}, {da:"Sommer", en:"Summer"},
-    {da:"Vinter", en:"Winter"}, {da:"Forår", en:"Spring"}, {da:"Efterår", en:"Autumn"},
-    {da:"By", en:"City"}, {da:"Land", en:"Country"}, {da:"Verden", en:"World"},
-    {da:"Rejse", en:"Travel"}, {da:"Hjem", en:"Home"}
+    {da:"Skole", en:"School", df:"Scholarina"}, {da:"Lærer", en:"Teacher", df:"Magistera"}, {da:"Venlig", en:"Kind", df:"Amicora"},
+    {da:"Eventyrlysten", en:"Adventurous", df:"Aventurosa"}, {da:"Morgenmad", en:"Breakfast", df:"Matinara"}, {da:"Frokost", en:"Lunch", df:"Prandora"},
+    {da:"Aftensmad", en:"Dinner", df:"Cenarina"}, {da:"Kat", en:"Cat", df:"Felina"}, {da:"Hund", en:"Dog", df:"Canora"},
+    {da:"Hest", en:"Horse", df:"Equina"}, {da:"Fugl", en:"Bird", df:"Aviora"}, {da:"Sommer", en:"Summer", df:"Estivara"},
+    {da:"Vinter", en:"Winter", df:"Inverna"}, {da:"Forår", en:"Spring", df:"Primavera"}, {da:"Efterår", en:"Autumn", df:"Autumnara"},
+    {da:"By", en:"City", df:"Urbana"}, {da:"Land", en:"Country", df:"Paisora"}, {da:"Verden", en:"World", df:"Mundara"},
+    {da:"Rejse", en:"Travel", df:"Viatora"}, {da:"Hjem", en:"Home", df:"Domina"}
   ]}
 };
 
 const UI_TEXT = {
   en: {
-    obSub: "Free, fun, and effective language learning!",
+    obSub: "Learn the magical Danfrolat language!",
     obLabel: "I speak...",
     startBtn: "Start Learning",
     unit: "Unit",
     lesson: "Lesson",
     startLesson: "Start Lesson",
-    translateTo: "Translate this",
+    translateTo: "Translate to Danfrolat",
     writeIn: "Write in Danfrolat",
     whatMeans: "What does this mean?",
     tapPairs: "Tap the pairs",
@@ -1201,18 +1209,20 @@ const UI_TEXT = {
     close: "Close",
     english: "English",
     danish: "Dansk",
+    listen: "Listen",
+    speak: "Speak",
     streakMsg: "🔥 Streak updated!",
     gemMsg: "💎 Gems earned!",
     refillDone: "Hearts refilled!"
   },
   da: {
-    obSub: "Gratis, sjov og effektiv sprogindlæring!",
+    obSub: "Lær det magiske Danfrolat sprog!",
     obLabel: "Jeg taler...",
     startBtn: "Start læring",
     unit: "Enhed",
     lesson: "Lektion",
     startLesson: "Start lektion",
-    translateTo: "Oversæt dette",
+    translateTo: "Oversæt til Danfrolat",
     writeIn: "Skriv på Danfrolat",
     whatMeans: "Hvad betyder dette?",
     tapPairs: "Tryk på parrene",
@@ -1225,7 +1235,7 @@ const UI_TEXT = {
     lessonComplete: "Lektion fuldført!",
     greatProgress: "Du gør det godt!",
     continueBtn: "Fortsæt",
-    outOfHearts: "Inde hjerter!",
+    outOfHearts: "Ingen hjerter!",
     ranOut: "Du løb tør for hjerter. Fyld dem op for at fortsætte!",
     refill: "Fyld hjerter",
     goHome: "Gå hjem",
@@ -1237,11 +1247,87 @@ const UI_TEXT = {
     close: "Luk",
     english: "English",
     danish: "Dansk",
+    listen: "Lyt",
+    speak: "Tal",
     streakMsg: "🔥 Streak opdateret!",
     gemMsg: "💎 Ædelstene tjent!",
     refillDone: "Hjerter fyldt op!"
   }
 };
+
+// ============ TTS ============
+class SmoothTTS {
+  constructor() {
+    this.synth = window.speechSynthesis;
+    this.voices = [];
+    this.currentUtterance = null;
+    this.init();
+  }
+
+  init() {
+    if (!this.synth) return;
+    
+    const loadVoices = () => {
+      this.voices = this.synth.getVoices();
+    };
+
+    loadVoices();
+    if (this.synth.onvoiceschanged !== undefined) {
+      this.synth.onvoiceschanged = loadVoices;
+    }
+  }
+
+  speak(text, lang = 'en', rate = 0.9) {
+    if (!this.synth) return;
+    
+    this.stop();
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = rate;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+    
+    // Try to find appropriate voice
+    const voiceMap = {
+      'en': ['en-US', 'en-GB', 'en'],
+      'da': ['da-DK', 'da'],
+      'df': ['en-US', 'en-GB', 'en'] // Danfrolat uses English voice with slower rate
+    };
+    
+    const preferredLangs = voiceMap[lang] || ['en'];
+    
+    for (const prefLang of preferredLangs) {
+      const voice = this.voices.find(v => v.lang.startsWith(prefLang));
+      if (voice) {
+        utterance.voice = voice;
+        break;
+      }
+    }
+    
+    // For Danfrolat, use slower rate for clarity
+    if (lang === 'df') {
+      utterance.rate = 0.75;
+    }
+    
+    this.currentUtterance = utterance;
+    this.synth.speak(utterance);
+    
+    return utterance;
+  }
+
+  stop() {
+    if (this.synth && this.synth.speaking) {
+      this.synth.cancel();
+    }
+    this.currentUtterance = null;
+  }
+
+  isSpeaking() {
+    return this.synth && this.synth.speaking;
+  }
+}
+
+const tts = new SmoothTTS();
 
 // ============ STATE ============
 const STATE_KEY = 'danfrolat_state_v1';
@@ -1252,7 +1338,7 @@ let state = {
   hearts: 5,
   streak: 0,
   lastActive: null,
-  progress: {}, // {unitId: {lessonId: {completed: bool, best: score}}}
+  progress: {},
 };
 
 function saveState() {
@@ -1288,7 +1374,7 @@ const t = key => UI_TEXT[state.lang][key];
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => {
-    s.classList.remove('active', 'slide-left');
+    s.classList.remove('active');
   });
   $(id).classList.add('active');
 }
@@ -1331,12 +1417,8 @@ function shuffle(arr) {
   return a;
 }
 
-function getWordInLang(w) {
+function getSourceWord(w) {
   return state.lang === 'da' ? w.da : w.en;
-}
-
-function getTargetInLang(w) {
-  return 'df'; // Always Danfrolat as target
 }
 
 // ============ ONBOARDING ============
@@ -1362,7 +1444,6 @@ $('startBtn').addEventListener('click', () => {
 
 // ============ HOME ============
 function renderHome() {
-  // Update stats
   $('streakVal').textContent = state.streak;
   $('gemVal').textContent = state.gems;
   $('heartVal').textContent = state.hearts;
@@ -1422,7 +1503,6 @@ function renderHome() {
 
 function getLessonsForUnit(unitId) {
   const words = VOCAB[unitId].words;
-  // Split into lessons of 5 words each
   const lessons = [];
   for (let i = 0; i < words.length; i += 5) {
     lessons.push(words.slice(i, i + 5));
@@ -1461,67 +1541,81 @@ function generateQuestions(words) {
   const qs = [];
   const allWords = VOCAB[currentLesson.unitId].words;
 
-  // Q1: Multiple choice - translate word to Danfrolat
+  // Q1: Multiple choice - translate source to Danfrolat
   const w1 = words[0];
   qs.push({
     type: 'mcq',
-    prompt: getWordInLang(w1),
-    promptLabel: t('translateTo') + ' Danfrolat',
-    correct: w1.da,
-    choices: shuffle([w1.da, ...getDistractors(w1, allWords, 3, 'da')])
+    prompt: getSourceWord(w1),
+    promptLabel: t('translateTo'),
+    correct: w1.df,
+    choices: shuffle([w1.df, ...getDistractors(w1, allWords, 3, 'df')]),
+    speakText: w1.df,
+    speakLang: 'df'
   });
 
-  // Q2: Type the translation
+  // Q2: Type the Danfrolat translation
   const w2 = words[1];
   qs.push({
     type: 'type',
-    prompt: getWordInLang(w2),
+    prompt: getSourceWord(w2),
     promptLabel: t('writeIn'),
-    correct: w2.da
+    correct: w2.df,
+    speakText: w2.df,
+    speakLang: 'df'
   });
 
   // Q3: Multiple choice - what does Danfrolat mean
   const w3 = words[2];
   qs.push({
     type: 'mcq',
-    prompt: w3.da,
+    prompt: w3.df,
     promptLabel: t('whatMeans'),
-    correct: getWordInLang(w3),
-    choices: shuffle([getWordInLang(w3), ...getDistractors(w3, allWords, 3, state.lang)])
+    correct: getSourceWord(w3),
+    choices: shuffle([getSourceWord(w3), ...getDistractors(w3, allWords, 3, state.lang)]),
+    speakText: w3.df,
+    speakLang: 'df'
   });
 
-  // Q4: Word bank (build sentence = single word here)
+  // Q4: Word bank
   const w4 = words[3];
   qs.push({
     type: 'bank',
-    prompt: getWordInLang(w4),
-    promptLabel: t('translateTo') + ' Danfrolat',
-    correct: w4.da,
-    words: shuffle(w4.da.split(' ').concat(getBankDistractors(w4.da, allWords)))
+    prompt: getSourceWord(w4),
+    promptLabel: t('translateTo'),
+    correct: w4.df,
+    words: shuffle(w4.df.split(' ').concat(getBankDistractors(w4.df, allWords))),
+    speakText: w4.df,
+    speakLang: 'df'
   });
 
   // Q5: Multiple choice again
   const w5 = words[4];
   qs.push({
     type: 'mcq',
-    prompt: getWordInLang(w5),
-    promptLabel: t('translateTo') + ' Danfrolat',
-    correct: w5.da,
-    choices: shuffle([w5.da, ...getDistractors(w5, allWords, 3, 'da')])
+    prompt: getSourceWord(w5),
+    promptLabel: t('translateTo'),
+    correct: w5.df,
+    choices: shuffle([w5.df, ...getDistractors(w5, allWords, 3, 'df')]),
+    speakText: w5.df,
+    speakLang: 'df'
   });
 
   return qs;
 }
 
 function getDistractors(word, pool, count, langKey) {
-  const others = pool.filter(w => w.da !== word.da);
+  const others = pool.filter(w => w.df !== word.df);
   const shuffled = shuffle(others);
-  return shuffled.slice(0, count).map(w => langKey === 'da' ? w.da : w[langKey]);
+  if (langKey === 'df') {
+    return shuffled.slice(0, count).map(w => w.df);
+  } else {
+    return shuffled.slice(0, count).map(w => langKey === 'da' ? w.da : w.en);
+  }
 }
 
 function getBankDistractors(correctWord, pool) {
   const extras = [];
-  const allWords = pool.flatMap(w => w.da.split(' '));
+  const allWords = pool.flatMap(w => w.df.split(' '));
   const unique = [...new Set(allWords)].filter(w => w !== correctWord);
   const shuffled = shuffle(unique);
   return shuffled.slice(0, 2);
@@ -1551,6 +1645,24 @@ function renderQuestion() {
   prompt.className = 'q-prompt';
   prompt.textContent = q.prompt;
   body.appendChild(prompt);
+
+  // Speaker button
+  if (q.speakText) {
+    const speaker = document.createElement('div');
+    speaker.className = 'speaker-btn';
+    speaker.innerHTML = `<span>🔊</span> ${t('listen')}`;
+    speaker.addEventListener('click', () => {
+      speaker.classList.add('playing');
+      tts.speak(q.speakText, q.speakLang);
+      setTimeout(() => speaker.classList.remove('playing'), 600);
+    });
+    body.appendChild(speaker);
+    
+    // Auto-play on question start
+    setTimeout(() => {
+      tts.speak(q.speakText, q.speakLang);
+    }, 300);
+  }
 
   if (q.type === 'mcq') {
     const choices = document.createElement('div');
@@ -1635,7 +1747,6 @@ function updateBankAnswer() {
 
 $('footerBtn').addEventListener('click', () => {
   if (feedbackShown) {
-    // Continue to next
     currentQ++;
     if (currentQ >= questions.length) {
       finishLesson();
@@ -1661,7 +1772,6 @@ $('footerBtn').addEventListener('click', () => {
     $('footerBtn').className = 'footer-btn continue-correct';
     $('footerBtn').disabled = false;
 
-    // Highlight correct choice
     document.querySelectorAll('.choice').forEach(c => {
       if (c.textContent === q.correct) c.classList.add('correct');
     });
@@ -1678,7 +1788,6 @@ $('footerBtn').addEventListener('click', () => {
     $('footerBtn').className = 'footer-btn continue-wrong';
     $('footerBtn').disabled = false;
 
-    // Highlight
     document.querySelectorAll('.choice').forEach(c => {
       if (c.textContent === selectedAnswer) c.classList.add('wrong');
       if (c.textContent === q.correct) c.classList.add('correct');
@@ -1691,8 +1800,6 @@ $('footerBtn').addEventListener('click', () => {
   }
 
   saveState();
-
-  // Update progress bar
   $('progressFill').style.width = ((currentQ + 1) / questions.length) * 100 + '%';
 });
 
@@ -1715,7 +1822,6 @@ function finishLesson() {
   state.xp += xpGain;
   state.gems += gemGain;
 
-  // Mark progress
   if (!state.progress[currentLesson.unitId]) state.progress[currentLesson.unitId] = {};
   const prev = state.progress[currentLesson.unitId][currentLesson.lessonIdx];
   state.progress[currentLesson.unitId][currentLesson.lessonIdx] = {
@@ -1726,7 +1832,6 @@ function finishLesson() {
   updateStreak();
   saveState();
 
-  // Show complete screen
   $('xpEarned').textContent = '+' + xpGain;
   $('gemEarned').textContent = '+' + gemGain;
   $('accuracyVal').textContent = Math.round((correctCount / questions.length) * 100) + '%';
@@ -1744,6 +1849,7 @@ $('continueBtn').addEventListener('click', () => {
 
 $('closeLesson').addEventListener('click', () => {
   if (confirm('Quit lesson? Progress will be lost.')) {
+    tts.stop();
     renderHome();
     showScreen('home');
   }
@@ -1808,7 +1914,6 @@ if (loadState() && state.lang) {
   showScreen('onboarding');
 }
 
-// Heart refill timer (1 heart per 30 min, max 5) - check on load
 setInterval(() => {
   if (state.hearts < 5) {
     state.hearts = Math.min(5, state.hearts + 1);
