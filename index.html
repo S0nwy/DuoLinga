@@ -12,6 +12,7 @@
     --green-light: #D7FFB8;
     --blue: #1CB0F6;
     --blue-dark: #1899D6;
+    --blue-light: #E7F7FF;
     --red: #FF4B4B;
     --red-dark: #EA2B2B;
     --yellow: #FFC800;
@@ -24,6 +25,7 @@
     --bg-soft: #F7F7F7;
     --text: #3C3C3C;
     --ease: cubic-bezier(0.25, 0.8, 0.25, 1);
+    --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -207,6 +209,67 @@
     box-shadow: 0 4px 0 #EA2B2B;
   }
 
+  .forgot-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    background: #1CB0F6;
+    color: white;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    box-shadow: 0 3px 0 #1899D6;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .forgot-btn:hover { background: #15A0DD; }
+  .forgot-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 0 0 #1899D6;
+  }
+
+  .forgot-btn.attention {
+    animation: attentionPulse 1.8s ease-in-out infinite;
+    background: linear-gradient(135deg, #1CB0F6, #1899D6, #1CB0F6);
+    background-size: 200% 100%;
+  }
+
+  @keyframes attentionPulse {
+    0%, 100% {
+      box-shadow: 0 3px 0 #1899D6, 0 0 0 0 rgba(28,176,246,0.5);
+      background-position: 0% 0%;
+    }
+    50% {
+      box-shadow: 0 3px 0 #1899D6, 0 0 0 10px rgba(28,176,246,0);
+      background-position: 100% 0%;
+    }
+  }
+
+  .forgot-btn .notif-badge {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #FF4B4B;
+    border: 1.5px solid white;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .forgot-btn.attention .notif-badge { opacity: 1; }
+
   .auth-status {
     font-size: 12px;
     color: #777;
@@ -217,7 +280,6 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
-    line-height: 1.4;
   }
 
   .pulse-dot {
@@ -1216,6 +1278,424 @@
     font-size: 11px;
     font-weight: 900;
   }
+
+  /* ============ FORGOT MODAL ============ */
+  .forgot-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    backdrop-filter: blur(0px);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s var(--ease), background 0.3s var(--ease), backdrop-filter 0.3s var(--ease);
+  }
+
+  .forgot-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px);
+  }
+
+  .forgot-modal {
+    background: white;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 22px;
+    padding: 26px 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 8px 20px rgba(0,0,0,0.15);
+    transform: scale(0.85) translateY(20px);
+    opacity: 0;
+    transition: transform 0.4s var(--spring), opacity 0.3s var(--ease);
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .forgot-backdrop.show .forgot-modal {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+
+  .forgot-content {
+    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+
+  .forgot-content.fading {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  .forgot-close-x {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--bg-soft);
+    border: none;
+    cursor: pointer;
+    color: var(--gray-text);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 5;
+  }
+
+  .forgot-close-x:hover { background: var(--gray); color: var(--text); }
+  .forgot-close-x:active { transform: scale(0.9); }
+
+  .forgot-icon-big {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--blue-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin: 0 auto 16px;
+    animation: floatyIcon 2.5s ease-in-out infinite;
+  }
+
+  @keyframes floatyIcon {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  .forgot-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .forgot-subtitle {
+    font-size: 14px;
+    color: var(--gray-text);
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 22px;
+    line-height: 1.5;
+  }
+
+  .forgot-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .forgot-action {
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.15s;
+    min-height: 48px;
+  }
+
+  .forgot-action.yes {
+    background: var(--green);
+    color: white;
+    box-shadow: 0 4px 0 var(--green-dark);
+  }
+  .forgot-action.yes:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 var(--green-dark);
+  }
+
+  .forgot-action.no {
+    background: var(--bg-soft);
+    color: var(--text);
+    border: 2px solid var(--gray);
+    box-shadow: 0 4px 0 var(--gray-dark);
+  }
+  .forgot-action.no:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 var(--gray-dark);
+  }
+
+  .forgot-field {
+    margin-bottom: 14px;
+  }
+
+  .forgot-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .forgot-label .req {
+    color: var(--red);
+    margin-left: 2px;
+  }
+
+  .forgot-label .opt {
+    color: var(--gray-text);
+    font-weight: 600;
+    margin-left: 4px;
+    font-size: 11px;
+  }
+
+  .forgot-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--gray);
+    border-radius: 11px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    outline: none;
+    background: var(--bg-soft);
+    transition: all 0.2s;
+    resize: none;
+  }
+
+  .forgot-input:focus {
+    border-color: var(--blue);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(28,176,246,0.12);
+  }
+
+  .forgot-input.textarea {
+    min-height: 70px;
+    font-family: inherit;
+    line-height: 1.4;
+  }
+
+  .forgot-submit {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: var(--blue);
+    color: white;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--blue-dark);
+    transition: all 0.15s;
+    margin-top: 6px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .forgot-submit:disabled {
+    background: var(--gray);
+    box-shadow: 0 4px 0 var(--gray-dark);
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  .forgot-submit:not(:disabled):active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 var(--blue-dark);
+  }
+
+  .forgot-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 10px;
+    gap: 16px;
+    animation: fadeInUp 0.35s var(--ease);
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .forgot-loading .spinner-lg {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--blue-light);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+  }
+
+  .forgot-loading .loading-text {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--gray-text);
+    text-align: center;
+    animation: fadeText 1.5s ease-in-out infinite;
+  }
+
+  @keyframes fadeText {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  .forgot-success {
+    text-align: center;
+    padding: 20px 10px;
+    animation: fadeInUp 0.4s var(--ease);
+  }
+
+  .forgot-success .success-icon {
+    font-size: 56px;
+    margin-bottom: 12px;
+    animation: successPop 0.6s var(--spring);
+  }
+
+  @keyframes successPop {
+    0% { transform: scale(0); }
+    60% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  .forgot-success .success-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--green-dark);
+    margin-bottom: 6px;
+  }
+
+  .forgot-success .success-sub {
+    font-size: 13px;
+    color: var(--gray-text);
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .forgot-message {
+    padding: 20px 4px 10px;
+    animation: fadeInUp 0.4s var(--ease);
+  }
+
+  .forgot-message .company-seal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--blue-light);
+    color: var(--blue-dark);
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+  }
+
+  .forgot-message .letter {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .forgot-message .letter strong {
+    font-weight: 900;
+  }
+
+  .forgot-message .letter .username-highlight {
+    display: block;
+    background: linear-gradient(135deg, var(--green-light), #C8F09E);
+    color: var(--green-dark);
+    font-size: 20px;
+    font-weight: 900;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin: 12px 0;
+    text-align: center;
+    font-family: monospace;
+    letter-spacing: 1px;
+    border: 2px solid var(--green);
+    animation: highlightPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes highlightPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(88,204,2,0.3); }
+    50% { box-shadow: 0 0 0 8px rgba(88,204,2,0); }
+  }
+
+  .forgot-message .signature {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--gray);
+    font-size: 12px;
+    color: var(--gray-text);
+    font-weight: 800;
+    letter-spacing: 0.3px;
+  }
+
+  .forgot-request-again {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 11px;
+    background: var(--bg-soft);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    border: 2px solid var(--gray);
+    box-shadow: 0 3px 0 var(--gray-dark);
+    transition: all 0.15s;
+    margin-top: 18px;
+  }
+
+  .forgot-request-again:active {
+    transform: translateY(3px);
+    box-shadow: 0 0 0 var(--gray-dark);
+  }
+
+  .forgot-pending {
+    text-align: center;
+    padding: 20px 10px;
+    animation: fadeInUp 0.4s var(--ease);
+  }
+
+  .forgot-pending .pending-icon {
+    font-size: 56px;
+    margin-bottom: 12px;
+    animation: pendingBounce 1.6s ease-in-out infinite;
+  }
+
+  @keyframes pendingBounce {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-6px) rotate(-3deg); }
+  }
+
+  .forgot-pending .pending-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--yellow-dark);
+    margin-bottom: 8px;
+  }
+
+  .forgot-pending .pending-sub {
+    font-size: 13px;
+    color: var(--gray-text);
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
 </style>
 </head>
 <body>
@@ -1234,6 +1714,10 @@
         <div class="auth-error" id="authError"></div>
         <button class="request-btn" id="requestBtn" data-state="idle">
           <span class="request-btn-text">Request Access</span>
+        </button>
+        <button class="forgot-btn" id="forgotBtn">
+          <span>Forgot Username?</span>
+          <span class="notif-badge"></span>
         </button>
         <div class="auth-status" id="authStatus"></div>
       </div>
@@ -1409,6 +1893,14 @@
 
 </div>
 
+<!-- Forgot Modal -->
+<div class="forgot-backdrop" id="forgotBackdrop">
+  <div class="forgot-modal" id="forgotModal">
+    <button class="forgot-close-x" id="forgotCloseX" style="display:none;">✕</button>
+    <div class="forgot-content" id="forgotContent"></div>
+  </div>
+</div>
+
 <script>
 // ============ CONFIG ============
 const CLOUD_CONFIG = {
@@ -1421,7 +1913,6 @@ const SESSION_KEY = 'danfrolat_session_v6';
 const LASTNAME_KEY = 'danfrolat_lastname';
 const DEVICE_ID_KEY = 'danfrolat_device_id';
 
-// ============ CLOUD ============
 async function cloudGet() {
   try {
     const res = await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}/latest?t=${Date.now()}`, {
@@ -1444,7 +1935,6 @@ async function cloudSet(data) {
   } catch (e) { console.error('Cloud save error:', e); return false; }
 }
 
-// ============ DEVICE ID ============
 function getOrCreateDeviceId() {
   let id = localStorage.getItem(DEVICE_ID_KEY);
   if (!id) {
@@ -1459,23 +1949,10 @@ function getOrCreateDeviceId() {
   return id;
 }
 
-async function claimOwnership(name, deviceId) {
-  const data = await cloudGet();
-  if (!data[name]) data[name] = {};
-  data[name].ownerDeviceId = deviceId;
-  await cloudSet(data);
-}
-
-// ============ REQUEST STATUS ============
-async function setRequestStatus(name, status, extraFields = {}) {
+async function setRequestStatus(name, status, extra = {}) {
   const data = await cloudGet();
   if (!data.__requests__) data.__requests__ = {};
-  data.__requests__[name] = { 
-    status, 
-    timestamp: Date.now(), 
-    name,
-    ...extraFields
-  };
+  data.__requests__[name] = { status, timestamp: Date.now(), name, ...extra };
   return await cloudSet(data);
 }
 
@@ -1484,12 +1961,39 @@ async function getRequestRecord(name) {
   return data.__requests__?.[name] || null;
 }
 
-// ============ SESSION ============
+async function claimOwnership(name, deviceId) {
+  const data = await cloudGet();
+  if (!data[name]) data[name] = {};
+  data[name].ownerDeviceId = deviceId;
+  await cloudSet(data);
+}
+
+// ============ FORGOT HELPERS ============
+async function getForgotRecord(deviceId) {
+  const data = await cloudGet();
+  return data.__forgot__?.[deviceId] || null;
+}
+
+async function setForgotRecord(deviceId, payload) {
+  const data = await cloudGet();
+  if (!data.__forgot__) data.__forgot__ = {};
+  data.__forgot__[deviceId] = { ...payload, deviceId, timestamp: Date.now(), read: false };
+  return await cloudSet(data);
+}
+
+async function markForgotRead(deviceId) {
+  const data = await cloudGet();
+  if (data.__forgot__?.[deviceId]) {
+    data.__forgot__[deviceId].read = true;
+    await cloudSet(data);
+  }
+}
+
 function getSession() { return localStorage.getItem(SESSION_KEY); }
 function setSession(u) { localStorage.setItem(SESSION_KEY, u); }
 function clearSession() { localStorage.removeItem(SESSION_KEY); }
 
-// ============ VOCAB ============
+// ============ VOCAB (unchanged) ============
 const VOCAB = {
   1: { title: { en: "Greetings & People", da: "Hilsner og mennesker" }, icon: "👋", color: 1, words: [
     {da:"Hej", en:"Hello", df:"Bonhallo"}, {da:"Godmorgen", en:"Good morning", df:"Bonmora"}, {da:"Godnat", en:"Good night", df:"Bonnocta"},
@@ -1954,11 +2458,7 @@ function setRequestState(newState, customMsg) {
       break;
     case 'requested':
       btn.innerHTML = '<span class="request-btn-text">✓ Requested</span>';
-      statusEl.innerHTML = '';
-      const dot = document.createElement('span');
-      dot.className = 'pulse-dot';
-      statusEl.appendChild(dot);
-      statusEl.appendChild(document.createTextNode(' ' + (customMsg || 'Waiting for approval...')));
+      statusEl.innerHTML = '<span class="pulse-dot"></span> ' + (customMsg || 'Waiting for approval...');
       statusEl.style.color = '';
       break;
     case 'approved':
@@ -1983,31 +2483,34 @@ function startPolling(name) {
       const data = await cloudGet();
       const req = data.__requests__?.[name];
       const existing = data[name];
-
       if (!req) return;
 
       if (req.status === 'approved') {
-        // Is someone else already claiming it?
-        if (existing?.ownerDeviceId && existing.ownerDeviceId !== myDevice) {
+        // If I requested this (normal or takeover), claim ownership now
+        if (req.requestingDeviceId === myDevice) {
+          await claimOwnership(name, myDevice);
           stopPolling();
-          setRequestState('denied', '❌ Name is now owned by another device');
+          setRequestState('approved');
+          toast('Access granted! 🎉');
+          await enterApp(name);
           return;
         }
-        // Claim if not claimed
-        if (!existing?.ownerDeviceId) {
-          await claimOwnership(name, myDevice);
+        // I'm not the requesting device — check if I still own it
+        if (existing?.ownerDeviceId === myDevice) {
+          stopPolling();
+          setRequestState('approved');
+          await enterApp(name);
+          return;
         }
+        // Someone else got approved for a name I don't own
         stopPolling();
-        setRequestState('approved');
-        toast('Access granted! 🎉');
-        await enterApp(name);
+        setRequestState('denied', '❌ Name is now owned by another device');
       } else if (req.status === 'denied' && req.requestingDeviceId === myDevice) {
         stopPolling();
         setRequestState('denied');
       } else if (req.status === 'pending' && req.requestingDeviceId !== myDevice) {
-        // Someone else overwrote our request — show idle
         stopPolling();
-        setRequestState('idle', 'Someone else requested this name. Try again.');
+        setRequestState('idle', 'Someone else requested this name.');
       }
     } catch (e) { console.error('Poll error:', e); }
   }, 8000);
@@ -2039,15 +2542,13 @@ async function handleRequestClick() {
     const existing = data[name];
     const req = data.__requests__?.[name];
 
-    // CASE 1: I already own this account
+    // Case A: I already own this name → enter
     if (existing?.ownerDeviceId === myDevice) {
-      // Check if approved or has data — enter
-      if (req?.status === 'approved' || existing.data) {
+      if (existing.data || req?.status === 'approved') {
         setRequestState('approved');
         await enterApp(name);
         return;
       }
-      // I'm the owner but pending — resume
       if (req?.status === 'pending' && req.requestingDeviceId === myDevice) {
         setRequestState('requested');
         startPolling(name);
@@ -2055,7 +2556,7 @@ async function handleRequestClick() {
       }
     }
 
-    // CASE 2: Owned by ANOTHER device — submit takeover request
+    // Case B: Someone else owns it → takeover request
     if (existing?.ownerDeviceId && existing.ownerDeviceId !== myDevice) {
       await setRequestStatus(name, 'pending', {
         requestingDeviceId: myDevice,
@@ -2067,27 +2568,28 @@ async function handleRequestClick() {
       return;
     }
 
-    // CASE 3: Unclaimed (legacy or new) — submit normal request
+    // Case C: Unclaimed but has a pending request
     if (req?.status === 'pending' && req.requestingDeviceId === myDevice) {
       setRequestState('requested');
       startPolling(name);
       return;
     }
 
+    // Case D: Unclaimed approved (legacy) — claim and enter
     if (req?.status === 'approved') {
-      // Legacy: approved but no owner → claim it
       await claimOwnership(name, myDevice);
       setRequestState('approved');
       await enterApp(name);
       return;
     }
 
+    // Case E: Denied
     if (req?.status === 'denied' && req.requestingDeviceId === myDevice) {
       setRequestState('denied');
       return;
     }
 
-    // Fresh request
+    // Case F: Fresh request
     await setRequestStatus(name, 'pending', {
       requestingDeviceId: myDevice,
       isTakeover: false
@@ -2110,10 +2612,10 @@ async function enterApp(name) {
     setSession(name);
     currentUser = name;
     await loadUserState(name);
-    // Ensure ownership is claimed
+    // Ensure ownership on entry
     const data = await cloudGet();
-    if (!data[name]?.ownerDeviceId) {
-      if (!data[name]) data[name] = {};
+    if (!data[name]) data[name] = {};
+    if (!data[name].ownerDeviceId || data[name].ownerDeviceId !== getOrCreateDeviceId()) {
       data[name].ownerDeviceId = getOrCreateDeviceId();
       await cloudSet(data);
     }
@@ -2138,6 +2640,270 @@ $('authName').addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !$('requestBtn').disabled) { e.preventDefault(); handleRequestClick(); }
 });
 
+// ============ FORGOT USERNAME FLOW ============
+const forgotBackdrop = $('forgotBackdrop');
+const forgotContent = $('forgotContent');
+const forgotCloseX = $('forgotCloseX');
+let forgotFlowState = 'closed';
+let forgotPollInterval = null;
+
+function openForgotModal(initialScreen) {
+  forgotBackdrop.classList.add('show');
+  forgotFlowState = 'open';
+  forgotCloseX.style.display = 'flex';
+  showForgotScreen(initialScreen || 'confirm');
+}
+
+function closeForgotModal() {
+  forgotBackdrop.classList.remove('show');
+  forgotFlowState = 'closed';
+  forgotCloseX.style.display = 'none';
+  // Clear content after fade out
+  setTimeout(() => {
+    if (forgotFlowState === 'closed') {
+      forgotContent.classList.remove('fading');
+      forgotContent.innerHTML = '';
+    }
+  }, 350);
+}
+
+function showForgotScreen(screenName, data = {}) {
+  forgotContent.classList.add('fading');
+  setTimeout(() => {
+    forgotContent.innerHTML = getForgotScreenHTML(screenName, data);
+    forgotContent.classList.remove('fading');
+    bindForgotScreenEvents(screenName, data);
+  }, 220);
+}
+
+function getForgotScreenHTML(screenName, data) {
+  switch (screenName) {
+    case 'confirm':
+      return `
+        <div class="forgot-icon-big">🤔</div>
+        <div class="forgot-title">Forgot your username?</div>
+        <div class="forgot-subtitle">Are you sure? We'll help you find it again.</div>
+        <div class="forgot-row-2">
+          <button class="forgot-action yes" id="forgotYes">Yes</button>
+          <button class="forgot-action no" id="forgotNo">No</button>
+        </div>
+      `;
+    case 'loading':
+      return `
+        <div class="forgot-loading">
+          <div class="spinner-lg"></div>
+          <div class="loading-text">${data.text || 'Preparing...'}</div>
+        </div>
+      `;
+    case 'form':
+      return `
+        <div class="forgot-icon-big">✏️</div>
+        <div class="forgot-title">Help us find you</div>
+        <div class="forgot-subtitle">Tell us a few things so we can match you to your account.</div>
+        <div class="forgot-field">
+          <label class="forgot-label">What's your name?<span class="req">*</span></label>
+          <input type="text" class="forgot-input" id="forgotName" placeholder="Your real name" maxlength="40" />
+        </div>
+        <div class="forgot-field">
+          <label class="forgot-label">What do you remember from your username?<span class="req">*</span></label>
+          <input type="text" class="forgot-input" id="forgotRemembered" placeholder="e.g. it had 'alex' in it" maxlength="40" />
+        </div>
+        <div class="forgot-field">
+          <label class="forgot-label">Anything else you want us to know?<span class="opt">(optional)</span></label>
+          <textarea class="forgot-input textarea" id="forgotExplain" placeholder="e.g. I created it around March, I remember my avatar" maxlength="300"></textarea>
+        </div>
+        <button class="forgot-submit" id="forgotSubmit" disabled>
+          <span>Send Request</span>
+        </button>
+      `;
+    case 'sending':
+      return `
+        <div class="forgot-loading">
+          <div class="spinner-lg"></div>
+          <div class="loading-text">Sending your request...</div>
+        </div>
+      `;
+    case 'sent':
+      return `
+        <div class="forgot-success">
+          <div class="success-icon">✅</div>
+          <div class="success-title">Sent!</div>
+          <div class="success-sub">Our team will review your request and get back to you soon.</div>
+        </div>
+      `;
+    case 'pending':
+      return `
+        <div class="forgot-pending">
+          <div class="pending-icon">⏳</div>
+          <div class="pending-title">Pending Review</div>
+          <div class="pending-sub">Our team is looking into your request. You'll see a message here once we've responded.</div>
+          <div class="pending-sub" style="font-size:12px;opacity:0.7;">Submitted ${data.timeAgo || 'recently'}</div>
+        </div>
+      `;
+    case 'answered':
+      return `
+        <div class="forgot-message">
+          <div class="company-seal">📬 Message from Danfrolat</div>
+          <div class="letter">
+            We noticed that you asked about your username.<br><br>
+            After checking our records, we found your account. Your username is:
+            <span class="username-highlight">${escapeHtmlHTML(data.answer)}</span>
+            Welcome back — we're glad you're here. Head back and request access using this username, and we'll let you in.
+          </div>
+          <div class="signature">— The Danfrolat Team 💚</div>
+        </div>
+        <button class="forgot-request-again" id="forgotRequestAgain">↺ Send another request</button>
+      `;
+    case 'declined':
+      return `
+        <div class="forgot-message">
+          <div class="company-seal">📬 Message from Danfrolat</div>
+          <div class="letter">
+            We received your request about a forgotten username.<br><br>
+            Unfortunately, after careful review, we weren't able to verify that this request came from the account owner. To protect our users, we can't share account details at this time.<br><br>
+            If you believe this is a mistake, you can submit another request with more details about your account.
+          </div>
+          <div class="signature">— The Danfrolat Team 💚</div>
+        </div>
+        <button class="forgot-request-again" id="forgotRequestAgain">↺ Try again</button>
+      `;
+    default:
+      return '';
+  }
+}
+
+function escapeHtmlHTML(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+function bindForgotScreenEvents(screenName, data) {
+  if (screenName === 'confirm') {
+    $('forgotYes').addEventListener('click', () => {
+      showForgotScreen('loading', { text: 'Checking...' });
+      setTimeout(() => showForgotScreen('form'), 1200);
+    });
+    $('forgotNo').addEventListener('click', closeForgotModal);
+  }
+
+  if (screenName === 'form') {
+    const nameInput = $('forgotName');
+    const rememberedInput = $('forgotRemembered');
+    const explainInput = $('forgotExplain');
+    const submitBtn = $('forgotSubmit');
+
+    const updateSubmit = () => {
+      const valid = nameInput.value.trim().length >= 2 && rememberedInput.value.trim().length >= 1;
+      submitBtn.disabled = !valid;
+    };
+
+    nameInput.addEventListener('input', updateSubmit);
+    rememberedInput.addEventListener('input', updateSubmit);
+    explainInput.addEventListener('input', () => {});
+
+    setTimeout(() => nameInput.focus(), 200);
+
+    submitBtn.addEventListener('click', async () => {
+      if (submitBtn.disabled) return;
+      const payload = {
+        name: nameInput.value.trim(),
+        remembered: rememberedInput.value.trim(),
+        explanation: explainInput.value.trim(),
+        status: 'pending'
+      };
+      showForgotScreen('sending');
+      try {
+        await setForgotRecord(getOrCreateDeviceId(), payload);
+        showForgotScreen('sent');
+        setTimeout(() => closeForgotModal(), 5000);
+      } catch (e) {
+        showForgotScreen('form');
+        toast('Could not send. Please try again.');
+      }
+    });
+  }
+
+  if (screenName === 'answered' || screenName === 'declined') {
+    const againBtn = $('forgotRequestAgain');
+    if (againBtn) {
+      againBtn.addEventListener('click', async () => {
+        // Wipe existing record and open form again
+        showForgotScreen('loading', { text: 'Opening form...' });
+        setTimeout(() => showForgotScreen('form'), 700);
+      });
+    }
+    // Mark as read when viewed
+    markForgotRead(getOrCreateDeviceId()).then(() => {
+      $('forgotBtn').classList.remove('attention');
+    });
+  }
+}
+
+async function openForgotFlow() {
+  try {
+    const rec = await getForgotRecord(getOrCreateDeviceId());
+    if (rec) {
+      if (rec.status === 'pending') {
+        const ago = formatTimeAgo(rec.timestamp);
+        openForgotModal('pending');
+        // Re-render with time
+        setTimeout(() => {
+          forgotContent.innerHTML = getForgotScreenHTML('pending', { timeAgo: ago });
+          bindForgotScreenEvents('pending', {});
+        }, 250);
+        return;
+      }
+      if (rec.status === 'answered' && rec.answer) {
+        openForgotModal('answered');
+        setTimeout(() => {
+          forgotContent.innerHTML = getForgotScreenHTML('answered', { answer: rec.answer });
+          bindForgotScreenEvents('answered', { answer: rec.answer });
+        }, 250);
+        return;
+      }
+      if (rec.status === 'declined') {
+        openForgotModal('declined');
+        setTimeout(() => {
+          forgotContent.innerHTML = getForgotScreenHTML('declined', {});
+          bindForgotScreenEvents('declined', {});
+        }, 250);
+        return;
+      }
+    }
+    openForgotModal('confirm');
+  } catch (e) {
+    openForgotModal('confirm');
+  }
+}
+
+function formatTimeAgo(ts) {
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff / 60) + ' minutes ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + ' hours ago';
+  return Math.floor(diff / 86400) + ' days ago';
+}
+
+$('forgotBtn').addEventListener('click', openForgotFlow);
+$('forgotCloseX').addEventListener('click', closeForgotModal);
+forgotBackdrop.addEventListener('click', (e) => {
+  if (e.target === forgotBackdrop) closeForgotModal();
+});
+
+async function checkForgotAttention() {
+  if (forgotFlowState === 'open') return;
+  if ($('auth').classList.contains('active') === false) return;
+  try {
+    const rec = await getForgotRecord(getOrCreateDeviceId());
+    if (rec && (rec.status === 'answered' || rec.status === 'declined') && !rec.read) {
+      $('forgotBtn').classList.add('attention');
+    } else {
+      $('forgotBtn').classList.remove('attention');
+    }
+  } catch (e) {}
+}
+
+setInterval(checkForgotAttention, 15000);
+
 // ============ BOOT ============
 $('authMascot').innerHTML = mascotSVG(110);
 getOrCreateDeviceId();
@@ -2158,28 +2924,30 @@ async function boot() {
         return;
       }
 
-      // Owned by someone else — clear session
+      // Owned by someone else — clear
       if (existing?.ownerDeviceId && existing.ownerDeviceId !== myDevice) {
         clearSession();
         showScreen('auth');
         $('authName').value = session;
         currentRequestName = session;
         setRequestState('idle', '🔒 This name is on another device');
+        checkForgotAttention();
         return;
       }
 
-      // My pending request — show waiting
+      // My pending — show waiting
       if (req?.status === 'pending' && req.requestingDeviceId === myDevice) {
         currentRequestName = session;
         $('authName').value = session;
         setRequestState('requested');
         startPolling(session);
         showScreen('auth');
+        checkForgotAttention();
         return;
       }
 
-      // Approved but not claimed — claim and enter
-      if (req?.status === 'approved' && req.requestingDeviceId === myDevice) {
+      // Approved but unclaimed — claim and enter
+      if (req?.status === 'approved') {
         await claimOwnership(session, myDevice);
         await enterApp(session);
         return;
@@ -2187,8 +2955,8 @@ async function boot() {
 
       clearSession();
     } catch (e) {
-      // Offline — trust session only if we have data cached locally (we don't, so just show auth)
       showScreen('auth');
+      checkForgotAttention();
       return;
     }
   }
@@ -2215,9 +2983,10 @@ async function boot() {
       } else if (req?.status === 'denied' && req.requestingDeviceId === myDevice) {
         setRequestState('denied');
       }
-    } catch (e) { /* offline */ }
+    } catch (e) {}
   }
   setTimeout(() => $('authName')?.focus(), 350);
+  checkForgotAttention();
 }
 
 // ============ NAV ============
@@ -2718,6 +3487,7 @@ $('logoutBtn').addEventListener('click', () => {
     $('authError').textContent = '';
     setRequestState('idle');
     showScreen('auth');
+    checkForgotAttention();
     setTimeout(() => $('authName').focus(), 300);
   }
 });
