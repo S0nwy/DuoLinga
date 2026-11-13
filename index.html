@@ -1410,10 +1410,10 @@
 
 <script>
 // ============ CONFIG ============
-// ⚠️ Replace with YOUR values from jsonbin.io if these aren't already working
+// ⚠️ DO NOT CHANGE THESE - these are your working credentials
 const CLOUD_CONFIG = {
-  BIN_ID: '6745f3a8e41b4d34e4f7b8a2',
-  API_KEY: '$2a$10$vWJ6qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8q',
+  BIN_ID: '6af727e7ac6210605a853a74',
+  API_KEY: '$2a$10$0Iv/9aI8ROmnVBDmYP/W0eDFZkS22TfFItJPz07yKsEpiKuU7pLSu',
   BASE_URL: 'https://api.jsonbin.io/v3/b'
 };
 
@@ -1422,7 +1422,7 @@ const LASTNAME_KEY = 'danfrolat_lastname';
 
 async function cloudGet() {
   try {
-    const res = await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}/latest`, {
+    const res = await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}/latest?t=${Date.now()}`, {
       headers: { 'X-Master-Key': CLOUD_CONFIG.API_KEY }
     });
     if (!res.ok) return {};
@@ -1675,9 +1675,7 @@ const VOCAB = {
 };
 
 const PHONETIC_MAP = {
-  // ===== Existing units 1-10 =====
   'bonhallo':'bon-HAHL-lo','bonmora':'bon-MO-ra','bonnocta':'bon-NOCK-ta','adevara':'ah-day-VAH-ra','familora':'fah-MEE-lo-ra','madora':'mah-DO-ra','padora':'pah-DO-ra','sorina':'so-REE-na','fratero':'fra-TEH-ro','infanto':'een-FAHN-to','humano':'hoo-MAH-no','amivenn':'ah-mee-VEN','grandmora':'grahnd-MO-ra','grandpador':'grahnd-PAH-dor','femina':'FEH-mee-na','homaro':'ho-MAH-ro','puella':'poo-EH-la','garçono':'gar-SO-no','bebina':'beh-BEE-na','persona':'per-SO-na','amorliv':'ah-MOR-liv','joyara':'joy-AH-ra','dolora':'do-LO-ra','felicia':'feh-LEE-sha','amistara':'ah-mee-STAH-ra','saudora':'sow-DO-ra','somnara':'som-NAH-ra','espera':'es-PE-ra','timora':'tee-MO-ra','sorrisa':'so-REE-sa','besora':'beh-SO-ra','cordehjert':'kor-deh-YERT','iraora':'ee-rah-O-ra','calmina':'kal-MEE-na','joyeux':'joy-UH','tristora':'tree-STO-ra','corajosa':'ko-rah-HO-sa','fierté':'fee-er-TAY','solitara':'so-lee-TAH-ra','amorella':'ah-mo-REH-la','maré':'mah-RAY','aqua':'AH-kwa','fuego':'FWEH-go','terra':'TEH-ra','cielum':'SEE-lum','estrela':'eh-STREH-la','florina':'flo-REE-na','arbor':'AR-bor','silvara':'seel-VAH-ra','montara':'mon-TAH-ra','ventora':'ven-TOR-a','pluvia':'PLOO-vee-a','nivora':'nee-VO-ra','solaria':'so-LAH-ree-a','lunalux':'LOO-na-luks','plajara':'plah-HAH-ra','rivora':'ree-VO-ra','lakora':'lah-KO-ra','herbina':'her-BEE-na','nubela':'noo-BEH-la','domora':'do-MO-ra','camara':'kah-MAH-ra','lectora':'lek-TO-ra','sedora':'seh-DO-ra','tabora':'tah-BO-ra','portara':'por-TAH-ra','fenestra':'feh-NEH-strah','cozinara':'ko-zee-NAH-ra','alimenta':'ah-lee-MEN-ta','panora':'pah-NO-ra','lacté':'lak-TAY','pomara':'po-MAH-ra','cafora':'kah-FO-ra','libera':'LEE-beh-ra','musica':'MOO-zee-ka','telefoné':'teh-leh-fo-NAY','computara':'kom-poo-TAH-ra','clavora':'klah-VO-ra','vestara':'ves-TAH-ra','sapata':'sah-PAH-ta','rubina':'roo-BEE-na','azula':'ah-ZOO-la','verdora':'ver-DO-ra','amarela':'ah-mah-REH-la','nigrum':'NYE-grum','albina':'al-BEE-na','rosalia':'ro-SAH-lee-a','violara':'vee-oh-LAH-ra','aurum':'AW-rum','argenta':'ar-JEN-ta','oranja':'oh-RAHN-ya','brunora':'broo-NO-ra','grisia':'GREE-see-a','bellskøn':'bel-SKUN','grandora':'grahn-DO-ra','minora':'mee-NO-ra','rapida':'rah-PEE-da','lentora':'len-TO-ra','calora':'kah-LO-ra','frigora':'free-GO-ra','diara':'dee-AH-ra','noctara':'noc-TAH-ra','matina':'mah-TEE-na','vespara':'ves-PAH-ra','hodiera':'ho-DYEH-ra','amanora':'ah-mah-NO-ra','heriora':'heh-REE-or-a','tempora':'TEM-po-ra','nuncé':'noon-SAY','sempre':'SEM-preh','nuncquam':'NOON-kwam','semanara':'seh-mah-NAH-ra','mensora':'men-SO-ra','annora':'ah-NO-ra','horina':'ho-REE-na','minuta':'mee-NOO-ta','seconda':'seh-KON-da','antera':'ahn-TE-ra','postara':'pos-TAH-ra','proxima':'PROK-see-ma','mio':'MEE-o','tua':'TOO-ah','elo':'EH-lo','ela':'EH-la','nos':'nos','elar':'EH-lar','mina':'MEE-na','aqui':'ah-KEE','alora':'ah-LO-ra','oui':'wee','non':'non','merci tak':'MER-see tahk','por favor':'por fah-VOR','ubara':'oo-BAH-ra','quisara':'kee-SAH-ra','quora':'KWO-ra','porqué':'por-KAY','porque':'por-KEH','talvez':'tahl-VEZ','amora':'ah-MO-ra','risora':'ree-SO-ra','lacrima':'lah-KREE-ma','mangera':'mahn-JEH-ra','bibera':'bee-BEH-ra','dormira':'dor-MEE-ra','dansara':'dahn-SAH-ra','cantora':'kahn-TO-ra','currera':'koo-REH-ra','ambular':'am-boo-LAR','parlora':'par-LO-ra','audira':'ow-DEE-ra','vidora':'vee-DO-ra','legora':'leh-GO-ra','scriptora':'skreep-TO-ra','ludora':'loo-DO-ra','natara':'nah-TAH-ra','volara':'vo-LAH-ra','pensara':'pen-SAH-ra','sorrira':'so-REE-ra','magiora':'mah-JO-ra','anima':'AH-nee-ma','pacera':'pah-SE-ra','libertara':'lee-ber-TAH-ra','eternora':'eh-ter-NO-ra','secretara':'seh-kreh-TAH-ra','bellora':'beh-LO-ra','universa':'oo-nee-VER-sa','angelora':'ahn-JEH-lo-ra','luxespera':'luks-es-PE-ra','somniversa':'som-nee-VER-sa','aventora':'ah-ven-TO-ra','lun anima':'loon AH-nee-ma','solcorda':'sol-KOR-da','estrelpura':'eh-strel-POO-ra','arcobella':'ar-ko-BEH-la','lumina':'LOO-mee-na','obscura':'ob-SKOO-ra','miracula':'mee-RAH-koo-la','enchantora':'en-chan-TO-ra','scholarina':'sko-lah-REE-na','magistera':'mah-JEES-te-ra','amicora':'ah-mee-KO-ra','aventurosa':'ah-ven-too-RO-sa','matinara':'mah-tee-NAH-ra','prandora':'prahn-DO-ra','cenarina':'seh-nah-REE-na','felina':'feh-LEE-na','canora':'kah-NO-ra','equina':'eh-KWEE-na','aviora':'ah-VEE-o-ra','estivara':'es-tee-VAH-ra','inverna':'een-VER-na','primavera':'pree-mah-VE-ra','autumnara':'aw-tum-NAH-ra','urbana':'ur-BAH-na','paisora':'pay-SO-ra','mundara':'moon-DAH-ra','viatora':'vee-ah-TO-ra','domina':'do-MEE-na',
-  // ===== New units 11-18 =====
   'hallovai':'hah-LO-vai','bonadia':'bo-NAH-dee-ya','bonvespa':'bon-VES-pa','bonadia venora':'bo-NAH-dee-ya veh-NO-ra','meraki':'meh-RAH-kee','grandmeraki':'grahnd-meh-RAH-kee','benmeraki':'ben-meh-RAH-kee','perdona':'per-DO-na','perdoni':'per-DO-nee','nulproblema':'nool-pro-BLEH-ma','viresta':'vee-RES-ta','benvara':'ben-VAH-ra','quomara':'kwo-MAH-ra','quandra':'KWAHN-dra','qualora':'kwah-LO-ra','sucede':'soo-SEH-deh','coma vesta':'KO-ma VES-ta','bonora':'bo-NO-ra','malora':'mah-LO-ra','finora':'fee-NO-ra','clarivo':'klah-REE-vo','verita':'veh-REE-ta','okeya':'oh-KAY-ya','attenda':'ah-TEN-da','venira':'veh-NEE-ra','alevara':'ah-leh-VAH-ra','ajuvara':'ah-joo-VAH-ra','miva':'MEE-va','tuva':'TOO-va','nosa':'NO-sa','elara':'eh-LAH-ra','neivora':'nay-VO-ra','somnira':'som-NEE-ra','famelia':'fah-MEH-lee-ya','aquira':'ah-KEE-ra','risavena':'ree-sah-VEH-na','nuljoya':'nool-JOY-ya','nervora':'ner-VO-ra','confusa':'kon-FOO-sa','miravena':'mee-rah-VEH-na','malivara':'mah-lee-VAH-ra','fantora':'fahn-TO-ra','nulcare':'nool-KAH-reh','estara':'es-TAH-ra','habira':'hah-BEE-ra','facera':'fah-SEH-ra','dicera':'dee-SEH-ra','evigora':'eh-vee-GO-ra','sedira':'seh-DEE-ra','statora':'stah-TO-ra','sapira':'sah-PEE-ra','comprena':'kom-PREH-na','banelora':'bah-neh-LO-ra','sanitora':'sah-nee-TO-ra','bagora':'bah-GO-ra','moneta':'mo-NEH-ta','horica':'ho-REE-ka','banora':'bah-NO-ra','carnora':'kar-NO-ra','piscara':'pee-SKAH-ra','rizona':'ree-ZO-na','quesora':'keh-SO-ra','tevara':'teh-VAH-ra','jucera':'joo-SEH-ra','dulcora':'dool-KO-ra','salina':'sah-LEE-na','restora':'res-TO-ra','posterra':'pos-TEH-ra','primora':'pree-MO-ra','tardora':'tar-DO-ra','novara':'no-VAH-ra','vetora':'veh-TO-ra','importa':'eem-POR-ta'
 };
 
@@ -1935,13 +1933,15 @@ function startPolling(name) {
   stopPolling();
   pollTimer = setInterval(async () => {
     try {
-      const status = await getRequestStatus(name);
-      if (status === 'approved') {
+      const data = await cloudGet();
+      const req = data.__requests__?.[name];
+      const hasData = !!data[name]?.data;
+      if (req?.status === 'approved' || hasData) {
         stopPolling();
         setRequestState('approved');
         toast('Access granted! 🎉');
         await enterApp(name);
-      } else if (status === 'denied') {
+      } else if (req?.status === 'denied') {
         stopPolling();
         setRequestState('denied');
       }
@@ -1969,9 +1969,31 @@ async function handleRequestClick() {
   setRequestState('requesting');
 
   try {
-    const existing = await getRequestStatus(name);
-    if (existing === 'approved') { setRequestState('approved'); await enterApp(name); return; }
+    const data = await cloudGet();
+    const req = data.__requests__?.[name];
+    const hasData = !!data[name]?.data;
 
+    // AUTO-ENTER: they were approved before OR have saved progress
+    if (req?.status === 'approved' || hasData) {
+      setRequestState('approved');
+      await enterApp(name);
+      return;
+    }
+
+    // Already pending — resume waiting
+    if (req?.status === 'pending') {
+      setRequestState('requested');
+      startPolling(name);
+      return;
+    }
+
+    // Denied — show denied
+    if (req?.status === 'denied') {
+      setRequestState('denied');
+      return;
+    }
+
+    // Brand new — send request
     await setRequestStatus(name, 'pending');
     setRequestState('requested');
     startPolling(name);
@@ -2019,14 +2041,36 @@ async function boot() {
   const session = getSession();
   if (session) {
     try {
-      const status = await getRequestStatus(session);
-      if (status === 'approved') { await enterApp(session); return; }
-      if (status === null) {
-        const data = await cloudGet();
-        if (data[session]?.data) { await enterApp(session); return; }
+      const data = await cloudGet();
+      const req = data.__requests__?.[session];
+      const hasData = !!data[session]?.data;
+
+      // AUTO-ENTER: approved OR has saved progress
+      if (req?.status === 'approved' || hasData) {
+        await enterApp(session);
+        return;
       }
+
+      if (req?.status === 'pending') {
+        currentRequestName = session;
+        $('authName').value = session;
+        setRequestState('requested');
+        startPolling(session);
+        showScreen('auth');
+        return;
+      }
+
+      if (req?.status === 'denied') {
+        currentRequestName = session;
+        $('authName').value = session;
+        setRequestState('denied');
+        showScreen('auth');
+        return;
+      }
+
       clearSession();
     } catch (e) {
+      // Offline fallback — trust session
       await enterApp(session);
       return;
     }
@@ -2038,10 +2082,13 @@ async function boot() {
     $('authName').value = lastName;
     currentRequestName = lastName;
     try {
-      const status = await getRequestStatus(lastName);
-      if (status === 'approved') setRequestState('approved');
-      else if (status === 'pending') { setRequestState('requested'); startPolling(lastName); }
-      else if (status === 'denied') setRequestState('denied');
+      const data = await cloudGet();
+      const req = data.__requests__?.[lastName];
+      const hasData = !!data[lastName]?.data;
+
+      if (req?.status === 'approved' || hasData) setRequestState('approved');
+      else if (req?.status === 'pending') { setRequestState('requested'); startPolling(lastName); }
+      else if (req?.status === 'denied') setRequestState('denied');
     } catch (e) { /* offline */ }
   }
   setTimeout(() => $('authName')?.focus(), 350);
