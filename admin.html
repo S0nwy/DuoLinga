@@ -71,11 +71,13 @@
   .filter-tab.active{background:var(--blue);color:#fff;box-shadow:0 3px 0 var(--blue-dark)}
   .filter-tab.active:active{transform:translateY(2px);box-shadow:0 1px 0 var(--blue-dark)}
   .filter-tab[data-filter="forgot"].active{background:var(--purple);box-shadow:0 3px 0 #A855F7}
+  .filter-tab[data-filter="accounts"].active{background:var(--green);box-shadow:0 3px 0 var(--green-dark)}
   .filter-count{background:rgba(255,255,255,.25);padding:1px 6px;border-radius:6px;font-size:10px;font-weight:900;transition:all .2s}
   .filter-tab:not(.active) .filter-count{background:var(--gray);color:var(--text)}
   .filter-tab[data-filter="forgot"]:not(.active) .filter-count{background:var(--purple-light);color:#7B1FA2}
+  .filter-tab[data-filter="accounts"]:not(.active) .filter-count{background:var(--green-light);color:var(--green-dark)}
 
-  .feed{padding:16px;display:flex;flex-direction:column;gap:10px;min-height:300px;transition:opacity .2s}
+  .feed{padding:16px;display:flex;flex-direction:column;gap:10px;min-height:300px}
   .request-card{background:#fff;border-radius:14px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:12px;transition:all .3s var(--ease);animation:cardEnter .45s var(--ease) both;border:2px solid transparent}
   @keyframes cardEnter{0%{opacity:0;transform:translateX(24px) scale(.94)}60%{opacity:1;transform:translateX(-2px) scale(1.02)}100%{opacity:1;transform:translateX(0) scale(1)}}
   .request-card.new{animation:cardNew .7s var(--ease) both}
@@ -85,6 +87,9 @@
   .request-card.forgot-card{border-left:4px solid var(--purple)}
   .request-card.forgot-card.answered{border-left-color:var(--green)}
   .request-card.forgot-card.declined{border-left-color:var(--red)}
+  .request-card.account-card{cursor:pointer;transition:all .2s var(--ease)}
+  .request-card.account-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.08)}
+  .request-card.account-card:active{transform:scale(.98)}
 
   .card-top{display:flex;align-items:center;gap:12px}
   .avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:#fff;flex-shrink:0;box-shadow:0 2px 4px rgba(0,0,0,.1)}
@@ -99,6 +104,9 @@
   .status-forgot{background:var(--purple-light);color:#7B1FA2}
   .status-answered{background:var(--green-light);color:var(--green-dark)}
   .status-declined{background:var(--red-light);color:var(--red-dark)}
+  .status-account{background:var(--green-light);color:var(--green-dark)}
+  .account-arrow{font-size:24px;color:var(--gray-dark);font-weight:900;transition:transform .2s}
+  .account-card:hover .account-arrow{transform:translateX(3px);color:var(--text)}
 
   .card-actions{display:flex;gap:8px}
   .btn-action{flex:1;padding:11px 14px;border:none;border-radius:11px;font-family:inherit;font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.7px;cursor:pointer;color:#fff;transition:all .12s var(--ease);display:flex;align-items:center;justify-content:center;gap:6px;min-height:42px}
@@ -168,6 +176,72 @@
   .confirm-btn-no{background:var(--bg);color:var(--text);border:2px solid var(--gray);box-shadow:0 4px 0 var(--gray-dark)}
   .confirm-btn-no:active{transform:translateY(4px);box-shadow:0 0 0}
   .confirm-btn-success{background:var(--green);box-shadow:0 4px 0 var(--green-dark)}
+
+  /* ===== ACCOUNT DETAIL MODAL ===== */
+  .acct-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0);backdrop-filter:blur(0px);z-index:700;display:flex;align-items:flex-end;justify-content:center;padding:0;opacity:0;pointer-events:none;transition:all .3s var(--ease)}
+  .acct-backdrop.show{opacity:1;pointer-events:auto;background:rgba(0,0,0,.55);backdrop-filter:blur(4px)}
+  .acct-sheet{background:#fff;width:100%;max-width:500px;border-radius:24px 24px 0 0;padding:0 0 20px;transform:translateY(100%);transition:transform .4s var(--spring);max-height:90vh;overflow-y:auto;position:relative}
+  .acct-backdrop.show .acct-sheet{transform:translateY(0)}
+  .acct-handle{width:40px;height:4px;background:var(--gray);border-radius:2px;margin:10px auto 0}
+  .acct-hero{padding:24px 24px 20px;text-align:center;background:linear-gradient(180deg,#F7FBFF 0%,#FFF 100%);border-bottom:1px solid var(--gray);position:relative}
+  .acct-hero-avatar{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:32px;color:#fff;margin:0 auto 14px;box-shadow:0 8px 24px rgba(0,0,0,.15);border:4px solid #fff;animation:acctAvatarPop .5s var(--spring)}
+  @keyframes acctAvatarPop{0%{transform:scale(0)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+  .acct-hero-name{font-size:24px;font-weight:900;color:var(--text);letter-spacing:-.5px;margin-bottom:4px}
+  .acct-hero-device{font-size:11px;font-family:monospace;color:var(--gray-text);font-weight:800;background:var(--bg);padding:4px 10px;border-radius:6px;display:inline-block;letter-spacing:.5px}
+  .acct-close-x{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.06);border:none;cursor:pointer;font-size:16px;color:var(--gray-text);display:flex;align-items:center;justify-content:center;transition:all .2s}
+  .acct-close-x:hover{background:rgba(0,0,0,.12);color:var(--text)}
+  .acct-close-x:active{transform:scale(.9)}
+
+  .acct-stats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:20px 24px;border-bottom:1px solid var(--gray)}
+  .acct-stat{text-align:center;padding:12px 6px;background:var(--bg);border-radius:12px;animation:acctStatPop .4s var(--spring) both}
+  .acct-stat:nth-child(1){animation-delay:.05s}
+  .acct-stat:nth-child(2){animation-delay:.1s}
+  .acct-stat:nth-child(3){animation-delay:.15s}
+  .acct-stat:nth-child(4){animation-delay:.2s}
+  @keyframes acctStatPop{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
+  .acct-stat-icon{font-size:20px;margin-bottom:4px}
+  .acct-stat-val{font-size:16px;font-weight:900;color:var(--text)}
+  .acct-stat-label{font-size:9px;font-weight:800;color:var(--gray-text);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+
+  .acct-info{padding:20px 24px 12px}
+  .acct-info-title{font-size:11px;font-weight:900;color:var(--gray-text);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px}
+  .acct-info-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--bg);gap:12px}
+  .acct-info-row:last-child{border-bottom:none}
+  .acct-info-label{font-size:12px;font-weight:700;color:var(--gray-text)}
+  .acct-info-value{font-size:13px;font-weight:800;color:var(--text);text-align:right;font-family:monospace}
+  .acct-info-value.plain{font-family:inherit;font-weight:800}
+
+  .acct-actions{padding:8px 24px 20px;display:flex;flex-direction:column;gap:10px}
+  .delete-btn{width:100%;padding:14px;background:#fff;border:2px solid var(--red);color:var(--red);border-radius:12px;font-family:inherit;font-size:14px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;box-shadow:0 4px 0 var(--red);transition:all .15s}
+  .delete-btn:hover{background:#FFF5F5}
+  .delete-btn:active{transform:translateY(4px);box-shadow:0 0 0 var(--red)}
+  .acct-close-btn{width:100%;padding:13px;background:var(--bg);color:var(--text);border:2px solid var(--gray);border-radius:12px;font-family:inherit;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;box-shadow:0 3px 0 var(--gray-dark);transition:all .15s}
+  .acct-close-btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--gray-dark)}
+
+  /* ===== CAPTCHA MODAL ===== */
+  .captcha-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0);backdrop-filter:blur(0px);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:all .3s var(--ease)}
+  .captcha-backdrop.show{opacity:1;pointer-events:auto;background:rgba(0,0,0,.65);backdrop-filter:blur(6px)}
+  .captcha-modal{background:#fff;border-radius:22px;padding:24px 20px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.4);transform:scale(.85) translateY(20px);opacity:0;transition:all .4s var(--spring)}
+  .captcha-backdrop.show .captcha-modal{transform:scale(1) translateY(0);opacity:1}
+  .captcha-header{font-size:19px;font-weight:900;color:var(--text);text-align:center;margin-bottom:6px}
+  .captcha-sub{font-size:12px;color:var(--gray-text);font-weight:700;text-align:center;line-height:1.5;margin-bottom:18px}
+  .captcha-stage{position:relative;width:100%;aspect-ratio:280/200;margin:0 auto 16px;background:linear-gradient(135deg,#FFF5F5 0%,#FAFAFA 100%);border-radius:14px;border:2px solid #FFE5E5;touch-action:none;user-select:none;overflow:hidden}
+  .captcha-svg{width:100%;height:100%;display:block;position:absolute;inset:0}
+  .captcha-knob{position:absolute;width:36px;height:36px;background:#fff;border:3px solid var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:grab;box-shadow:0 4px 12px rgba(255,75,75,.35);transform:translate(-50%,-50%);touch-action:none;pointer-events:auto;z-index:10;transition:box-shadow .15s}
+  .captcha-knob.dragging{cursor:grabbing;box-shadow:0 6px 20px rgba(255,75,75,.5);transition:none}
+  .captcha-knob::before{content:'›';color:var(--red);font-size:24px;font-weight:900;line-height:1;margin-top:-4px}
+  .captcha-countdown{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none;align-items:center;justify-content:center;width:100px;height:100px;z-index:20;pointer-events:none}
+  .captcha-countdown.show{display:flex;animation:countdownIn .3s var(--spring)}
+  @keyframes countdownIn{0%{transform:translate(-50%,-50%) scale(0)}100%{transform:translate(-50%,-50%) scale(1)}}
+  .countdown-ring{position:absolute;inset:0;width:100%;height:100%}
+  .countdown-num{position:relative;font-size:36px;font-weight:900;color:var(--red);text-shadow:0 2px 8px rgba(255,75,75,.3);z-index:1}
+  .captcha-success{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:8px;background:rgba(232,245,217,.95);border-radius:12px;z-index:30;animation:fadeIn .3s ease}
+  .captcha-success.show{display:flex}
+  .captcha-success-icon{font-size:48px;animation:successPop .5s var(--spring)}
+  @keyframes successPop{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+  .captcha-success-text{font-size:14px;font-weight:900;color:var(--green-dark)}
+  .captcha-cancel{width:100%;padding:12px;background:var(--bg);color:var(--gray-text);border:2px solid var(--gray);border-radius:12px;font-family:inherit;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;box-shadow:0 3px 0 var(--gray-dark);transition:all .15s}
+  .captcha-cancel:active{transform:translateY(3px);box-shadow:0 0 0 var(--gray-dark)}
 </style>
 </head>
 <body>
@@ -214,6 +288,7 @@
       <button class="filter-tab" data-filter="approved">Approved <span class="filter-count" id="countApproved">0</span></button>
       <button class="filter-tab" data-filter="denied">Denied <span class="filter-count" id="countDenied">0</span></button>
       <button class="filter-tab" data-filter="forgot">Forgot <span class="filter-count" id="countForgot">0</span></button>
+      <button class="filter-tab" data-filter="accounts">Accounts <span class="filter-count" id="countAccounts">0</span></button>
       <button class="filter-tab" data-filter="all">All <span class="filter-count" id="countAll">0</span></button>
     </div>
   </div>
@@ -238,6 +313,43 @@
       <button class="confirm-btn confirm-btn-yes" id="confirmYes">Yes</button>
       <button class="confirm-btn confirm-btn-no" id="confirmNo">No</button>
     </div>
+  </div>
+</div>
+
+<div class="acct-backdrop" id="acctBackdrop">
+  <div class="acct-sheet" id="acctSheet">
+    <div class="acct-handle"></div>
+    <button class="acct-close-x" id="acctCloseX">✕</button>
+    <div id="acctContent"></div>
+  </div>
+</div>
+
+<div class="captcha-backdrop" id="captchaBackdrop">
+  <div class="captcha-modal">
+    <div class="captcha-header">Confirm Deletion</div>
+    <div class="captcha-sub" id="captchaSub">Drag the circle along the path and hold at the end for 5 seconds</div>
+    <div class="captcha-stage" id="captchaStage">
+      <svg class="captcha-svg" id="captchaSvg" viewBox="0 0 280 200" preserveAspectRatio="xMidYMid meet">
+        <path id="captchaPathBg" d="M 20 180 L 240 180 Q 260 180 260 160 L 260 40" stroke="#FFD6D6" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <path id="captchaPathFg" d="M 20 180 L 240 180 Q 260 180 260 160 L 260 40" stroke="#FF4B4B" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1000" stroke-dashoffset="1000"/>
+        <circle id="captchaEndZone" cx="260" cy="40" r="22" fill="#FFE5E5" opacity="0.5"/>
+      </svg>
+      <div class="captcha-knob" id="captchaKnob"></div>
+      <div class="captcha-countdown" id="captchaCountdown">
+        <svg class="countdown-ring" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="42" fill="rgba(255,255,255,0.9)" stroke="#FFE5E5" stroke-width="6"/>
+          <circle id="countdownProgress" cx="50" cy="50" r="42" fill="none" stroke="#FF4B4B" stroke-width="6"
+                  stroke-dasharray="263.9" stroke-dashoffset="263.9" stroke-linecap="round"
+                  transform="rotate(-90 50 50)"/>
+        </svg>
+        <div class="countdown-num" id="countdownNum">5</div>
+      </div>
+      <div class="captcha-success" id="captchaSuccess">
+        <div class="captcha-success-icon">✅</div>
+        <div class="captcha-success-text">Verified</div>
+      </div>
+    </div>
+    <button class="captcha-cancel" id="captchaCancel">Cancel</button>
   </div>
 </div>
 
@@ -304,12 +416,17 @@ async function isDeviceAuthorized(deviceId){
 
 const $ = id => document.getElementById(id);
 let currentFilter='pending';
+let allData={};
 let allRequests={};
 let allForgot={};
 let seenNames=new Set();
 let initialLoadDone=false;
 let pollInterval=null;
 let currentDeviceId='';
+let lastSig='';
+let isRefreshing=false;
+let openAccountName=null;
+let pendingDeleteName=null;
 
 function formatAgo(ts){
   const diff=Math.floor((Date.now()-ts)/1000);
@@ -319,6 +436,12 @@ function formatAgo(ts){
   if(diff<86400)return Math.floor(diff/3600)+'h ago';
   return Math.floor(diff/86400)+'d ago';
 }
+function formatDate(ts){
+  if (!ts) return 'Unknown';
+  const d = new Date(ts);
+  return d.toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }) + ' · ' +
+         d.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+}
 function avatarColor(name){
   const colors=['#58CC02','#1CB0F6','#CE82FF','#FF9600','#FF4B4B','#2ECC71','#9C27B0','#E91E63','#FFC800'];
   let hash=0; for(let i=0;i<name.length;i++)hash=name.charCodeAt(i)+((hash<<5)-hash);
@@ -327,9 +450,30 @@ function avatarColor(name){
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function getInitial(name){return (name||'?').charAt(0).toUpperCase();}
 
+function getAccounts() {
+  const accounts = [];
+  Object.entries(allData).forEach(([key, value]) => {
+    if (key.startsWith('__')) return;
+    if (!value || typeof value !== 'object') return;
+    const req = allRequests[key] || {};
+    accounts.push({
+      name: key,
+      ownerDeviceId: value.ownerDeviceId || '—',
+      data: value.data || {},
+      createdAt: value.createdAt || value.data?.createdAt || null,
+      firstSeen: req.timestamp || null,
+      requestStatus: req.status || null
+    });
+  });
+  return accounts.sort((a,b) => a.name.localeCompare(b.name));
+}
+
 function getFilteredRequests(){
   if (currentFilter === 'forgot') {
     return Object.entries(allForgot).sort((a,b)=>(b[1].timestamp||0)-(a[1].timestamp||0));
+  }
+  if (currentFilter === 'accounts') {
+    return getAccounts();
   }
   const entries=Object.entries(allRequests);
   let filtered;
@@ -344,16 +488,39 @@ function updateCounts(){
   const a=entries.filter(r=>r.status==='approved').length;
   const d=entries.filter(r=>r.status==='denied').length;
   const f=Object.values(allForgot).filter(r=>r.status==='pending').length;
+  const accCount = getAccounts().length;
   $('countPending').textContent=p;
   $('countApproved').textContent=a;
   $('countDenied').textContent=d;
   $('countForgot').textContent=f;
+  $('countAccounts').textContent=accCount;
   $('countAll').textContent=entries.length;
   $('pendingCount').textContent=p;
 }
 
+function computeSig() {
+  const reqSig = Object.entries(allRequests)
+    .map(([k,v]) => `${k}:${v.status}:${v.timestamp}`).join('|');
+  const forgotSig = Object.entries(allForgot)
+    .map(([k,v]) => `${k}:${v.status}:${v.timestamp}:${v.answer||''}`).join('|');
+  const accSig = getAccounts().map(a => `${a.name}:${a.ownerDeviceId}:${a.data?.xp||0}`).join('|');
+  return reqSig + '||' + forgotSig + '||' + accSig + '||' + currentFilter;
+}
+
 function renderFeed(){
   const feed=$('feed');
+
+  // Save inputs state
+  const savedInputs = {};
+  document.querySelectorAll('.answer-input[data-forgot-input]').forEach(inp => {
+    savedInputs[inp.dataset.forgotInput] = {
+      value: inp.value,
+      focused: document.activeElement === inp,
+      selStart: inp.selectionStart,
+      selEnd: inp.selectionEnd
+    };
+  });
+
   const filtered=getFilteredRequests();
   if(filtered.length===0){
     let emptyHtml='';
@@ -361,6 +528,7 @@ function renderFeed(){
     else if(currentFilter==='approved') emptyHtml=`<div class="empty-icon">📭</div><div class="empty-title">No approved requests</div><div class="empty-sub">Approved users will show up here.</div>`;
     else if(currentFilter==='denied') emptyHtml=`<div class="empty-icon">🚫</div><div class="empty-title">No denied requests</div><div class="empty-sub">Denied users will show up here.</div>`;
     else if(currentFilter==='forgot') emptyHtml=`<div class="empty-icon">🔍</div><div class="empty-title">No forgot requests</div><div class="empty-sub">Users asking about their username will appear here.</div>`;
+    else if(currentFilter==='accounts') emptyHtml=`<div class="empty-icon">👥</div><div class="empty-title">No accounts yet</div><div class="empty-sub">Accounts will appear here once users are approved.</div>`;
     else emptyHtml=`<div class="empty-icon">📭</div><div class="empty-title">No requests yet</div><div class="empty-sub">When someone requests access, they'll appear here automatically.</div>`;
     feed.innerHTML=`<div class="empty-state">${emptyHtml}</div>`;
     return;
@@ -368,9 +536,25 @@ function renderFeed(){
   feed.innerHTML='';
   if (currentFilter === 'forgot') {
     filtered.forEach(([deviceId, r]) => feed.appendChild(createForgotCard(deviceId, r)));
+  } else if (currentFilter === 'accounts') {
+    filtered.forEach(acct => feed.appendChild(createAccountCard(acct)));
   } else {
     filtered.forEach(([name,r])=>feed.appendChild(createCard(name,r)));
   }
+
+  // Restore inputs
+  Object.entries(savedInputs).forEach(([id, s]) => {
+    const inp = document.querySelector(`.answer-input[data-forgot-input="${id}"]`);
+    if (inp) {
+      inp.value = s.value;
+      const sendBtn = inp.closest('.request-card')?.querySelector(`button[data-forgot-action="send"]`);
+      if (sendBtn) sendBtn.disabled = s.value.trim().length === 0;
+      if (s.focused) {
+        inp.focus();
+        try { inp.setSelectionRange(s.selStart, s.selEnd); } catch(e){}
+      }
+    }
+  });
 }
 
 function createCard(name,r){
@@ -479,6 +663,34 @@ function createForgotCard(deviceId, r){
     btn.addEventListener('click', () => handleForgotAction(btn, card));
   });
 
+  return card;
+}
+
+function createAccountCard(acct) {
+  const card = document.createElement('div');
+  card.className = 'request-card account-card';
+  card.dataset.account = acct.name;
+  const color = avatarColor(acct.name);
+  const initial = getInitial(acct.name);
+  const xp = acct.data?.xp || 0;
+  const streak = acct.data?.streak || 0;
+  const dateStr = acct.createdAt ? formatDate(acct.createdAt) : (acct.firstSeen ? 'Seen ' + formatAgo(acct.firstSeen) : 'Unknown');
+
+  card.innerHTML = `
+    <div class="card-top">
+      <div class="avatar" style="background:${color};">${initial}</div>
+      <div class="card-info">
+        <div class="card-name">${escapeHtml(acct.name)}</div>
+        <div class="card-meta">
+          <span>⚡ ${xp} XP</span><span class="meta-dot"></span>
+          <span>🔥 ${streak}d streak</span><span class="meta-dot"></span>
+          <span>${dateStr}</span>
+        </div>
+      </div>
+      <div class="account-arrow">›</div>
+    </div>
+  `;
+  card.addEventListener('click', () => openAccountDetail(acct.name));
   return card;
 }
 
@@ -624,33 +836,46 @@ function showToast({name,color,title,sub}){
 }
 
 async function refresh(){
+  if (isRefreshing) return;
+  isRefreshing = true;
   try{
     const data=await cloudGet();
-    const requests=data.__requests__||{};
-    const forgot=data.__forgot__||{};
     const prevNames=new Set(Object.keys(allRequests));
+    const prevForgot=new Set(Object.keys(allForgot));
     const newNames=[];
+    const newForgot=[];
+
+    const requests = data.__requests__ || {};
+    const forgot = data.__forgot__ || {};
+
     Object.entries(requests).forEach(([name,r])=>{
-      if(!prevNames.has(name)&&initialLoadDone&&(r.status||'pending')==='pending'){
+      if(!prevNames.has(name) && initialLoadDone && (r.status||'pending')==='pending'){
         newNames.push(name);
       }
     });
-    const prevForgot=new Set(Object.keys(allForgot));
-    const newForgot=[];
     Object.entries(forgot).forEach(([id,r])=>{
-      if(!prevForgot.has(id)&&initialLoadDone&&r.status==='pending'){
+      if(!prevForgot.has(id) && initialLoadDone && r.status==='pending'){
         newForgot.push(r);
       }
     });
-    allRequests=requests;
-    allForgot=forgot;
+
+    allData = data;
+    allRequests = requests;
+    allForgot = forgot;
+
     updateCounts();
-    renderFeed();
+
+    const newSig = computeSig();
+    if (newSig !== lastSig || !initialLoadDone) {
+      lastSig = newSig;
+      renderFeed();
+    }
+
     newNames.forEach(name=>{
       showToast({name,color:avatarColor(name),title:'New request!',sub:`${name} wants access`});
     });
     newForgot.forEach(r=>{
-      showToast({name:r.name||'?',color:'#CE82FF',title:'Forgot request!',sub:`${r.name||'Someone'} needs help finding their username`});
+      showToast({name:r.name||'?',color:'#CE82FF',title:'Forgot request!',sub:`${r.name||'Someone'} needs help`});
     });
     if(newNames.length>0){
       const pill=$('pendingPill');
@@ -658,6 +883,7 @@ async function refresh(){
     }
     initialLoadDone=true;
   }catch(e){console.error('Refresh error:',e);}
+  finally { isRefreshing = false; }
 }
 
 function startPolling(){
@@ -673,6 +899,7 @@ document.querySelectorAll('.filter-tab').forEach(tab=>{
     document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
     tab.classList.add('active');
     currentFilter=tab.dataset.filter;
+    lastSig = ''; // force re-render for filter change
     renderFeed();
   });
 });
@@ -680,6 +907,7 @@ document.querySelectorAll('.filter-tab').forEach(tab=>{
 $('refreshBtn').addEventListener('click',async()=>{
   const btn=$('refreshBtn');
   btn.classList.add('spinning');
+  lastSig = '';
   await refresh();
   setTimeout(()=>btn.classList.remove('spinning'),400);
 });
@@ -715,6 +943,330 @@ $('checkBtn').addEventListener('click',async()=>{
     showToast({name:'?',color:'#FFC800',title:'Not added yet',sub:'Ask the admin to add your code, then try again'});
   }
 });
+
+// ============ ACCOUNT DETAIL ============
+function openAccountDetail(name) {
+  const acct = getAccounts().find(a => a.name === name);
+  if (!acct) return;
+  openAccountName = name;
+
+  const color = avatarColor(name);
+  const initial = getInitial(name);
+  const d = acct.data || {};
+  const xp = d.xp || 0;
+  const gems = d.gems || 0;
+  const hearts = d.hearts != null ? d.hearts : 5;
+  const streak = d.streak || 0;
+
+  // Count completed lessons
+  let completedLessons = 0;
+  let touchedUnits = 0;
+  if (d.progress) {
+    Object.values(d.progress).forEach(lessons => {
+      let any = false;
+      Object.values(lessons || {}).forEach(info => {
+        any = true;
+        if (info?.completed) completedLessons++;
+      });
+      if (any) touchedUnits++;
+    });
+  }
+
+  const createdLabel = acct.createdAt
+    ? formatDate(acct.createdAt)
+    : (acct.firstSeen ? 'First seen ' + formatAgo(acct.firstSeen) : 'Unknown');
+
+  const statusLabel = acct.requestStatus
+    ? acct.requestStatus.charAt(0).toUpperCase() + acct.requestStatus.slice(1)
+    : 'No request';
+
+  $('acctContent').innerHTML = `
+    <div class="acct-hero">
+      <div class="acct-hero-avatar" style="background:${color};">${initial}</div>
+      <div class="acct-hero-name">${escapeHtml(name)}</div>
+      <div class="acct-hero-device">${escapeHtml(acct.ownerDeviceId)}</div>
+    </div>
+    <div class="acct-stats">
+      <div class="acct-stat"><div class="acct-stat-icon">⚡</div><div class="acct-stat-val">${xp}</div><div class="acct-stat-label">XP</div></div>
+      <div class="acct-stat"><div class="acct-stat-icon">💎</div><div class="acct-stat-val">${gems}</div><div class="acct-stat-label">Gems</div></div>
+      <div class="acct-stat"><div class="acct-stat-icon">❤️</div><div class="acct-stat-val">${hearts}</div><div class="acct-stat-label">Hearts</div></div>
+      <div class="acct-stat"><div class="acct-stat-icon">🔥</div><div class="acct-stat-val">${streak}</div><div class="acct-stat-label">Streak</div></div>
+    </div>
+    <div class="acct-info">
+      <div class="acct-info-title">Account Details</div>
+      <div class="acct-info-row"><span class="acct-info-label">Created</span><span class="acct-info-value plain">${createdLabel}</span></div>
+      <div class="acct-info-row"><span class="acct-info-label">Device ID</span><span class="acct-info-value">${escapeHtml(acct.ownerDeviceId)}</span></div>
+      <div class="acct-info-row"><span class="acct-info-label">Request Status</span><span class="acct-info-value plain">${statusLabel}</span></div>
+      <div class="acct-info-row"><span class="acct-info-label">Lessons Completed</span><span class="acct-info-value">${completedLessons}</span></div>
+      <div class="acct-info-row"><span class="acct-info-label">Units Touched</span><span class="acct-info-value">${touchedUnits}</span></div>
+    </div>
+    <div class="acct-actions">
+      <button class="delete-btn" id="acctDeleteBtn">Delete Account</button>
+      <button class="acct-close-btn" id="acctCloseBtn">Close</button>
+    </div>
+  `;
+
+  $('acctBackdrop').classList.add('show');
+  $('acctCloseX').onclick = closeAccountDetail;
+  $('acctCloseBtn').onclick = closeAccountDetail;
+  $('acctDeleteBtn').onclick = () => {
+    pendingDeleteName = name;
+    closeAccountDetail();
+    setTimeout(() => openCaptchaForDelete(name), 350);
+  };
+}
+
+function closeAccountDetail() {
+  $('acctBackdrop').classList.remove('show');
+  openAccountName = null;
+}
+
+$('acctBackdrop').addEventListener('click', (e) => {
+  if (e.target === $('acctBackdrop')) closeAccountDetail();
+});
+
+// ============ CAPTCHA ============
+let captchaState = {
+  dragging: false,
+  progress: 0,
+  atEnd: false,
+  holdInterval: null,
+  holdStart: null,
+  complete: false,
+  onComplete: null
+};
+
+const CAPTCHA_CIRCUMFERENCE = 2 * Math.PI * 42;
+
+function openCaptchaForDelete(name) {
+  captchaState.dragging = false;
+  captchaState.progress = 0;
+  captchaState.atEnd = false;
+  captchaState.complete = false;
+  captchaState.onComplete = () => deleteAccount(name);
+
+  $('captchaSub').textContent = `This will permanently delete "${name}" and all their progress. Drag the circle along the path and hold at the end for 5 seconds.`;
+  $('captchaBackdrop').classList.add('show');
+  $('captchaSuccess').classList.remove('show');
+  $('captchaCountdown').classList.remove('show');
+  $('countdownProgress').style.strokeDasharray = CAPTCHA_CIRCUMFERENCE;
+  $('countdownProgress').style.strokeDashoffset = CAPTCHA_CIRCUMFERENCE;
+  $('countdownNum').textContent = '5';
+
+  initCaptcha();
+}
+
+function initCaptcha() {
+  const svg = $('captchaSvg');
+  const pathBg = $('captchaPathBg');
+  const pathFg = $('captchaPathFg');
+  const knob = $('captchaKnob');
+  const stage = $('captchaStage');
+
+  const pathLength = pathBg.getTotalLength();
+  pathFg.style.strokeDasharray = pathLength;
+  pathFg.style.strokeDashoffset = pathLength;
+
+  // Precompute samples
+  const samples = [];
+  const NUM_SAMPLES = 200;
+  for (let i = 0; i <= NUM_SAMPLES; i++) {
+    const t = i / NUM_SAMPLES;
+    const point = pathBg.getPointAtLength(t * pathLength);
+    samples.push({ x: point.x, y: point.y, t });
+  }
+
+  function setKnobPos(svgX, svgY) {
+    const rect = svg.getBoundingClientRect();
+    const stageRect = stage.getBoundingClientRect();
+    const cssX = ((svgX / 280) * rect.width) + (rect.left - stageRect.left);
+    const cssY = ((svgY / 200) * rect.height) + (rect.top - stageRect.top);
+    knob.style.left = cssX + 'px';
+    knob.style.top = cssY + 'px';
+  }
+
+  function updateProgress(t) {
+    const clamped = Math.max(0, Math.min(1, t));
+    captchaState.progress = clamped;
+    const point = pathBg.getPointAtLength(clamped * pathLength);
+    setKnobPos(point.x, point.y);
+    pathFg.style.strokeDashoffset = pathLength * (1 - clamped);
+    return clamped;
+  }
+
+  function findClosest(svgX, svgY) {
+    let best = { dist: Infinity, t: 0 };
+    samples.forEach(s => {
+      const dx = s.x - svgX;
+      const dy = s.y - svgY;
+      const dist = dx*dx + dy*dy;
+      if (dist < best.dist) best = { dist, t: s.t };
+    });
+    return best.t;
+  }
+
+  function pointerToSvg(clientX, clientY) {
+    const rect = svg.getBoundingClientRect();
+    return {
+      x: ((clientX - rect.left) / rect.width) * 280,
+      y: ((clientY - rect.top) / rect.height) * 200
+    };
+  }
+
+  // Initial position
+  const startPoint = pathBg.getPointAtLength(0);
+  setKnobPos(startPoint.x, startPoint.y);
+
+  function startDrag(e) {
+    if (captchaState.complete) return;
+    e.preventDefault();
+    captchaState.dragging = true;
+    knob.classList.add('dragging');
+    try { knob.setPointerCapture(e.pointerId); } catch(err){}
+  }
+
+  function moveDrag(e) {
+    if (!captchaState.dragging) return;
+    e.preventDefault();
+    const { x, y } = pointerToSvg(e.clientX, e.clientY);
+    const t = findClosest(x, y);
+    const newT = updateProgress(t);
+
+    if (newT >= 0.97) {
+      captchaState.atEnd = true;
+      startHold();
+    } else {
+      captchaState.atEnd = false;
+      cancelHold();
+    }
+  }
+
+  function endDrag(e) {
+    if (!captchaState.dragging) return;
+    captchaState.dragging = false;
+    knob.classList.remove('dragging');
+    cancelHold();
+    captchaState.atEnd = false;
+
+    // Reset to start if not complete
+    if (!captchaState.complete && captchaState.progress < 0.97) {
+      animateKnobToStart();
+    }
+  }
+
+  function animateKnobToStart() {
+    const startTime = Date.now();
+    const fromT = captchaState.progress;
+    const duration = 400;
+    const step = () => {
+      const elapsed = Date.now() - startTime;
+      const p = Math.min(1, elapsed / duration);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const t = fromT * (1 - eased);
+      updateProgress(t);
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  function startHold() {
+    if (captchaState.holdInterval) return;
+    captchaState.holdStart = Date.now();
+    $('captchaCountdown').classList.add('show');
+    updateCountdown();
+    captchaState.holdInterval = setInterval(updateCountdown, 50);
+  }
+
+  function updateCountdown() {
+    if (!captchaState.dragging || !captchaState.atEnd) {
+      cancelHold();
+      return;
+    }
+    const elapsed = (Date.now() - captchaState.holdStart) / 1000;
+    const remaining = 5 - elapsed;
+    if (remaining <= 0) {
+      completeCaptcha();
+      return;
+    }
+    $('countdownNum').textContent = Math.ceil(remaining);
+    const prog = elapsed / 5;
+    $('countdownProgress').style.strokeDashoffset = CAPTCHA_CIRCUMFERENCE * (1 - prog);
+  }
+
+  function cancelHold() {
+    if (captchaState.holdInterval) {
+      clearInterval(captchaState.holdInterval);
+      captchaState.holdInterval = null;
+    }
+    captchaState.holdStart = null;
+    $('captchaCountdown').classList.remove('show');
+    $('countdownProgress').style.strokeDashoffset = CAPTCHA_CIRCUMFERENCE;
+    $('countdownNum').textContent = '5';
+  }
+
+  function completeCaptcha() {
+    cancelHold();
+    captchaState.complete = true;
+    captchaState.dragging = false;
+    knob.classList.remove('dragging');
+    $('captchaSuccess').classList.add('show');
+    setTimeout(() => {
+      closeCaptcha();
+      if (captchaState.onComplete) captchaState.onComplete();
+    }, 900);
+  }
+
+  // Bind
+  knob.addEventListener('pointerdown', startDrag);
+  stage.addEventListener('pointerdown', (e) => {
+    // Only start if near knob
+    const knobRect = knob.getBoundingClientRect();
+    const dist = Math.hypot(e.clientX - (knobRect.left + knobRect.width/2), e.clientY - (knobRect.top + knobRect.height/2));
+    if (dist < 40) startDrag(e);
+  });
+  document.addEventListener('pointermove', moveDrag);
+  document.addEventListener('pointerup', endDrag);
+  document.addEventListener('pointercancel', endDrag);
+}
+
+function closeCaptcha() {
+  $('captchaBackdrop').classList.remove('show');
+  if (captchaState.holdInterval) clearInterval(captchaState.holdInterval);
+  captchaState.holdInterval = null;
+  captchaState.dragging = false;
+  captchaState.complete = false;
+}
+
+$('captchaCancel').addEventListener('click', closeCaptcha);
+$('captchaBackdrop').addEventListener('click', (e) => {
+  if (e.target === $('captchaBackdrop')) closeCaptcha();
+});
+
+async function deleteAccount(name) {
+  try {
+    const data = await cloudGet();
+    // Remove account
+    if (data[name]) delete data[name];
+    // Remove request
+    if (data.__requests__?.[name]) delete data.__requests__[name];
+    // Remove forgot records for this user
+    if (data.__forgot__) {
+      Object.keys(data.__forgot__).forEach(deviceId => {
+        if (data.__forgot__[deviceId]?.name === name) {
+          delete data.__forgot__[deviceId];
+        }
+      });
+    }
+    const ok = await cloudSet(data);
+    if (!ok) throw new Error('Save failed');
+    showToast({ name, color: '#FF4B4B', title: 'Account deleted', sub: `${name} and all progress removed` });
+    lastSig = '';
+    await refresh();
+  } catch (e) {
+    console.error('Delete error:', e);
+    showToast({ name: '?', color: '#FF4B4B', title: 'Delete failed', sub: 'Could not reach server' });
+  }
+}
 
 async function boot(){
   currentDeviceId=getOrCreateDeviceId();
