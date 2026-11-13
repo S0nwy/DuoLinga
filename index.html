@@ -280,6 +280,7 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
+    line-height: 1.4;
   }
 
   .pulse-dot {
@@ -503,6 +504,7 @@
   .unit-16 { background: linear-gradient(135deg, #3498DB, #1F618D); }
   .unit-17 { background: linear-gradient(135deg, #E74C3C, #922B21); }
   .unit-18 { background: linear-gradient(135deg, #1ABC9C, #117A65); }
+  .unit-19 { background: linear-gradient(135deg, #4338CA, #312E81); }
 
   .lessons {
     display: flex;
@@ -1779,6 +1781,7 @@
             <div class="filter-tab" data-filter="16">Objects</div>
             <div class="filter-tab" data-filter="17">Food</div>
             <div class="filter-tab" data-filter="18">Time</div>
+            <div class="filter-tab" data-filter="19">Numbers</div>
           </div>
         </div>
         <div class="words-list" id="wordsList"></div>
@@ -1893,7 +1896,6 @@
 
 </div>
 
-<!-- Forgot Modal -->
 <div class="forgot-backdrop" id="forgotBackdrop">
   <div class="forgot-modal" id="forgotModal">
     <button class="forgot-close-x" id="forgotCloseX" style="display:none;">✕</button>
@@ -1902,7 +1904,6 @@
 </div>
 
 <script>
-// ============ CONFIG ============
 const CLOUD_CONFIG = {
   BIN_ID: '6af727e7ac6210605a853a74',
   API_KEY: '$2a$10$0Iv/9aI8ROmnVBDmYP/W0eDFZkS22TfFItJPz07yKsEpiKuU7pLSu',
@@ -1965,10 +1966,10 @@ async function claimOwnership(name, deviceId) {
   const data = await cloudGet();
   if (!data[name]) data[name] = {};
   data[name].ownerDeviceId = deviceId;
+  if (!data[name].createdAt) data[name].createdAt = Date.now();
   await cloudSet(data);
 }
 
-// ============ FORGOT HELPERS ============
 async function getForgotRecord(deviceId) {
   const data = await cloudGet();
   return data.__forgot__?.[deviceId] || null;
@@ -1993,7 +1994,7 @@ function getSession() { return localStorage.getItem(SESSION_KEY); }
 function setSession(u) { localStorage.setItem(SESSION_KEY, u); }
 function clearSession() { localStorage.removeItem(SESSION_KEY); }
 
-// ============ VOCAB (unchanged) ============
+// ============ VOCAB ============
 const VOCAB = {
   1: { title: { en: "Greetings & People", da: "Hilsner og mennesker" }, icon: "👋", color: 1, words: [
     {da:"Hej", en:"Hello", df:"Bonhallo"}, {da:"Godmorgen", en:"Good morning", df:"Bonmora"}, {da:"Godnat", en:"Good night", df:"Bonnocta"},
@@ -2206,12 +2207,39 @@ const VOCAB = {
     {da:"Sent", en:"Late", df:"Tardora"}, {da:"Hurtig", en:"Fast", df:"Rapida"}, {da:"Langsom", en:"Slow", df:"Lentora"},
     {da:"Stor", en:"Big", df:"Grandora"}, {da:"Lille", en:"Small", df:"Minora"}, {da:"Ny", en:"New", df:"Novara"},
     {da:"Gammel", en:"Old", df:"Vetora"}, {da:"Vigtig", en:"Important", df:"Importa"}
+  ], sentences: [] },
+  19: { title: { en: "Numbers", da: "Tal" }, icon: "🔢", color: 19, words: [
+    {da:"Nul", en:"Zero", df:"Nula"}, {da:"En", en:"One", df:"Unora"}, {da:"To", en:"Two", df:"Duora"},
+    {da:"Tre", en:"Three", df:"Tria"}, {da:"Fire", en:"Four", df:"Quatra"},
+    {da:"Fem", en:"Five", df:"Quinora"}, {da:"Seks", en:"Six", df:"Sexora"}, {da:"Syv", en:"Seven", df:"Septora"},
+    {da:"Otte", en:"Eight", df:"Octora"}, {da:"Ni", en:"Nine", df:"Novara"},
+    {da:"Ti", en:"Ten", df:"Decora"}, {da:"Elleve", en:"Eleven", df:"Undecora"}, {da:"Tolv", en:"Twelve", df:"Duodecora"},
+    {da:"Tretten", en:"Thirteen", df:"Tredecora"}, {da:"Fjorten", en:"Fourteen", df:"Quattuordecora"},
+    {da:"Femten", en:"Fifteen", df:"Quindecora"}, {da:"Seksten", en:"Sixteen", df:"Sedecora"}, {da:"Sytten", en:"Seventeen", df:"Septendecora"},
+    {da:"Atten", en:"Eighteen", df:"Octodecora"}, {da:"Nitten", en:"Nineteen", df:"Novendecora"},
+    {da:"Tyve", en:"Twenty", df:"Vigora"}, {da:"Tredive", en:"Thirty", df:"Trigora"}, {da:"Fyrre", en:"Forty", df:"Quadragora"},
+    {da:"Halvtreds", en:"Fifty", df:"Quinquagora"}, {da:"Tres", en:"Sixty", df:"Sexagora"},
+    {da:"Halvfjerds", en:"Seventy", df:"Septuagora"}, {da:"Firs", en:"Eighty", df:"Octogora"}, {da:"Halvfems", en:"Ninety", df:"Nonagora"},
+    {da:"Et hundrede", en:"One hundred", df:"Centora"}, {da:"Et tusind", en:"One thousand", df:"Millora"},
+    {da:"Ti tusind", en:"Ten thousand", df:"Decamillora"}, {da:"Hundrede tusind", en:"One hundred thousand", df:"Centimillora"},
+    {da:"En million", en:"One million", df:"Miliona"}, {da:"En milliard", en:"One billion", df:"Biliona"},
+    {da:"Første", en:"First", df:"Primora"}, {da:"Anden", en:"Second", df:"Secora"}, {da:"Tredje", en:"Third", df:"Tertora"},
+    {da:"Sidste", en:"Last", df:"Ultima"}, {da:"Halv", en:"Half", df:"Semora"}, {da:"Dobbelt", en:"Double", df:"Duplora"},
+    {da:"Mange", en:"Many", df:"Multora"}, {da:"Få", en:"Few", df:"Pauora"},
+    {da:"21", en:"Twenty-one", df:"Vigora-Unora"}, {da:"22", en:"Twenty-two", df:"Vigora-Duora"}, {da:"23", en:"Twenty-three", df:"Vigora-Tria"},
+    {da:"24", en:"Twenty-four", df:"Vigora-Quatra"}, {da:"25", en:"Twenty-five", df:"Vigora-Quinora"},
+    {da:"26", en:"Twenty-six", df:"Vigora-Sexora"}, {da:"27", en:"Twenty-seven", df:"Vigora-Septora"}, {da:"28", en:"Twenty-eight", df:"Vigora-Octora"},
+    {da:"29", en:"Twenty-nine", df:"Vigora-Novara"}, {da:"31", en:"Thirty-one", df:"Trigora-Unora"}, {da:"32", en:"Thirty-two", df:"Trigora-Duora"},
+    {da:"42", en:"Forty-two", df:"Quadragora-Tria"}, {da:"45", en:"Forty-five", df:"Quadragora-Quinora"}, {da:"56", en:"Fifty-six", df:"Quinquagora-Sexora"},
+    {da:"63", en:"Sixty-three", df:"Sexagora-Tria"}, {da:"78", en:"Seventy-eight", df:"Septuagora-Octora"}, {da:"87", en:"Eighty-seven", df:"Octogora-Septora"},
+    {da:"99", en:"Ninety-nine", df:"Nonagora-Novara"}
   ], sentences: [] }
 };
 
 const PHONETIC_MAP = {
   'bonhallo':'bon-HAHL-lo','bonmora':'bon-MO-ra','bonnocta':'bon-NOCK-ta','adevara':'ah-day-VAH-ra','familora':'fah-MEE-lo-ra','madora':'mah-DO-ra','padora':'pah-DO-ra','sorina':'so-REE-na','fratero':'fra-TEH-ro','infanto':'een-FAHN-to','humano':'hoo-MAH-no','amivenn':'ah-mee-VEN','grandmora':'grahnd-MO-ra','grandpador':'grahnd-PAH-dor','femina':'FEH-mee-na','homaro':'ho-MAH-ro','puella':'poo-EH-la','garçono':'gar-SO-no','bebina':'beh-BEE-na','persona':'per-SO-na','amorliv':'ah-MOR-liv','joyara':'joy-AH-ra','dolora':'do-LO-ra','felicia':'feh-LEE-sha','amistara':'ah-mee-STAH-ra','saudora':'sow-DO-ra','somnara':'som-NAH-ra','espera':'es-PE-ra','timora':'tee-MO-ra','sorrisa':'so-REE-sa','besora':'beh-SO-ra','cordehjert':'kor-deh-YERT','iraora':'ee-rah-O-ra','calmina':'kal-MEE-na','joyeux':'joy-UH','tristora':'tree-STO-ra','corajosa':'ko-rah-HO-sa','fierté':'fee-er-TAY','solitara':'so-lee-TAH-ra','amorella':'ah-mo-REH-la','maré':'mah-RAY','aqua':'AH-kwa','fuego':'FWEH-go','terra':'TEH-ra','cielum':'SEE-lum','estrela':'eh-STREH-la','florina':'flo-REE-na','arbor':'AR-bor','silvara':'seel-VAH-ra','montara':'mon-TAH-ra','ventora':'ven-TOR-a','pluvia':'PLOO-vee-a','nivora':'nee-VO-ra','solaria':'so-LAH-ree-a','lunalux':'LOO-na-luks','plajara':'plah-HAH-ra','rivora':'ree-VO-ra','lakora':'lah-KO-ra','herbina':'her-BEE-na','nubela':'noo-BEH-la','domora':'do-MO-ra','camara':'kah-MAH-ra','lectora':'lek-TO-ra','sedora':'seh-DO-ra','tabora':'tah-BO-ra','portara':'por-TAH-ra','fenestra':'feh-NEH-strah','cozinara':'ko-zee-NAH-ra','alimenta':'ah-lee-MEN-ta','panora':'pah-NO-ra','lacté':'lak-TAY','pomara':'po-MAH-ra','cafora':'kah-FO-ra','libera':'LEE-beh-ra','musica':'MOO-zee-ka','telefoné':'teh-leh-fo-NAY','computara':'kom-poo-TAH-ra','clavora':'klah-VO-ra','vestara':'ves-TAH-ra','sapata':'sah-PAH-ta','rubina':'roo-BEE-na','azula':'ah-ZOO-la','verdora':'ver-DO-ra','amarela':'ah-mah-REH-la','nigrum':'NYE-grum','albina':'al-BEE-na','rosalia':'ro-SAH-lee-a','violara':'vee-oh-LAH-ra','aurum':'AW-rum','argenta':'ar-JEN-ta','oranja':'oh-RAHN-ya','brunora':'broo-NO-ra','grisia':'GREE-see-a','bellskøn':'bel-SKUN','grandora':'grahn-DO-ra','minora':'mee-NO-ra','rapida':'rah-PEE-da','lentora':'len-TO-ra','calora':'kah-LO-ra','frigora':'free-GO-ra','diara':'dee-AH-ra','noctara':'noc-TAH-ra','matina':'mah-TEE-na','vespara':'ves-PAH-ra','hodiera':'ho-DYEH-ra','amanora':'ah-mah-NO-ra','heriora':'heh-REE-or-a','tempora':'TEM-po-ra','nuncé':'noon-SAY','sempre':'SEM-preh','nuncquam':'NOON-kwam','semanara':'seh-mah-NAH-ra','mensora':'men-SO-ra','annora':'ah-NO-ra','horina':'ho-REE-na','minuta':'mee-NOO-ta','seconda':'seh-KON-da','antera':'ahn-TE-ra','postara':'pos-TAH-ra','proxima':'PROK-see-ma','mio':'MEE-o','tua':'TOO-ah','elo':'EH-lo','ela':'EH-la','nos':'nos','elar':'EH-lar','mina':'MEE-na','aqui':'ah-KEE','alora':'ah-LO-ra','oui':'wee','non':'non','merci tak':'MER-see tahk','por favor':'por fah-VOR','ubara':'oo-BAH-ra','quisara':'kee-SAH-ra','quora':'KWO-ra','porqué':'por-KAY','porque':'por-KEH','talvez':'tahl-VEZ','amora':'ah-MO-ra','risora':'ree-SO-ra','lacrima':'lah-KREE-ma','mangera':'mahn-JEH-ra','bibera':'bee-BEH-ra','dormira':'dor-MEE-ra','dansara':'dahn-SAH-ra','cantora':'kahn-TO-ra','currera':'koo-REH-ra','ambular':'am-boo-LAR','parlora':'par-LO-ra','audira':'ow-DEE-ra','vidora':'vee-DO-ra','legora':'leh-GO-ra','scriptora':'skreep-TO-ra','ludora':'loo-DO-ra','natara':'nah-TAH-ra','volara':'vo-LAH-ra','pensara':'pen-SAH-ra','sorrira':'so-REE-ra','magiora':'mah-JO-ra','anima':'AH-nee-ma','pacera':'pah-SE-ra','libertara':'lee-ber-TAH-ra','eternora':'eh-ter-NO-ra','secretara':'seh-kreh-TAH-ra','bellora':'beh-LO-ra','universa':'oo-nee-VER-sa','angelora':'ahn-JEH-lo-ra','luxespera':'luks-es-PE-ra','somniversa':'som-nee-VER-sa','aventora':'ah-ven-TO-ra','lun anima':'loon AH-nee-ma','solcorda':'sol-KOR-da','estrelpura':'eh-strel-POO-ra','arcobella':'ar-ko-BEH-la','lumina':'LOO-mee-na','obscura':'ob-SKOO-ra','miracula':'mee-RAH-koo-la','enchantora':'en-chan-TO-ra','scholarina':'sko-lah-REE-na','magistera':'mah-JEES-te-ra','amicora':'ah-mee-KO-ra','aventurosa':'ah-ven-too-RO-sa','matinara':'mah-tee-NAH-ra','prandora':'prahn-DO-ra','cenarina':'seh-nah-REE-na','felina':'feh-LEE-na','canora':'kah-NO-ra','equina':'eh-KWEE-na','aviora':'ah-VEE-o-ra','estivara':'es-tee-VAH-ra','inverna':'een-VER-na','primavera':'pree-mah-VE-ra','autumnara':'aw-tum-NAH-ra','urbana':'ur-BAH-na','paisora':'pay-SO-ra','mundara':'moon-DAH-ra','viatora':'vee-ah-TO-ra','domina':'do-MEE-na',
-  'hallovai':'hah-LO-vai','bonadia':'bo-NAH-dee-ya','bonvespa':'bon-VES-pa','bonadia venora':'bo-NAH-dee-ya veh-NO-ra','meraki':'meh-RAH-kee','grandmeraki':'grahnd-meh-RAH-kee','benmeraki':'ben-meh-RAH-kee','perdona':'per-DO-na','perdoni':'per-DO-nee','nulproblema':'nool-pro-BLEH-ma','viresta':'vee-RES-ta','benvara':'ben-VAH-ra','quomara':'kwo-MAH-ra','quandra':'KWAHN-dra','qualora':'kwah-LO-ra','sucede':'soo-SEH-deh','coma vesta':'KO-ma VES-ta','bonora':'bo-NO-ra','malora':'mah-LO-ra','finora':'fee-NO-ra','clarivo':'klah-REE-vo','verita':'veh-REE-ta','okeya':'oh-KAY-ya','attenda':'ah-TEN-da','venira':'veh-NEE-ra','alevara':'ah-leh-VAH-ra','ajuvara':'ah-joo-VAH-ra','miva':'MEE-va','tuva':'TOO-va','nosa':'NO-sa','elara':'eh-LAH-ra','neivora':'nay-VO-ra','somnira':'som-NEE-ra','famelia':'fah-MEH-lee-ya','aquira':'ah-KEE-ra','risavena':'ree-sah-VEH-na','nuljoya':'nool-JOY-ya','nervora':'ner-VO-ra','confusa':'kon-FOO-sa','miravena':'mee-rah-VEH-na','malivara':'mah-lee-VAH-ra','fantora':'fahn-TO-ra','nulcare':'nool-KAH-reh','estara':'es-TAH-ra','habira':'hah-BEE-ra','facera':'fah-SEH-ra','dicera':'dee-SEH-ra','evigora':'eh-vee-GO-ra','sedira':'seh-DEE-ra','statora':'stah-TO-ra','sapira':'sah-PEE-ra','comprena':'kom-PREH-na','banelora':'bah-neh-LO-ra','sanitora':'sah-nee-TO-ra','bagora':'bah-GO-ra','moneta':'mo-NEH-ta','horica':'ho-REE-ka','banora':'bah-NO-ra','carnora':'kar-NO-ra','piscara':'pee-SKAH-ra','rizona':'ree-ZO-na','quesora':'keh-SO-ra','tevara':'teh-VAH-ra','jucera':'joo-SEH-ra','dulcora':'dool-KO-ra','salina':'sah-LEE-na','restora':'res-TO-ra','posterra':'pos-TEH-ra','primora':'pree-MO-ra','tardora':'tar-DO-ra','novara':'no-VAH-ra','vetora':'veh-TO-ra','importa':'eem-POR-ta'
+  'hallovai':'hah-LO-vai','bonadia':'bo-NAH-dee-ya','bonvespa':'bon-VES-pa','bonadia venora':'bo-NAH-dee-ya veh-NO-ra','meraki':'meh-RAH-kee','grandmeraki':'grahnd-meh-RAH-kee','benmeraki':'ben-meh-RAH-kee','perdona':'per-DO-na','perdoni':'per-DO-nee','nulproblema':'nool-pro-BLEH-ma','viresta':'vee-RES-ta','benvara':'ben-VAH-ra','quomara':'kwo-MAH-ra','quandra':'KWAHN-dra','qualora':'kwah-LO-ra','sucede':'soo-SEH-deh','coma vesta':'KO-ma VES-ta','bonora':'bo-NO-ra','malora':'mah-LO-ra','finora':'fee-NO-ra','clarivo':'klah-REE-vo','verita':'veh-REE-ta','okeya':'oh-KAY-ya','attenda':'ah-TEN-da','venira':'veh-NEE-ra','alevara':'ah-leh-VAH-ra','ajuvara':'ah-joo-VAH-ra','miva':'MEE-va','tuva':'TOO-va','nosa':'NO-sa','elara':'eh-LAH-ra','neivora':'nay-VO-ra','somnira':'som-NEE-ra','famelia':'fah-MEH-lee-ya','aquira':'ah-KEE-ra','risavena':'ree-sah-VEH-na','nuljoya':'nool-JOY-ya','nervora':'ner-VO-ra','confusa':'kon-FOO-sa','miravena':'mee-rah-VEH-na','malivara':'mah-lee-VAH-ra','fantora':'fahn-TO-ra','nulcare':'nool-KAH-reh','estara':'es-TAH-ra','habira':'hah-BEE-ra','facera':'fah-SEH-ra','dicera':'dee-SEH-ra','evigora':'eh-vee-GO-ra','sedira':'seh-DEE-ra','statora':'stah-TO-ra','sapira':'sah-PEE-ra','comprena':'kom-PREH-na','banelora':'bah-neh-LO-ra','sanitora':'sah-nee-TO-ra','bagora':'bah-GO-ra','moneta':'mo-NEH-ta','horica':'ho-REE-ka','banora':'bah-NO-ra','carnora':'kar-NO-ra','piscara':'pee-SKAH-ra','rizona':'ree-ZO-na','quesora':'keh-SO-ra','tevara':'teh-VAH-ra','jucera':'joo-SEH-ra','dulcora':'dool-KO-ra','salina':'sah-LEE-na','restora':'res-TO-ra','posterra':'pos-TEH-ra','primora':'pree-MO-ra','tardora':'tar-DO-ra','novara':'no-VAH-ra','vetora':'veh-TO-ra','importa':'eem-POR-ta',
+  'nula':'NOO-la','unora':'oo-NO-ra','duora':'doo-O-ra','tria':'TREE-ah','quatra':'KWAH-tra','quinora':'kwee-NO-ra','sexora':'sek-SO-ra','septora':'sep-TO-ra','octora':'ok-TO-ra','decora':'deh-KO-ra','undecora':'oon-deh-KO-ra','duodecora':'doo-oh-deh-KO-ra','tredecora':'treh-deh-KO-ra','quattuordecora':'kwah-toor-deh-KO-ra','quindecora':'kween-deh-KO-ra','sedecora':'seh-deh-KO-ra','septendecora':'sep-ten-deh-KO-ra','octodecora':'ok-toh-deh-KO-ra','novendecora':'no-ven-deh-KO-ra','vigora':'vee-GO-ra','trigora':'tree-GO-ra','quadragora':'kwah-drah-GO-ra','quinquagora':'kween-kwah-GO-ra','sexagora':'sek-sah-GO-ra','septuagora':'sep-too-ah-GO-ra','octogora':'ok-toh-GO-ra','nonagora':'no-nah-GO-ra','centora':'sen-TO-ra','millora':'mee-LO-ra','decamillora':'deh-kah-mee-LO-ra','centimillora':'sen-tee-mee-LO-ra','miliona':'mee-lee-O-na','biliona':'bee-lee-O-na','secora':'seh-KO-ra','tertora':'ter-TO-ra','ultima':'OOL-tee-ma','semora':'seh-MO-ra','duplora':'doo-PLO-ra','multora':'mool-TO-ra','pauora':'pow-O-ra'
 };
 
 const UI_TEXT = {
@@ -2253,7 +2281,6 @@ function mascotSVG(size = 110) {
   </svg>`;
 }
 
-// ============ TTS ============
 class NaturalTTS {
   constructor() {
     this.synth = window.speechSynthesis;
@@ -2290,6 +2317,14 @@ class NaturalTTS {
   }
   toPhonetic(text) {
     return text.toLowerCase().split(/\s+/).map(w => {
+      // Handle hyphenated compound numbers (Vigora-Unora → vee-GO-ra oo-NO-ra)
+      if (w.includes('-')) {
+        return w.split('-').map(part => {
+          const clean = part.replace(/[.,!?¿¡]/g, '');
+          if (PHONETIC_MAP[clean]) return PHONETIC_MAP[clean];
+          return this.applyRules(clean);
+        }).join(' ');
+      }
       const clean = w.replace(/[.,!?¿¡]/g, '');
       if (PHONETIC_MAP[clean]) return PHONETIC_MAP[clean];
       return this.applyRules(clean);
@@ -2346,7 +2381,8 @@ async function saveState() {
   data[currentUser] = {
     ...existing,
     data: state,
-    ownerDeviceId: existing.ownerDeviceId || getOrCreateDeviceId()
+    ownerDeviceId: existing.ownerDeviceId || getOrCreateDeviceId(),
+    createdAt: existing.createdAt || Date.now()
   };
   await cloudSet(data);
 }
@@ -2486,7 +2522,6 @@ function startPolling(name) {
       if (!req) return;
 
       if (req.status === 'approved') {
-        // If I requested this (normal or takeover), claim ownership now
         if (req.requestingDeviceId === myDevice) {
           await claimOwnership(name, myDevice);
           stopPolling();
@@ -2495,14 +2530,12 @@ function startPolling(name) {
           await enterApp(name);
           return;
         }
-        // I'm not the requesting device — check if I still own it
         if (existing?.ownerDeviceId === myDevice) {
           stopPolling();
           setRequestState('approved');
           await enterApp(name);
           return;
         }
-        // Someone else got approved for a name I don't own
         stopPolling();
         setRequestState('denied', '❌ Name is now owned by another device');
       } else if (req.status === 'denied' && req.requestingDeviceId === myDevice) {
@@ -2542,7 +2575,6 @@ async function handleRequestClick() {
     const existing = data[name];
     const req = data.__requests__?.[name];
 
-    // Case A: I already own this name → enter
     if (existing?.ownerDeviceId === myDevice) {
       if (existing.data || req?.status === 'approved') {
         setRequestState('approved');
@@ -2556,7 +2588,6 @@ async function handleRequestClick() {
       }
     }
 
-    // Case B: Someone else owns it → takeover request
     if (existing?.ownerDeviceId && existing.ownerDeviceId !== myDevice) {
       await setRequestStatus(name, 'pending', {
         requestingDeviceId: myDevice,
@@ -2568,14 +2599,12 @@ async function handleRequestClick() {
       return;
     }
 
-    // Case C: Unclaimed but has a pending request
     if (req?.status === 'pending' && req.requestingDeviceId === myDevice) {
       setRequestState('requested');
       startPolling(name);
       return;
     }
 
-    // Case D: Unclaimed approved (legacy) — claim and enter
     if (req?.status === 'approved') {
       await claimOwnership(name, myDevice);
       setRequestState('approved');
@@ -2583,13 +2612,11 @@ async function handleRequestClick() {
       return;
     }
 
-    // Case E: Denied
     if (req?.status === 'denied' && req.requestingDeviceId === myDevice) {
       setRequestState('denied');
       return;
     }
 
-    // Case F: Fresh request
     await setRequestStatus(name, 'pending', {
       requestingDeviceId: myDevice,
       isTakeover: false
@@ -2612,13 +2639,13 @@ async function enterApp(name) {
     setSession(name);
     currentUser = name;
     await loadUserState(name);
-    // Ensure ownership on entry
     const data = await cloudGet();
     if (!data[name]) data[name] = {};
     if (!data[name].ownerDeviceId || data[name].ownerDeviceId !== getOrCreateDeviceId()) {
       data[name].ownerDeviceId = getOrCreateDeviceId();
-      await cloudSet(data);
     }
+    if (!data[name].createdAt) data[name].createdAt = Date.now();
+    await cloudSet(data);
     if (!state.lang) { state.lang = 'en'; await saveState(); }
     renderHome();
     showScreen('home');
@@ -2645,7 +2672,6 @@ const forgotBackdrop = $('forgotBackdrop');
 const forgotContent = $('forgotContent');
 const forgotCloseX = $('forgotCloseX');
 let forgotFlowState = 'closed';
-let forgotPollInterval = null;
 
 function openForgotModal(initialScreen) {
   forgotBackdrop.classList.add('show');
@@ -2658,7 +2684,6 @@ function closeForgotModal() {
   forgotBackdrop.classList.remove('show');
   forgotFlowState = 'closed';
   forgotCloseX.style.display = 'none';
-  // Clear content after fade out
   setTimeout(() => {
     if (forgotFlowState === 'closed') {
       forgotContent.classList.remove('fading');
@@ -2798,7 +2823,6 @@ function bindForgotScreenEvents(screenName, data) {
 
     nameInput.addEventListener('input', updateSubmit);
     rememberedInput.addEventListener('input', updateSubmit);
-    explainInput.addEventListener('input', () => {});
 
     setTimeout(() => nameInput.focus(), 200);
 
@@ -2826,12 +2850,10 @@ function bindForgotScreenEvents(screenName, data) {
     const againBtn = $('forgotRequestAgain');
     if (againBtn) {
       againBtn.addEventListener('click', async () => {
-        // Wipe existing record and open form again
         showForgotScreen('loading', { text: 'Opening form...' });
         setTimeout(() => showForgotScreen('form'), 700);
       });
     }
-    // Mark as read when viewed
     markForgotRead(getOrCreateDeviceId()).then(() => {
       $('forgotBtn').classList.remove('attention');
     });
@@ -2845,7 +2867,6 @@ async function openForgotFlow() {
       if (rec.status === 'pending') {
         const ago = formatTimeAgo(rec.timestamp);
         openForgotModal('pending');
-        // Re-render with time
         setTimeout(() => {
           forgotContent.innerHTML = getForgotScreenHTML('pending', { timeAgo: ago });
           bindForgotScreenEvents('pending', {});
@@ -2918,13 +2939,11 @@ async function boot() {
       const existing = data[session];
       const req = data.__requests__?.[session];
 
-      // Owned by me — enter
       if (existing?.ownerDeviceId === myDevice && (existing.data || req?.status === 'approved')) {
         await enterApp(session);
         return;
       }
 
-      // Owned by someone else — clear
       if (existing?.ownerDeviceId && existing.ownerDeviceId !== myDevice) {
         clearSession();
         showScreen('auth');
@@ -2935,7 +2954,6 @@ async function boot() {
         return;
       }
 
-      // My pending — show waiting
       if (req?.status === 'pending' && req.requestingDeviceId === myDevice) {
         currentRequestName = session;
         $('authName').value = session;
@@ -2946,7 +2964,6 @@ async function boot() {
         return;
       }
 
-      // Approved but unclaimed — claim and enter
       if (req?.status === 'approved') {
         await claimOwnership(session, myDevice);
         await enterApp(session);
@@ -2989,7 +3006,6 @@ async function boot() {
   checkForgotAttention();
 }
 
-// ============ NAV ============
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', () => {
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -3000,7 +3016,6 @@ document.querySelectorAll('.nav-item').forEach(item => {
   });
 });
 
-// ============ WORDS ============
 let currentFilter = 'all';
 let searchQuery = '';
 $('searchInput').addEventListener('input', (e) => { searchQuery = e.target.value.toLowerCase(); renderWordsList(); });
@@ -3050,7 +3065,6 @@ function renderWordsList() {
   if (!hasResults) list.innerHTML = '<div class="no-results">No words found</div>';
 }
 
-// ============ HOME ============
 function renderHome() {
   $('streakVal').textContent = state.streak;
   $('gemVal').textContent = state.gems;
@@ -3099,7 +3113,6 @@ function renderHome() {
   });
 }
 
-// ============ LESSON ============
 let currentLesson = null;
 let currentStep = 0;
 let steps = [];
@@ -3500,7 +3513,6 @@ setInterval(async () => {
   }
 }, 30 * 60 * 1000);
 
-// GO
 boot();
 </script>
 
