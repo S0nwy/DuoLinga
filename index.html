@@ -23,6 +23,10 @@
     --bg: #FFFFFF;
     --bg-soft: #F7F7F7;
     --text: #3C3C3C;
+    --owl-body: #A0522D;
+    --owl-light: #CD853F;
+    --owl-dark: #6B3410;
+    --owl-belly: #DEB887;
     --ease: cubic-bezier(0.25, 0.8, 0.25, 1);
   }
 
@@ -34,6 +38,7 @@
     color: var(--text);
     overflow: hidden;
     height: 100%;
+    height: 100dvh;
     user-select: none;
   }
 
@@ -43,6 +48,7 @@
     width: 100%;
     max-width: 500px;
     height: 100vh;
+    height: 100dvh;
     position: relative;
     overflow: hidden;
     background: var(--bg);
@@ -61,171 +67,282 @@
     overflow-x: hidden;
   }
 
-  .screen.active {
-    opacity: 1;
-    pointer-events: all;
-    transform: translateX(0);
-  }
-
+  .screen.active { opacity: 1; pointer-events: all; transform: translateX(0); }
   .screen::-webkit-scrollbar { width: 0; }
 
   /* ============ MASCOT ============ */
   .mascot-wrap {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    margin-bottom: 16px;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 0 4px;
   }
 
   .mascot {
-    width: 110px;
-    height: 110px;
-    position: relative;
+    width: 70px;
+    height: 70px;
+    flex-shrink: 0;
     animation: mascotIdle 3.5s ease-in-out infinite;
   }
 
   @keyframes mascotIdle {
     0%, 100% { transform: translateY(0) rotate(-1deg); }
-    50% { transform: translateY(-6px) rotate(1deg); }
+    50% { transform: translateY(-4px) rotate(1deg); }
   }
 
   .mascot.happy { animation: mascotHappy 0.7s var(--ease); }
   @keyframes mascotHappy {
     0% { transform: scale(1) rotate(0); }
-    20% { transform: scale(1.15) rotate(-10deg) translateY(-8px); }
-    40% { transform: scale(1.1) rotate(10deg) translateY(-4px); }
-    60% { transform: scale(1.12) rotate(-5deg); }
+    25% { transform: scale(1.15) rotate(-8deg) translateY(-6px); }
+    50% { transform: scale(1.1) rotate(8deg) translateY(-3px); }
     100% { transform: scale(1) rotate(0); }
   }
 
   .mascot.sad { animation: mascotSad 0.7s var(--ease); }
   @keyframes mascotSad {
     0%, 100% { transform: translateY(0); }
-    25% { transform: translateY(-6px) rotate(-4deg); }
-    50% { transform: translateY(0) rotate(4deg); }
-    75% { transform: translateY(-3px) rotate(-2deg); }
+    25% { transform: translateY(-5px) rotate(-3deg); }
+    50% { transform: translateY(0) rotate(3deg); }
   }
 
   .mascot.talking { animation: mascotTalk 0.4s ease infinite; }
   @keyframes mascotTalk {
     0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.03); }
+    50% { transform: scale(1.04); }
   }
 
   .bubble {
-    background: white;
-    border: 3px solid var(--gray);
-    border-radius: 18px;
-    padding: 10px 14px;
-    margin-top: 8px;
-    position: relative;
-    max-width: 260px;
-    text-align: center;
+    background: var(--bg-soft);
+    border: 2px solid var(--gray);
+    border-radius: 14px;
+    padding: 8px 12px;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text);
-    box-shadow: 0 3px 0 var(--gray-dark);
-    animation: bubblePop 0.35s var(--ease);
     line-height: 1.3;
+    flex: 1;
+    position: relative;
   }
 
   .bubble::before {
     content: '';
     position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom: 10px solid var(--gray);
+    left: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 8px solid var(--gray);
   }
 
   .bubble::after {
     content: '';
     position: absolute;
-    top: -6px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-bottom: 8px solid white;
+    left: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-right: 6px solid var(--bg-soft);
   }
 
-  @keyframes bubblePop {
-    0% { transform: scale(0); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+  /* ============ AUTH SCREEN ============ */
+  #auth {
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F0F9E8 100%);
+  }
+
+  .auth-box {
+    width: 100%;
+    max-width: 340px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .auth-mascot {
+    width: 110px;
+    height: 110px;
+    margin-bottom: 14px;
+    animation: bounce 2.2s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-12px) rotate(3deg); }
+  }
+
+  .auth-title {
+    font-size: 34px;
+    font-weight: 900;
+    color: var(--green);
+    letter-spacing: -1px;
+    margin-bottom: 4px;
+  }
+
+  .auth-sub {
+    font-size: 13px;
+    color: var(--gray-text);
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .auth-tabs {
+    display: flex;
+    width: 100%;
+    background: var(--bg-soft);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 18px;
+  }
+
+  .auth-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--gray-text);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .auth-tab.active {
+    background: white;
+    color: var(--green);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  }
+
+  .auth-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .auth-input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 2px solid var(--gray);
+    border-bottom: 4px solid var(--gray-dark);
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    outline: none;
+    background: white;
+  }
+
+  .auth-input:focus {
+    border-color: var(--blue);
+    border-bottom-color: var(--blue-dark);
+  }
+
+  .auth-error {
+    color: var(--red);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    min-height: 16px;
+  }
+
+  .auth-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    background: var(--green);
+    box-shadow: 0 4px 0 var(--green-dark);
+    color: white;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+
+  .auth-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 var(--green-dark);
+  }
+
+  .auth-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
   /* ============ ONBOARDING ============ */
   #onboarding {
     justify-content: center;
     align-items: center;
-    padding: 30px;
+    padding: 24px;
     background: linear-gradient(180deg, #FFFFFF 0%, #F0F9E8 100%);
   }
 
   .ob-mascot {
-    width: 130px;
-    height: 130px;
-    margin-bottom: 20px;
+    width: 110px;
+    height: 110px;
+    margin-bottom: 16px;
     animation: bounce 2.2s ease-in-out infinite;
   }
 
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0) rotate(-3deg); }
-    50% { transform: translateY(-14px) rotate(3deg); }
-  }
-
   .ob-title {
-    font-size: 38px;
+    font-size: 34px;
     font-weight: 900;
     color: var(--green);
     letter-spacing: -1px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   .ob-sub {
-    font-size: 16px;
+    font-size: 14px;
     color: var(--gray-text);
-    margin-bottom: 40px;
+    margin-bottom: 28px;
     text-align: center;
     line-height: 1.4;
   }
 
   .ob-label {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 800;
     color: var(--gray-text);
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     align-self: flex-start;
     width: 100%;
-    max-width: 320px;
+    max-width: 300px;
   }
 
   .lang-options {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     width: 100%;
-    max-width: 320px;
-    margin-bottom: 30px;
+    max-width: 300px;
+    margin-bottom: 24px;
   }
 
   .lang-opt {
-    padding: 16px 20px;
+    padding: 14px 18px;
     border: 2px solid var(--gray);
     border-bottom: 4px solid var(--gray-dark);
     border-radius: 14px;
     background: white;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.15s var(--ease);
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
   }
 
   .lang-opt:active { transform: translateY(2px); border-bottom-width: 2px; }
@@ -237,21 +354,21 @@
     color: var(--blue);
   }
 
-  .lang-flag { font-size: 26px; }
+  .lang-flag { font-size: 24px; }
 
   .btn {
-    padding: 14px 28px;
+    padding: 13px 24px;
     border: none;
     border-radius: 14px;
     font-family: inherit;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.8px;
     cursor: pointer;
     transition: all 0.1s var(--ease);
     color: white;
-    min-width: 160px;
+    min-width: 150px;
   }
 
   .btn:active { transform: translateY(4px); }
@@ -276,40 +393,41 @@
     top: 0;
     background: white;
     z-index: 50;
-    padding: 14px 20px;
+    padding: 12px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid var(--gray);
+    flex-shrink: 0;
   }
 
   .flag-btn {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     background: var(--bg-soft);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 18px;
     cursor: pointer;
     border: 2px solid var(--gray);
   }
   .flag-btn:active { transform: scale(0.92); }
 
-  .stats-row { display: flex; gap: 14px; align-items: center; }
+  .stats-row { display: flex; gap: 10px; align-items: center; }
 
   .stat-chip {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     font-weight: 800;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
   }
   .stat-chip:active { transform: scale(0.95); }
 
-  .stat-icon { font-size: 22px; }
+  .stat-icon { font-size: 18px; }
   .streak-chip { color: var(--red); }
   .gem-chip { color: var(--blue); }
   .heart-chip { color: var(--red); }
@@ -321,12 +439,15 @@
     100% { transform: scale(1); }
   }
 
-  .units-wrap { padding: 20px 0 100px; }
+  .units-wrap {
+    padding: 16px 0 80px;
+    flex: 1;
+  }
 
   .unit {
-    margin: 0 20px 24px;
-    border-radius: 20px;
-    padding: 20px;
+    margin: 0 16px 20px;
+    border-radius: 18px;
+    padding: 16px;
     color: white;
     position: relative;
     overflow: hidden;
@@ -336,21 +457,21 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 
-  .unit-info h3 { font-size: 20px; font-weight: 900; margin-bottom: 2px; }
-  .unit-info p { font-size: 13px; opacity: 0.9; font-weight: 600; }
+  .unit-info h3 { font-size: 18px; font-weight: 900; margin-bottom: 2px; }
+  .unit-info p { font-size: 12px; opacity: 0.9; font-weight: 600; }
 
   .unit-badge {
-    width: 50px;
-    height: 50px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background: rgba(255,255,255,0.25);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 26px;
+    font-size: 22px;
   }
 
   .unit-1 { background: linear-gradient(135deg, #58CC02, #46A302); }
@@ -368,20 +489,20 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 16px;
   }
 
   .lesson-node {
-    width: 70px;
-    height: 70px;
+    width: 62px;
+    height: 62px;
     border-radius: 50%;
     background: rgba(255,255,255,0.95);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
+    font-size: 28px;
     cursor: pointer;
-    box-shadow: 0 6px 0 rgba(0,0,0,0.15);
+    box-shadow: 0 5px 0 rgba(0,0,0,0.15);
     transition: all 0.15s var(--ease);
     position: relative;
     z-index: 2;
@@ -389,7 +510,7 @@
 
   .lesson-node:active:not(.locked) {
     transform: translateY(4px);
-    box-shadow: 0 2px 0 rgba(0,0,0,0.15);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.15);
   }
 
   .lesson-node.locked {
@@ -401,38 +522,38 @@
   .lesson-node.completed::after {
     content: '✓';
     position: absolute;
-    bottom: -4px;
-    right: -4px;
-    width: 26px;
-    height: 26px;
+    bottom: -3px;
+    right: -3px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     background: var(--green);
     color: white;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 900;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 3px solid white;
+    border: 2px solid white;
   }
 
   .lesson-node.current { animation: pulse 2s infinite; }
 
   @keyframes pulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 0 0 0 rgba(255,255,255,0.6); }
-    50% { transform: scale(1.05); box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 0 0 12px rgba(255,255,255,0); }
+    0%, 100% { transform: scale(1); box-shadow: 0 5px 0 rgba(0,0,0,0.15), 0 0 0 0 rgba(255,255,255,0.6); }
+    50% { transform: scale(1.05); box-shadow: 0 5px 0 rgba(0,0,0,0.15), 0 0 0 10px rgba(255,255,255,0); }
   }
 
   .lesson-tooltip {
     position: absolute;
-    top: 80px;
+    top: 72px;
     background: white;
     color: var(--text);
-    padding: 10px 14px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    padding: 8px 12px;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
     font-weight: 800;
-    font-size: 13px;
+    font-size: 12px;
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
@@ -443,26 +564,29 @@
   .lesson-node.current .lesson-tooltip { opacity: 1; }
 
   .lesson-node:nth-child(5n+1) { margin-left: 0; }
-  .lesson-node:nth-child(5n+2) { margin-left: 60px; }
-  .lesson-node:nth-child(5n+3) { margin-left: 90px; }
-  .lesson-node:nth-child(5n+4) { margin-left: 60px; }
+  .lesson-node:nth-child(5n+2) { margin-left: 50px; }
+  .lesson-node:nth-child(5n+3) { margin-left: 75px; }
+  .lesson-node:nth-child(5n+4) { margin-left: 50px; }
   .lesson-node:nth-child(5n+5) { margin-left: 0; }
 
   /* ============ LESSON ============ */
+  #lesson { display: flex; flex-direction: column; }
+
   .lesson-top {
-    padding: 16px 20px;
+    padding: 12px 16px;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
+    flex-shrink: 0;
   }
 
   .close-btn {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background: var(--bg-soft);
     border: none;
-    font-size: 20px;
+    font-size: 18px;
     cursor: pointer;
     color: var(--gray-text);
     display: flex;
@@ -472,7 +596,7 @@
 
   .progress-bar {
     flex: 1;
-    height: 16px;
+    height: 14px;
     background: var(--gray);
     border-radius: 10px;
     overflow: hidden;
@@ -491,9 +615,9 @@
     content: '';
     position: absolute;
     top: 3px;
-    left: 8px;
-    right: 8px;
-    height: 4px;
+    left: 6px;
+    right: 6px;
+    height: 3px;
     background: rgba(255,255,255,0.4);
     border-radius: 2px;
   }
@@ -501,51 +625,51 @@
   .hearts {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     color: var(--red);
     font-weight: 800;
-    font-size: 18px;
+    font-size: 15px;
   }
 
   .lesson-body {
     flex: 1;
-    padding: 20px;
+    padding: 14px 16px;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    min-height: 0;
   }
 
   .q-type {
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 800;
     color: var(--gray-text);
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   .q-prompt {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 900;
     color: var(--text);
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     line-height: 1.25;
   }
 
   .speaker-btn {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     background: var(--bg-soft);
-    padding: 10px 16px;
-    border-radius: 12px;
-    font-size: 14px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 13px;
     font-weight: 700;
     color: var(--blue);
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     cursor: pointer;
     border: 2px solid var(--gray);
-    transition: all 0.15s;
     width: fit-content;
   }
 
@@ -554,64 +678,28 @@
 
   @keyframes speakerPulse {
     0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.08); }
-  }
-
-  .hint-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--yellow);
-    padding: 8px 14px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 800;
-    color: white;
-    margin-bottom: 14px;
-    cursor: pointer;
-    border: 2px solid var(--yellow-dark);
-    box-shadow: 0 3px 0 var(--yellow-dark);
-    width: fit-content;
-  }
-
-  .hint-btn:active { transform: translateY(3px); box-shadow: none; }
-
-  .hint-text {
-    background: #FFF8DC;
-    color: var(--yellow-dark);
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 14px;
-    border: 2px solid var(--yellow);
-    animation: slideDown 0.3s var(--ease);
-  }
-
-  @keyframes slideDown {
-    from { transform: translateY(-10px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    50% { transform: scale(1.06); }
   }
 
   .choices {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-top: 10px;
+    gap: 10px;
+    margin-top: 8px;
   }
 
   .choice {
-    padding: 16px 12px;
+    padding: 14px 10px;
     border: 2px solid var(--gray);
     border-bottom: 4px solid var(--gray-dark);
-    border-radius: 14px;
+    border-radius: 12px;
     background: white;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.15s var(--ease);
     text-align: center;
-    min-height: 80px;
+    min-height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -650,21 +738,21 @@
 
   @keyframes shake {
     0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-8px); }
-    75% { transform: translateX(8px); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
   }
 
   .type-input {
     width: 100%;
-    padding: 16px;
+    padding: 14px;
     border: 2px solid var(--gray);
     border-bottom: 4px solid var(--gray-dark);
-    border-radius: 14px;
+    border-radius: 12px;
     font-family: inherit;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     outline: none;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
 
   .type-input:focus { border-color: var(--blue); border-bottom-color: var(--blue-dark); }
@@ -672,54 +760,55 @@
   .word-bank {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
-    min-height: 50px;
-    padding: 12px;
+    gap: 6px;
+    margin-bottom: 12px;
+    min-height: 44px;
+    padding: 10px;
     background: var(--bg-soft);
-    border-radius: 14px;
+    border-radius: 12px;
   }
 
   .word-chip {
-    padding: 10px 14px;
+    padding: 8px 12px;
     background: white;
     border: 2px solid var(--gray);
-    border-bottom: 4px solid var(--gray-dark);
-    border-radius: 10px;
+    border-bottom: 3px solid var(--gray-dark);
+    border-radius: 8px;
     font-weight: 700;
-    font-size: 15px;
+    font-size: 14px;
     cursor: pointer;
   }
 
-  .word-chip:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .word-chip:active { transform: translateY(2px); border-bottom-width: 1px; }
   .word-chip.used { opacity: 0.3; pointer-events: none; }
 
   .answer-zone {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    min-height: 50px;
-    padding: 12px;
+    gap: 6px;
+    min-height: 44px;
+    padding: 10px;
     border-bottom: 2px dashed var(--gray);
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 
   .lesson-footer {
-    padding: 16px 20px;
+    padding: 12px 16px;
     border-top: 2px solid var(--gray);
     background: white;
+    flex-shrink: 0;
   }
 
   .feedback {
     display: none;
-    padding: 14px;
-    border-radius: 14px;
-    margin-bottom: 14px;
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 10px;
     animation: slideUp 0.3s var(--ease);
   }
 
   @keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
+    from { transform: translateY(16px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
   }
 
@@ -728,23 +817,23 @@
   .feedback.wrong { background: #FFE5E5; color: var(--red-dark); }
 
   .feedback-title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 900;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
   }
 
-  .feedback-body { font-size: 14px; font-weight: 700; }
+  .feedback-body { font-size: 13px; font-weight: 700; }
 
   .footer-btn {
     width: 100%;
-    padding: 16px;
+    padding: 14px;
     border: none;
-    border-radius: 14px;
+    border-radius: 12px;
     font-family: inherit;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -759,15 +848,18 @@
   .footer-btn.continue-correct { background: var(--green); box-shadow: 0 4px 0 var(--green-dark); }
   .footer-btn.continue-wrong { background: var(--red); box-shadow: 0 4px 0 var(--red-dark); }
 
-  /* ============ INTRO SCREEN ============ */
+  /* ============ INTRO ============ */
   .intro-word-card {
     background: white;
-    border: 3px solid var(--gray);
-    border-bottom: 5px solid var(--gray-dark);
-    border-radius: 18px;
-    padding: 20px;
-    margin-bottom: 14px;
-    text-align: center;
+    border: 2px solid var(--gray);
+    border-bottom: 4px solid var(--gray-dark);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
     animation: cardPop 0.4s var(--ease);
   }
 
@@ -776,25 +868,31 @@
     100% { transform: scale(1); opacity: 1; }
   }
 
+  .intro-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .intro-text { flex: 1; }
+
   .intro-df {
-    font-size: 28px;
+    font-size: 17px;
     font-weight: 900;
     color: var(--green-dark);
-    margin-bottom: 4px;
+    margin-bottom: 2px;
   }
 
   .intro-src {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--gray-text);
-  }
-
-  .intro-phonetic {
     font-size: 13px;
-    color: var(--blue);
-    font-weight: 700;
-    margin-top: 6px;
-    font-style: italic;
+    font-weight: 600;
+    color: var(--gray-text);
   }
 
   /* ============ COMPLETE ============ */
@@ -802,14 +900,14 @@
     background: linear-gradient(180deg, #FFF9E0 0%, #FFFFFF 50%);
     justify-content: center;
     align-items: center;
-    padding: 30px;
+    padding: 24px;
     text-align: center;
   }
 
   .complete-icon {
-    font-size: 100px;
+    font-size: 80px;
     animation: celebrate 1s var(--ease);
-    margin-bottom: 20px;
+    margin-bottom: 14px;
   }
 
   @keyframes celebrate {
@@ -818,23 +916,23 @@
     100% { transform: scale(1) rotate(0); opacity: 1; }
   }
 
-  .complete-title { font-size: 32px; font-weight: 900; color: var(--yellow-dark); margin-bottom: 8px; }
-  .complete-sub { font-size: 16px; color: var(--gray-text); margin-bottom: 30px; }
+  .complete-title { font-size: 28px; font-weight: 900; color: var(--yellow-dark); margin-bottom: 6px; }
+  .complete-sub { font-size: 14px; color: var(--gray-text); margin-bottom: 24px; }
 
   .reward-row {
     display: flex;
-    gap: 16px;
+    gap: 12px;
     justify-content: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     flex-wrap: wrap;
   }
 
   .reward {
     background: white;
-    padding: 14px 18px;
-    border-radius: 16px;
+    padding: 12px 16px;
+    border-radius: 14px;
     box-shadow: 0 4px 0 var(--gray-dark);
-    min-width: 90px;
+    min-width: 80px;
     animation: rewardPop 0.6s var(--ease);
     animation-fill-mode: both;
   }
@@ -848,9 +946,9 @@
     100% { transform: scale(1); opacity: 1; }
   }
 
-  .reward-icon { font-size: 28px; margin-bottom: 4px; }
-  .reward-val { font-size: 20px; font-weight: 900; color: var(--text); }
-  .reward-label { font-size: 10px; font-weight: 800; color: var(--gray-text); text-transform: uppercase; }
+  .reward-icon { font-size: 24px; margin-bottom: 3px; }
+  .reward-val { font-size: 18px; font-weight: 900; color: var(--text); }
+  .reward-label { font-size: 9px; font-weight: 800; color: var(--gray-text); text-transform: uppercase; }
 
   /* ============ MODALS ============ */
   .modal-bg {
@@ -872,8 +970,8 @@
     background: white;
     width: 100%;
     max-width: 500px;
-    border-radius: 24px 24px 0 0;
-    padding: 24px;
+    border-radius: 20px 20px 0 0;
+    padding: 20px;
     transform: translateY(100%);
     transition: transform 0.35s var(--ease);
     max-height: 80vh;
@@ -887,56 +985,58 @@
     height: 4px;
     background: var(--gray);
     border-radius: 2px;
-    margin: 0 auto 20px;
+    margin: 0 auto 16px;
   }
 
-  .modal-title { font-size: 22px; font-weight: 900; margin-bottom: 20px; }
+  .modal-title { font-size: 20px; font-weight: 900; margin-bottom: 16px; }
 
   .setting-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 0;
+    padding: 12px 0;
     border-bottom: 1px solid var(--gray);
   }
 
-  .setting-label { font-weight: 700; font-size: 15px; }
+  .setting-label { font-weight: 700; font-size: 14px; }
 
   .setting-value {
     font-weight: 800;
     color: var(--blue);
     cursor: pointer;
-    padding: 6px 12px;
+    padding: 5px 10px;
     background: var(--bg-soft);
     border-radius: 8px;
+    font-size: 13px;
   }
 
   .danger-btn {
     width: 100%;
-    padding: 14px;
+    padding: 12px;
     background: white;
     border: 2px solid var(--red);
     color: var(--red);
     border-radius: 12px;
     font-family: inherit;
     font-weight: 800;
-    font-size: 14px;
+    font-size: 13px;
     text-transform: uppercase;
-    margin-top: 20px;
+    margin-top: 16px;
     cursor: pointer;
   }
 
   .voice-item {
-    padding: 12px;
+    padding: 10px;
     border: 2px solid var(--gray);
     border-radius: 10px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     cursor: pointer;
     font-weight: 600;
     display: flex;
     justify-content: space-between;
     align-items: center;
     transition: all 0.15s;
+    font-size: 13px;
   }
 
   .voice-item:active { transform: scale(0.98); }
@@ -948,9 +1048,9 @@
   }
 
   .voice-badge {
-    font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 6px;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 5px;
     background: var(--green);
     color: white;
     font-weight: 800;
@@ -977,46 +1077,72 @@
     transform: translateX(-50%) translateY(-100px);
     background: var(--text);
     color: white;
-    padding: 12px 20px;
-    border-radius: 12px;
+    padding: 10px 18px;
+    border-radius: 10px;
     font-weight: 800;
     z-index: 500;
     transition: transform 0.3s var(--ease);
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .toast.show { transform: translateX(-50%) translateY(0); }
 
-  .gameover-icon { font-size: 80px; margin-bottom: 16px; }
+  .gameover-icon { font-size: 70px; margin-bottom: 14px; }
+
+  .user-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--bg-soft);
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    border: 2px solid var(--gray);
+  }
+
+  .user-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--green);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 900;
+  }
 </style>
 </head>
 <body>
 
 <div class="app">
 
-  <div class="screen active" id="onboarding">
-    <div class="ob-mascot">
-      <svg viewBox="0 0 120 120" width="130" height="130">
-        <ellipse cx="60" cy="70" rx="42" ry="45" fill="#58CC02"/>
-        <ellipse cx="60" cy="72" rx="36" ry="38" fill="#7ED321"/>
-        <ellipse cx="60" cy="85" rx="22" ry="18" fill="#D7FFB8"/>
-        <circle cx="44" cy="58" r="14" fill="white"/>
-        <circle cx="76" cy="58" r="14" fill="white"/>
-        <circle cx="46" cy="60" r="7" fill="#333"/>
-        <circle cx="78" cy="60" r="7" fill="#333"/>
-        <circle cx="48" cy="58" r="2.5" fill="white"/>
-        <circle cx="80" cy="58" r="2.5" fill="white"/>
-        <path d="M 52 74 L 60 80 L 68 74 Z" fill="#FFC800"/>
-        <path d="M 52 84 Q 60 90 68 84" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <ellipse cx="22" cy="60" rx="10" ry="18" fill="#58CC02" transform="rotate(-15 22 60)"/>
-        <ellipse cx="98" cy="60" rx="10" ry="18" fill="#58CC02" transform="rotate(15 98 60)"/>
-        <circle cx="34" cy="78" r="6" fill="#FF9600" opacity="0.5"/>
-        <circle cx="86" cy="78" r="6" fill="#FF9600" opacity="0.5"/>
-        <path d="M 50 30 Q 55 20 60 28" stroke="#58CC02" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M 70 30 Q 65 20 60 28" stroke="#58CC02" stroke-width="3" fill="none" stroke-linecap="round"/>
-      </svg>
+  <!-- AUTH -->
+  <div class="screen active" id="auth">
+    <div class="auth-box">
+      <div class="auth-mascot" id="authMascot"></div>
+      <div class="auth-title">Danfrolat</div>
+      <div class="auth-sub">Your progress, everywhere.</div>
+      <div class="auth-tabs">
+        <div class="auth-tab active" data-tab="login">Log In</div>
+        <div class="auth-tab" data-tab="register">Sign Up</div>
+      </div>
+      <form class="auth-form" id="authForm" autocomplete="off">
+        <input type="text" class="auth-input" id="authUser" placeholder="Username" autocomplete="username" required>
+        <input type="password" class="auth-input" id="authPass" placeholder="Password" autocomplete="current-password" required>
+        <div class="auth-error" id="authError"></div>
+        <button type="submit" class="auth-btn" id="authSubmit">Log In</button>
+      </form>
     </div>
-    <div class="ob-title">Danfrolat</div>
+  </div>
+
+  <!-- ONBOARDING -->
+  <div class="screen" id="onboarding">
+    <div class="ob-mascot" id="obMascot"></div>
+    <div class="ob-title">Welcome!</div>
     <div class="ob-sub" id="ob-sub">Learn the magical Danfrolat language!</div>
     <div class="ob-label" id="ob-label">I speak...</div>
     <div class="lang-options">
@@ -1032,6 +1158,7 @@
     <button class="btn btn-green" id="startBtn" disabled>Start Learning</button>
   </div>
 
+  <!-- HOME -->
   <div class="screen" id="home">
     <div class="top-bar">
       <div class="flag-btn" id="flagBtn">🇬🇧</div>
@@ -1048,11 +1175,16 @@
           <span class="stat-icon">❤️</span>
           <span id="heartVal">5</span>
         </div>
+        <div class="user-chip" id="userChip">
+          <div class="user-avatar" id="userAvatar">U</div>
+          <span id="userName">User</span>
+        </div>
       </div>
     </div>
     <div class="units-wrap" id="unitsWrap"></div>
   </div>
 
+  <!-- LESSON -->
   <div class="screen" id="lesson">
     <div class="lesson-top">
       <button class="close-btn" id="closeLesson">✕</button>
@@ -1074,6 +1206,7 @@
     </div>
   </div>
 
+  <!-- COMPLETE -->
   <div class="screen" id="complete">
     <div class="complete-icon">🎉</div>
     <div class="complete-title" id="completeTitle">Lesson Complete!</div>
@@ -1098,20 +1231,26 @@
     <button class="btn btn-green" id="continueBtn">Continue</button>
   </div>
 
+  <!-- GAME OVER -->
   <div class="screen" id="gameover">
-    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:30px; text-align:center;">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:24px; text-align:center;">
       <div class="gameover-icon">💔</div>
       <div class="complete-title" style="color:var(--red);">Out of Hearts!</div>
       <div class="complete-sub">You ran out of hearts. Refill them to keep learning!</div>
-      <button class="btn btn-red" id="refillBtn" style="margin-top:20px;">Refill Hearts (💎 50)</button>
-      <button class="btn btn-white" id="goHomeBtn" style="margin-top:12px;">Go Home</button>
+      <button class="btn btn-red" id="refillBtn" style="margin-top:16px;">Refill Hearts (💎 50)</button>
+      <button class="btn btn-white" id="goHomeBtn" style="margin-top:10px;">Go Home</button>
     </div>
   </div>
 
+  <!-- SETTINGS -->
   <div class="modal-bg" id="settingsModal">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
       <div class="modal-title">Settings</div>
+      <div class="setting-row">
+        <div class="setting-label">Account</div>
+        <div class="setting-value" id="accountDisplay" style="cursor:default;">user</div>
+      </div>
       <div class="setting-row">
         <div class="setting-label">My Language</div>
         <div class="setting-value" id="langDisplay">English</div>
@@ -1128,17 +1267,18 @@
         <div class="setting-label">Total XP</div>
         <div class="setting-value" id="xpDisplay" style="cursor:default;">0</div>
       </div>
-      <button class="danger-btn" id="resetBtn">Reset Progress</button>
-      <button class="btn btn-white" style="width:100%; margin-top:10px;" id="closeSettings">Close</button>
+      <button class="danger-btn" id="logoutBtn">Log Out</button>
+      <button class="btn btn-white" style="width:100%; margin-top:8px;" id="closeSettings">Close</button>
     </div>
   </div>
 
+  <!-- VOICE MODAL -->
   <div class="modal-bg" id="voiceModal">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
       <div class="modal-title">Select Voice</div>
       <div id="voiceList"></div>
-      <button class="btn btn-white" style="width:100%; margin-top:10px;" id="closeVoiceModal">Close</button>
+      <button class="btn btn-white" style="width:100%; margin-top:8px;" id="closeVoiceModal">Close</button>
     </div>
   </div>
 
@@ -1291,209 +1431,74 @@ const VOCAB = {
   ]}
 };
 
-// ============ PHONETIC PRONUNCIATION MAP ============
-// Converts Danfrolat words to phonetic approximations for natural TTS
+// ============ PHONETIC MAP ============
 const PHONETIC_MAP = {
-  // Common patterns
-  'bonhallo': 'bon-HAHL-lo',
-  'bonmora': 'bon-MO-ra',
-  'bonnocta': 'bon-NOCK-ta',
-  'adevara': 'ah-day-VAH-ra',
-  'familora': 'fah-MEE-lo-ra',
-  'madora': 'mah-DO-ra',
-  'padora': 'pah-DO-ra',
-  'sorina': 'so-REE-na',
-  'fratero': 'fra-TEH-ro',
-  'infanto': 'een-FAHN-to',
-  'humano': 'hoo-MAH-no',
-  'amivenn': 'ah-mee-VEN',
-  'grandmora': 'grahnd-MO-ra',
-  'grandpador': 'grahnd-PAH-dor',
-  'femina': 'FEH-mee-na',
-  'homaro': 'ho-MAH-ro',
-  'puella': 'poo-EH-la',
-  'garçono': 'gar-SO-no',
-  'bebina': 'beh-BEE-na',
-  'persona': 'per-SO-na',
-  'amorliv': 'ah-MOR-liv',
-  'joyara': 'joy-AH-ra',
-  'dolora': 'do-LO-ra',
-  'felicia': 'feh-LEE-sha',
-  'amistara': 'ah-mee-STAH-ra',
-  'saudora': 'sow-DO-ra',
-  'somnara': 'som-NAH-ra',
-  'espera': 'es-PE-ra',
-  'timora': 'tee-MO-ra',
-  'sorrisa': 'so-REE-sa',
-  'besora': 'beh-SO-ra',
-  'cordehjert': 'kor-deh-YERT',
-  'iraora': 'ee-rah-O-ra',
-  'calmina': 'kal-MEE-na',
-  'joyeux': 'joy-UH',
-  'tristora': 'tree-STO-ra',
-  'corajosa': 'ko-rah-HO-sa',
-  'fierté': 'fee-er-TAY',
-  'solitara': 'so-lee-TAH-ra',
-  'amorella': 'ah-mo-REH-la',
-  'maré': 'mah-RAY',
-  'aqua': 'AH-kwa',
-  'fuego': 'FWEH-go',
-  'terra': 'TEH-ra',
-  'cielum': 'SEE-lum',
-  'estrela': 'eh-STREH-la',
-  'florina': 'flo-REE-na',
-  'arbor': 'AR-bor',
-  'silvara': 'seel-VAH-ra',
-  'montara': 'mon-TAH-ra',
-  'ventora': 'ven-TOR-a',
-  'pluvia': 'PLOO-vee-a',
-  'nivora': 'nee-VO-ra',
-  'solaria': 'so-LAH-ree-a',
-  'lunalux': 'LOO-na-luks',
-  'plajara': 'plah-HAH-ra',
-  'rivora': 'ree-VO-ra',
-  'lakora': 'lah-KO-ra',
-  'herbina': 'her-BEE-na',
-  'nubela': 'noo-BEH-la',
-  'domora': 'do-MO-ra',
-  'camara': 'kah-MAH-ra',
-  'lectora': 'lek-TO-ra',
-  'sedora': 'seh-DO-ra',
-  'tabora': 'tah-BO-ra',
-  'portara': 'por-TAH-ra',
-  'fenestra': 'feh-NEH-strah',
-  'cozinara': 'ko-zee-NAH-ra',
-  'alimenta': 'ah-lee-MEN-ta',
-  'panora': 'pah-NO-ra',
-  'lacté': 'lak-TAY',
-  'pomara': 'po-MAH-ra',
-  'cafora': 'kah-FO-ra',
-  'libera': 'LEE-beh-ra',
-  'musica': 'MOO-zee-ka',
-  'telefoné': 'teh-leh-fo-NAY',
-  'computara': 'kom-poo-TAH-ra',
-  'clavora': 'klah-VO-ra',
-  'vestara': 'ves-TAH-ra',
-  'sapata': 'sah-PAH-ta',
-  'rubina': 'roo-BEE-na',
-  'azula': 'ah-ZOO-la',
-  'verdora': 'ver-DO-ra',
-  'amarela': 'ah-mah-REH-la',
-  'nigrum': 'NYE-grum',
-  'albina': 'al-BEE-na',
-  'rosalia': 'ro-SAH-lee-a',
-  'violara': 'vee-oh-LAH-ra',
-  'aurum': 'AW-rum',
-  'argenta': 'ar-JEN-ta',
-  'oranja': 'oh-RAHN-ya',
-  'brunora': 'broo-NO-ra',
-  'grisia': 'GREE-see-a',
-  'bellskøn': 'bel-SKUN',
-  'grandora': 'grahn-DO-ra',
-  'minora': 'mee-NO-ra',
-  'rapida': 'rah-PEE-da',
-  'lentora': 'len-TO-ra',
-  'calora': 'kah-LO-ra',
-  'frigora': 'free-GO-ra',
-  'diara': 'dee-AH-ra',
-  'noctara': 'noc-TAH-ra',
-  'matina': 'mah-TEE-na',
-  'vespara': 'ves-PAH-ra',
-  'hodiera': 'ho-DYEH-ra',
-  'amanora': 'ah-mah-NO-ra',
-  'heriora': 'heh-REE-or-a',
-  'tempora': 'TEM-po-ra',
-  'nuncé': 'noon-SAY',
-  'sempre': 'SEM-preh',
-  'nuncquam': 'NOON-kwam',
-  'semanara': 'seh-mah-NAH-ra',
-  'mensora': 'men-SO-ra',
-  'annora': 'ah-NO-ra',
-  'horina': 'ho-REE-na',
-  'minuta': 'mee-NOO-ta',
-  'seconda': 'seh-KON-da',
-  'antera': 'ahn-TE-ra',
-  'postara': 'pos-TAH-ra',
-  'proxima': 'PROK-see-ma',
-  'mio': 'MEE-o',
-  'tua': 'TOO-ah',
-  'elo': 'EH-lo',
-  'ela': 'EH-la',
-  'nos': 'nos',
-  'elar': 'EH-lar',
-  'mina': 'MEE-na',
-  'aqui': 'ah-KEE',
-  'alora': 'ah-LO-ra',
-  'oui': 'wee',
-  'non': 'non',
-  'merci tak': 'MER-see tahk',
-  'por favor': 'por fah-VOR',
-  'ubara': 'oo-BAH-ra',
-  'quisara': 'kee-SAH-ra',
-  'quora': 'KWO-ra',
-  'porqué': 'por-KAY',
-  'porque': 'por-KEH',
-  'talvez': 'tahl-VEZ',
-  'amora': 'ah-MO-ra',
-  'risora': 'ree-SO-ra',
-  'lacrima': 'lah-KREE-ma',
-  'mangera': 'mahn-JEH-ra',
-  'bibera': 'bee-BEH-ra',
-  'dormira': 'dor-MEE-ra',
-  'dansara': 'dahn-SAH-ra',
-  'cantora': 'kahn-TO-ra',
-  'currera': 'koo-REH-ra',
-  'ambular': 'am-boo-LAR',
-  'parlora': 'par-LO-ra',
-  'audira': 'ow-DEE-ra',
-  'vidora': 'vee-DO-ra',
-  'legora': 'leh-GO-ra',
-  'scriptora': 'skreep-TO-ra',
-  'ludora': 'loo-DO-ra',
-  'natara': 'nah-TAH-ra',
-  'volara': 'vo-LAH-ra',
-  'pensara': 'pen-SAH-ra',
-  'sorrira': 'so-REE-ra',
-  'magiora': 'mah-JO-ra',
-  'anima': 'AH-nee-ma',
-  'pacera': 'pah-SE-ra',
-  'libertara': 'lee-ber-TAH-ra',
-  'eternora': 'eh-ter-NO-ra',
-  'secretara': 'seh-kreh-TAH-ra',
-  'bellora': 'beh-LO-ra',
-  'universa': 'oo-nee-VER-sa',
-  'angelora': 'ahn-JEH-lo-ra',
-  'luxespera': 'luks-es-PE-ra',
-  'somniversa': 'som-nee-VER-sa',
-  'aventora': 'ah-ven-TO-ra',
-  'lun anima': 'loon AH-nee-ma',
-  'solcorda': 'sol-KOR-da',
-  'estrelpura': 'eh-strel-POO-ra',
-  'arcobella': 'ar-ko-BEH-la',
-  'lumina': 'LOO-mee-na',
-  'obscura': 'ob-SKOO-ra',
-  'miracula': 'mee-RAH-koo-la',
-  'enchantora': 'en-chan-TO-ra',
-  'scholarina': 'sko-lah-REE-na',
-  'magistera': 'mah-JEES-te-ra',
-  'amicora': 'ah-mee-KO-ra',
-  'aventurosa': 'ah-ven-too-RO-sa',
-  'matinara': 'mah-tee-NAH-ra',
-  'prandora': 'prahn-DO-ra',
-  'cenarina': 'seh-nah-REE-na',
-  'felina': 'feh-LEE-na',
-  'canora': 'kah-NO-ra',
-  'equina': 'eh-KWEE-na',
-  'aviora': 'ah-VEE-o-ra',
-  'estivara': 'es-tee-VAH-ra',
-  'inverna': 'een-VER-na',
-  'primavera': 'pree-mah-VE-ra',
-  'autumnara': 'aw-tum-NAH-ra',
-  'urbana': 'ur-BAH-na',
-  'paisora': 'pay-SO-ra',
-  'mundara': 'moon-DAH-ra',
-  'viatora': 'vee-ah-TO-ra',
-  'domina': 'do-MEE-na'
+  'bonhallo': 'bon-HAHL-lo', 'bonmora': 'bon-MO-ra', 'bonnocta': 'bon-NOCK-ta',
+  'adevara': 'ah-day-VAH-ra', 'familora': 'fah-MEE-lo-ra', 'madora': 'mah-DO-ra',
+  'padora': 'pah-DO-ra', 'sorina': 'so-REE-na', 'fratero': 'fra-TEH-ro',
+  'infanto': 'een-FAHN-to', 'humano': 'hoo-MAH-no', 'amivenn': 'ah-mee-VEN',
+  'grandmora': 'grahnd-MO-ra', 'grandpador': 'grahnd-PAH-dor', 'femina': 'FEH-mee-na',
+  'homaro': 'ho-MAH-ro', 'puella': 'poo-EH-la', 'garçono': 'gar-SO-no',
+  'bebina': 'beh-BEE-na', 'persona': 'per-SO-na', 'amorliv': 'ah-MOR-liv',
+  'joyara': 'joy-AH-ra', 'dolora': 'do-LO-ra', 'felicia': 'feh-LEE-sha',
+  'amistara': 'ah-mee-STAH-ra', 'saudora': 'sow-DO-ra', 'somnara': 'som-NAH-ra',
+  'espera': 'es-PE-ra', 'timora': 'tee-MO-ra', 'sorrisa': 'so-REE-sa',
+  'besora': 'beh-SO-ra', 'cordehjert': 'kor-deh-YERT', 'iraora': 'ee-rah-O-ra',
+  'calmina': 'kal-MEE-na', 'joyeux': 'joy-UH', 'tristora': 'tree-STO-ra',
+  'corajosa': 'ko-rah-HO-sa', 'fierté': 'fee-er-TAY', 'solitara': 'so-lee-TAH-ra',
+  'amorella': 'ah-mo-REH-la', 'maré': 'mah-RAY', 'aqua': 'AH-kwa',
+  'fuego': 'FWEH-go', 'terra': 'TEH-ra', 'cielum': 'SEE-lum',
+  'estrela': 'eh-STREH-la', 'florina': 'flo-REE-na', 'arbor': 'AR-bor',
+  'silvara': 'seel-VAH-ra', 'montara': 'mon-TAH-ra', 'ventora': 'ven-TOR-a',
+  'pluvia': 'PLOO-vee-a', 'nivora': 'nee-VO-ra', 'solaria': 'so-LAH-ree-a',
+  'lunalux': 'LOO-na-luks', 'plajara': 'plah-HAH-ra', 'rivora': 'ree-VO-ra',
+  'lakora': 'lah-KO-ra', 'herbina': 'her-BEE-na', 'nubela': 'noo-BEH-la',
+  'domora': 'do-MO-ra', 'camara': 'kah-MAH-ra', 'lectora': 'lek-TO-ra',
+  'sedora': 'seh-DO-ra', 'tabora': 'tah-BO-ra', 'portara': 'por-TAH-ra',
+  'fenestra': 'feh-NEH-strah', 'cozinara': 'ko-zee-NAH-ra', 'alimenta': 'ah-lee-MEN-ta',
+  'panora': 'pah-NO-ra', 'lacté': 'lak-TAY', 'pomara': 'po-MAH-ra',
+  'cafora': 'kah-FO-ra', 'libera': 'LEE-beh-ra', 'musica': 'MOO-zee-ka',
+  'telefoné': 'teh-leh-fo-NAY', 'computara': 'kom-poo-TAH-ra', 'clavora': 'klah-VO-ra',
+  'vestara': 'ves-TAH-ra', 'sapata': 'sah-PAH-ta', 'rubina': 'roo-BEE-na',
+  'azula': 'ah-ZOO-la', 'verdora': 'ver-DO-ra', 'amarela': 'ah-mah-REH-la',
+  'nigrum': 'NYE-grum', 'albina': 'al-BEE-na', 'rosalia': 'ro-SAH-lee-a',
+  'violara': 'vee-oh-LAH-ra', 'aurum': 'AW-rum', 'argenta': 'ar-JEN-ta',
+  'oranja': 'oh-RAHN-ya', 'brunora': 'broo-NO-ra', 'grisia': 'GREE-see-a',
+  'bellskøn': 'bel-SKUN', 'grandora': 'grahn-DO-ra', 'minora': 'mee-NO-ra',
+  'rapida': 'rah-PEE-da', 'lentora': 'len-TO-ra', 'calora': 'kah-LO-ra',
+  'frigora': 'free-GO-ra', 'diara': 'dee-AH-ra', 'noctara': 'noc-TAH-ra',
+  'matina': 'mah-TEE-na', 'vespara': 'ves-PAH-ra', 'hodiera': 'ho-DYEH-ra',
+  'amanora': 'ah-mah-NO-ra', 'heriora': 'heh-REE-or-a', 'tempora': 'TEM-po-ra',
+  'nuncé': 'noon-SAY', 'sempre': 'SEM-preh', 'nuncquam': 'NOON-kwam',
+  'semanara': 'seh-mah-NAH-ra', 'mensora': 'men-SO-ra', 'annora': 'ah-NO-ra',
+  'horina': 'ho-REE-na', 'minuta': 'mee-NOO-ta', 'seconda': 'seh-KON-da',
+  'antera': 'ahn-TE-ra', 'postara': 'pos-TAH-ra', 'proxima': 'PROK-see-ma',
+  'mio': 'MEE-o', 'tua': 'TOO-ah', 'elo': 'EH-lo', 'ela': 'EH-la',
+  'nos': 'nos', 'elar': 'EH-lar', 'mina': 'MEE-na', 'aqui': 'ah-KEE',
+  'alora': 'ah-LO-ra', 'oui': 'wee', 'non': 'non',
+  'merci tak': 'MER-see tahk', 'por favor': 'por fah-VOR', 'ubara': 'oo-BAH-ra',
+  'quisara': 'kee-SAH-ra', 'quora': 'KWO-ra', 'porqué': 'por-KAY',
+  'porque': 'por-KEH', 'talvez': 'tahl-VEZ', 'amora': 'ah-MO-ra',
+  'risora': 'ree-SO-ra', 'lacrima': 'lah-KREE-ma', 'mangera': 'mahn-JEH-ra',
+  'bibera': 'bee-BEH-ra', 'dormira': 'dor-MEE-ra', 'dansara': 'dahn-SAH-ra',
+  'cantora': 'kahn-TO-ra', 'currera': 'koo-REH-ra', 'ambular': 'am-boo-LAR',
+  'parlora': 'par-LO-ra', 'audira': 'ow-DEE-ra', 'vidora': 'vee-DO-ra',
+  'legora': 'leh-GO-ra', 'scriptora': 'skreep-TO-ra', 'ludora': 'loo-DO-ra',
+  'natara': 'nah-TAH-ra', 'volara': 'vo-LAH-ra', 'pensara': 'pen-SAH-ra',
+  'sorrira': 'so-REE-ra', 'magiora': 'mah-JO-ra', 'anima': 'AH-nee-ma',
+  'pacera': 'pah-SE-ra', 'libertara': 'lee-ber-TAH-ra', 'eternora': 'eh-ter-NO-ra',
+  'secretara': 'seh-kreh-TAH-ra', 'bellora': 'beh-LO-ra', 'universa': 'oo-nee-VER-sa',
+  'angelora': 'ahn-JEH-lo-ra', 'luxespera': 'luks-es-PE-ra', 'somniversa': 'som-nee-VER-sa',
+  'aventora': 'ah-ven-TO-ra', 'lun anima': 'loon AH-nee-ma', 'solcorda': 'sol-KOR-da',
+  'estrelpura': 'eh-strel-POO-ra', 'arcobella': 'ar-ko-BEH-la', 'lumina': 'LOO-mee-na',
+  'obscura': 'ob-SKOO-ra', 'miracula': 'mee-RAH-koo-la', 'enchantora': 'en-chan-TO-ra',
+  'scholarina': 'sko-lah-REE-na', 'magistera': 'mah-JEES-te-ra', 'amicora': 'ah-mee-KO-ra',
+  'aventurosa': 'ah-ven-too-RO-sa', 'matinara': 'mah-tee-NAH-ra', 'prandora': 'prahn-DO-ra',
+  'cenarina': 'seh-nah-REE-na', 'felina': 'feh-LEE-na', 'canora': 'kah-NO-ra',
+  'equina': 'eh-KWEE-na', 'aviora': 'ah-VEE-o-ra', 'estivara': 'es-tee-VAH-ra',
+  'inverna': 'een-VER-na', 'primavera': 'pree-mah-VE-ra', 'autumnara': 'aw-tum-NAH-ra',
+  'urbana': 'ur-BAH-na', 'paisora': 'pay-SO-ra', 'mundara': 'moon-DAH-ra',
+  'viatora': 'vee-ah-TO-ra', 'domina': 'do-MEE-na'
 };
 
 const UI_TEXT = {
@@ -1522,23 +1527,20 @@ const UI_TEXT = {
     goHome: "Go Home",
     settings: "Settings",
     myLang: "My Language",
-    learning: "Learning",
     totalXP: "Total XP",
     reset: "Reset Progress",
     close: "Close",
     listen: "🔊 Listen",
-    hint: "💡 Hint",
     refillDone: "Hearts refilled!",
-    mascotWelcome: "Hi! I'm Frolo! Let's learn!",
+    mascotWelcome: "Hi! I'm Frolo!",
     mascotGoodJob: "Amazing! You're a star!",
     mascotKeepGoing: "Keep going!",
     mascotOops: "Oops! Try again!",
-    mascotIntro: "Let's learn these words first!",
+    mascotIntro: "Let's learn these words!",
     selectVoice: "Select",
     normal: "Normal",
     slow: "Slow",
     fast: "Fast",
-    speed: "Speed",
     newWords: "New words!",
     letsPractice: "Let's practice!"
   },
@@ -1567,27 +1569,73 @@ const UI_TEXT = {
     goHome: "Gå hjem",
     settings: "Indstillinger",
     myLang: "Mit sprog",
-    learning: "Læring",
     totalXP: "Total XP",
     reset: "Nulstil",
     close: "Luk",
     listen: "🔊 Lyt",
-    hint: "💡 Tip",
     refillDone: "Hjerter fyldt!",
-    mascotWelcome: "Hej! Jeg er Frolo! Lad os lære!",
-    mascotGoodJob: "Fantastisk! Du er en stjerne!",
+    mascotWelcome: "Hej! Jeg er Frolo!",
+    mascotGoodJob: "Fantastisk!",
     mascotKeepGoing: "Bliv ved!",
     mascotOops: "Ups! Prøv igen!",
-    mascotIntro: "Lad os lære disse ord først!",
+    mascotIntro: "Lad os lære disse ord!",
     selectVoice: "Vælg",
     normal: "Normal",
     slow: "Langsom",
     fast: "Hurtig",
-    speed: "Hastighed",
     newWords: "Nye ord!",
     letsPractice: "Lad os øve!"
   }
 };
+
+// ============ BROWN OWL MASCOT SVG ============
+function mascotSVG(size = 110) {
+  return `<svg viewBox="0 0 120 120" width="${size}" height="${size}">
+    <!-- Body -->
+    <ellipse cx="60" cy="72" rx="42" ry="44" fill="#A0522D"/>
+    <ellipse cx="60" cy="74" rx="36" ry="38" fill="#CD853F"/>
+    <!-- Belly -->
+    <ellipse cx="60" cy="88" rx="22" ry="18" fill="#DEB887"/>
+    <!-- Belly pattern -->
+    <path d="M 48 82 Q 60 78 72 82" stroke="#A0522D" stroke-width="1.5" fill="none" opacity="0.5"/>
+    <path d="M 46 88 Q 60 84 74 88" stroke="#A0522D" stroke-width="1.5" fill="none" opacity="0.5"/>
+    <path d="M 48 94 Q 60 90 72 94" stroke="#A0522D" stroke-width="1.5" fill="none" opacity="0.5"/>
+    <!-- Head tufts -->
+    <path d="M 38 38 L 32 24 L 44 34 Z" fill="#6B3410"/>
+    <path d="M 82 38 L 88 24 L 76 34 Z" fill="#6B3410"/>
+    <path d="M 40 36 L 36 28 L 44 34 Z" fill="#A0522D"/>
+    <path d="M 80 36 L 84 28 L 76 34 Z" fill="#A0522D"/>
+    <!-- Eye sockets -->
+    <circle cx="44" cy="56" r="15" fill="#DEB887"/>
+    <circle cx="76" cy="56" r="15" fill="#DEB887"/>
+    <!-- Eyes white -->
+    <circle cx="44" cy="56" r="12" fill="white"/>
+    <circle cx="76" cy="56" r="12" fill="white"/>
+    <!-- Pupils -->
+    <circle cx="46" cy="58" r="6" fill="#1a1a1a"/>
+    <circle cx="78" cy="58" r="6" fill="#1a1a1a"/>
+    <!-- Eye shine -->
+    <circle cx="48" cy="56" r="2" fill="white"/>
+    <circle cx="80" cy="56" r="2" fill="white"/>
+    <!-- Beak -->
+    <path d="M 53 70 L 60 78 L 67 70 Z" fill="#FF8C00"/>
+    <path d="M 55 70 L 60 75 L 65 70 Z" fill="#FFA500"/>
+    <!-- Smile -->
+    <path d="M 52 82 Q 60 87 68 82" stroke="#6B3410" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- Wings -->
+    <ellipse cx="20" cy="70" rx="10" ry="20" fill="#8B4513" transform="rotate(-15 20 70)"/>
+    <ellipse cx="100" cy="70" rx="10" ry="20" fill="#8B4513" transform="rotate(15 100 70)"/>
+    <!-- Wing details -->
+    <path d="M 16 65 Q 20 70 16 75" stroke="#6B3410" stroke-width="1.5" fill="none"/>
+    <path d="M 104 65 Q 100 70 104 75" stroke="#6B3410" stroke-width="1.5" fill="none"/>
+    <!-- Cheeks -->
+    <circle cx="32" cy="72" r="5" fill="#FF9600" opacity="0.4"/>
+    <circle cx="88" cy="72" r="5" fill="#FF9600" opacity="0.4"/>
+    <!-- Feet -->
+    <ellipse cx="50" cy="112" rx="8" ry="4" fill="#FF8C00"/>
+    <ellipse cx="70" cy="112" rx="8" ry="4" fill="#FF8C00"/>
+  </svg>`;
+}
 
 // ============ TTS ENGINE ============
 class NaturalTTS {
@@ -1612,17 +1660,24 @@ class NaturalTTS {
   }
 
   sortVoices() {
-    // Prioritize natural/premium voices
     const premiumKeywords = ['natural', 'enhanced', 'premium', 'google', 'microsoft', 
                             'samantha', 'daniel', 'karen', 'moira', 'tessa', 'fiona',
                             'serena', 'oliver', 'ava', 'allison', 'nick', 'alex',
-                            'neural', 'wavenet', 'studio'];
+                            'neural', 'wavenet', 'studio', 'zira', 'hazel', 'david',
+                            'mark', 'markus', 'anna', 'alice', 'paulina'];
     this.voices.sort((a, b) => {
       const aName = a.name.toLowerCase();
       const bName = b.name.toLowerCase();
       const aPremium = premiumKeywords.some(k => aName.includes(k)) ? 1 : 0;
       const bPremium = premiumKeywords.some(k => bName.includes(k)) ? 1 : 0;
       if (aPremium !== bPremium) return bPremium - aPremium;
+      // Prefer female voices (often sound more natural)
+      const femaleKeywords = ['samantha', 'karen', 'moira', 'tessa', 'fiona', 'serena', 
+                             'ava', 'allison', 'zira', 'hazel', 'anna', 'alice', 'paulina',
+                             'victoria', 'susan', 'kate', 'veena', 'sangeeta'];
+      const aFemale = femaleKeywords.some(k => aName.includes(k)) ? 1 : 0;
+      const bFemale = femaleKeywords.some(k => bName.includes(k)) ? 1 : 0;
+      if (aFemale !== bFemale) return bFemale - aFemale;
       return a.name.localeCompare(b.name);
     });
   }
@@ -1642,22 +1697,16 @@ class NaturalTTS {
     return this.voices[0] || null;
   }
 
-  // Convert Danfrolat to phonetic English for natural pronunciation
   toPhonetic(text) {
     const words = text.toLowerCase().split(/\s+/);
     return words.map(w => {
-      // Remove punctuation for lookup
       const clean = w.replace(/[.,!?]/g, '');
-      if (PHONETIC_MAP[clean]) {
-        return PHONETIC_MAP[clean];
-      }
-      // Fallback: apply basic rules
+      if (PHONETIC_MAP[clean]) return PHONETIC_MAP[clean];
       return this.applyRules(clean);
     }).join(' ');
   }
 
   applyRules(word) {
-    // Basic phonetic rules for Danfrolat
     let result = word;
     result = result.replace(/ora$/g, 'O-ra');
     result = result.replace(/ina$/g, 'EE-na');
@@ -1674,15 +1723,14 @@ class NaturalTTS {
     let speakText = text;
     let speakLang = lang;
 
-    // For Danfrolat, convert to phonetic and use English voice
     if (lang === 'df') {
       speakText = this.toPhonetic(text);
       speakLang = 'en';
     }
 
     const utter = new SpeechSynthesisUtterance(speakText);
-    utter.rate = this.rate * (lang === 'df' ? 0.95 : 1);
-    utter.pitch = lang === 'df' ? 1.05 : 1;
+    utter.rate = this.rate * (lang === 'df' ? 0.92 : 1);
+    utter.pitch = lang === 'df' ? 1.08 : 1;
     utter.volume = 1;
 
     const voice = this.getBestVoice(speakLang);
@@ -1707,7 +1755,7 @@ class NaturalTTS {
       }
       this.speak(items[idx], lang, () => {
         idx++;
-        setTimeout(next, 200);
+        setTimeout(next, 250);
       });
     };
     next();
@@ -1724,8 +1772,55 @@ class NaturalTTS {
 
 const tts = new NaturalTTS();
 
+// ============ ACCOUNT SYSTEM ============
+const ACCOUNTS_KEY = 'danfrolat_accounts_v4';
+const SESSION_KEY = 'danfrolat_session_v4';
+
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password + '_danfrolat_salt_2026');
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function getAccounts() {
+  try {
+    return JSON.parse(localStorage.getItem(ACCOUNTS_KEY) || '{}');
+  } catch { return {}; }
+}
+
+function saveAccounts(accounts) {
+  localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+}
+
+function getSession() {
+  return localStorage.getItem(SESSION_KEY);
+}
+
+function setSession(username) {
+  localStorage.setItem(SESSION_KEY, username);
+}
+
+function clearSession() {
+  localStorage.removeItem(SESSION_KEY);
+}
+
+function getUserData(username) {
+  const accounts = getAccounts();
+  return accounts[username]?.data || null;
+}
+
+function saveUserData(username, data) {
+  const accounts = getAccounts();
+  if (accounts[username]) {
+    accounts[username].data = data;
+    saveAccounts(accounts);
+  }
+}
+
 // ============ STATE ============
-const STATE_KEY = 'danfrolat_state_v3';
+let currentUser = null;
 let state = {
   lang: null,
   xp: 0,
@@ -1738,12 +1833,27 @@ let state = {
   speed: 'normal'
 };
 
-function saveState() { localStorage.setItem(STATE_KEY, JSON.stringify(state)); }
+function saveState() {
+  if (currentUser) saveUserData(currentUser, state);
+}
 
-function loadState() {
-  const saved = localStorage.getItem(STATE_KEY);
-  if (saved) { state = { ...state, ...JSON.parse(saved) }; return true; }
-  return false;
+function loadUserState(username) {
+  const data = getUserData(username);
+  if (data) {
+    state = { ...state, ...data };
+  } else {
+    state = {
+      lang: null,
+      xp: 0,
+      gems: 50,
+      hearts: 5,
+      streak: 0,
+      lastActive: null,
+      progress: {},
+      selectedVoiceName: null,
+      speed: 'normal'
+    };
+  }
 }
 
 function updateStreak() {
@@ -1815,7 +1925,6 @@ function canAccessUnit(unitId) {
 function getLessonsForUnit(unitId) {
   const unit = VOCAB[unitId];
   const lessons = [];
-  // Each lesson: 5 words + 2 sentences
   const words = unit.words;
   const sentences = unit.sentences;
   for (let i = 0; i < words.length; i += 5) {
@@ -1826,27 +1935,96 @@ function getLessonsForUnit(unitId) {
   return lessons;
 }
 
-// ============ MASCOT SVG ============
-function mascotSVG() {
-  return `<svg viewBox="0 0 120 120" width="110" height="110">
-    <ellipse cx="60" cy="70" rx="42" ry="45" fill="#58CC02"/>
-    <ellipse cx="60" cy="72" rx="36" ry="38" fill="#7ED321"/>
-    <ellipse cx="60" cy="85" rx="22" ry="18" fill="#D7FFB8"/>
-    <circle cx="44" cy="58" r="14" fill="white"/>
-    <circle cx="76" cy="58" r="14" fill="white"/>
-    <circle cx="46" cy="60" r="7" fill="#333"/>
-    <circle cx="78" cy="60" r="7" fill="#333"/>
-    <circle cx="48" cy="58" r="2.5" fill="white"/>
-    <circle cx="80" cy="58" r="2.5" fill="white"/>
-    <path d="M 52 74 L 60 80 L 68 74 Z" fill="#FFC800"/>
-    <path d="M 52 84 Q 60 90 68 84" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-    <ellipse cx="22" cy="60" rx="10" ry="18" fill="#58CC02" transform="rotate(-15 22 60)"/>
-    <ellipse cx="98" cy="60" rx="10" ry="18" fill="#58CC02" transform="rotate(15 98 60)"/>
-    <circle cx="34" cy="78" r="6" fill="#FF9600" opacity="0.5"/>
-    <circle cx="86" cy="78" r="6" fill="#FF9600" opacity="0.5"/>
-    <path d="M 50 30 Q 55 20 60 28" stroke="#58CC02" stroke-width="3" fill="none" stroke-linecap="round"/>
-    <path d="M 70 30 Q 65 20 60 28" stroke="#58CC02" stroke-width="3" fill="none" stroke-linecap="round"/>
-  </svg>`;
+// ============ AUTH ============
+let authMode = 'login';
+
+document.querySelectorAll('.auth-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    authMode = tab.dataset.tab;
+    $('authSubmit').textContent = authMode === 'login' ? 'Log In' : 'Sign Up';
+    $('authPass').setAttribute('autocomplete', authMode === 'login' ? 'current-password' : 'new-password');
+    $('authError').textContent = '';
+  });
+});
+
+$('authForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const username = $('authUser').value.trim().toLowerCase();
+  const password = $('authPass').value;
+  const errEl = $('authError');
+
+  if (username.length < 3) {
+    errEl.textContent = 'Username must be at least 3 characters';
+    return;
+  }
+  if (password.length < 4) {
+    errEl.textContent = 'Password must be at least 4 characters';
+    return;
+  }
+
+  const accounts = getAccounts();
+  const hash = await hashPassword(password);
+
+  if (authMode === 'register') {
+    if (accounts[username]) {
+      errEl.textContent = 'Username already exists';
+      return;
+    }
+    accounts[username] = {
+      passwordHash: hash,
+      createdAt: Date.now(),
+      data: {
+        lang: null,
+        xp: 0,
+        gems: 50,
+        hearts: 5,
+        streak: 0,
+        lastActive: null,
+        progress: {},
+        selectedVoiceName: null,
+        speed: 'normal'
+      }
+    };
+    saveAccounts(accounts);
+    setSession(username);
+    currentUser = username;
+    loadUserState(username);
+    showScreen('onboarding');
+  } else {
+    if (!accounts[username]) {
+      errEl.textContent = 'Account not found';
+      return;
+    }
+    if (accounts[username].passwordHash !== hash) {
+      errEl.textContent = 'Wrong password';
+      return;
+    }
+    setSession(username);
+    currentUser = username;
+    loadUserState(username);
+    if (state.lang) {
+      renderHome();
+      showScreen('home');
+    } else {
+      showScreen('onboarding');
+    }
+  }
+});
+
+function logout() {
+  tts.stop();
+  clearSession();
+  currentUser = null;
+  state = {
+    lang: null, xp: 0, gems: 50, hearts: 5, streak: 0,
+    lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal'
+  };
+  $('authUser').value = '';
+  $('authPass').value = '';
+  $('authError').textContent = '';
+  showScreen('auth');
 }
 
 // ============ ONBOARDING ============
@@ -1876,6 +2054,8 @@ function renderHome() {
   $('gemVal').textContent = state.gems;
   $('heartVal').textContent = state.hearts;
   $('flagBtn').textContent = state.lang === 'da' ? '🇩🇰' : '🇬🇧';
+  $('userName').textContent = currentUser;
+  $('userAvatar').textContent = currentUser.charAt(0).toUpperCase();
 
   const wrap = $('unitsWrap');
   wrap.innerHTML = '';
@@ -1936,7 +2116,6 @@ let steps = [];
 let correctCount = 0;
 let selectedAnswer = null;
 let feedbackShown = false;
-let hintShown = false;
 
 function startLesson(unitId, lessonIdx) {
   if (state.hearts <= 0) { showScreen('gameover'); return; }
@@ -1948,7 +2127,6 @@ function startLesson(unitId, lessonIdx) {
   correctCount = 0;
   selectedAnswer = null;
   feedbackShown = false;
-  hintShown = false;
 
   $('lessonHearts').textContent = state.hearts;
   showScreen('lesson');
@@ -1959,12 +2137,9 @@ function buildSteps(lesson) {
   const allWords = VOCAB[currentLesson.unitId].words;
   const stepsList = [];
 
-  // Step 1: Intro - show all words with TTS
   stepsList.push({ type: 'intro', words: lesson.words });
 
-  // Step 2-4: Word practice (MCQ, type, match)
   lesson.words.forEach((w, i) => {
-    // MCQ: translate source -> Danfrolat
     stepsList.push({
       type: 'mcq',
       prompt: getSourceWord(w),
@@ -1972,11 +2147,9 @@ function buildSteps(lesson) {
       correct: w.df,
       choices: shuffle([w.df, ...getDistractors(w, allWords, 3, 'df')]),
       speakText: w.df,
-      speakLang: 'df',
-      hint: `${getSourceWord(w)} = ${w.df}`
+      speakLang: 'df'
     });
 
-    // Type the Danfrolat
     if (i % 2 === 0) {
       stepsList.push({
         type: 'type',
@@ -1984,12 +2157,10 @@ function buildSteps(lesson) {
         promptLabel: t('writeIn'),
         correct: w.df,
         speakText: w.df,
-        speakLang: 'df',
-        hint: w.df
+        speakLang: 'df'
       });
     }
 
-    // Reverse: what does Danfrolat mean?
     if (i % 2 === 1) {
       stepsList.push({
         type: 'mcq',
@@ -1998,13 +2169,11 @@ function buildSteps(lesson) {
         correct: getSourceWord(w),
         choices: shuffle([getSourceWord(w), ...getDistractors(w, allWords, 3, state.lang)]),
         speakText: w.df,
-        speakLang: 'df',
-        hint: `${w.df} = ${getSourceWord(w)}`
+        speakLang: 'df'
       });
     }
   });
 
-  // Sentence practice
   lesson.sentences.forEach(s => {
     stepsList.push({
       type: 'bank',
@@ -2013,8 +2182,7 @@ function buildSteps(lesson) {
       correct: s.df,
       words: shuffle(s.df.split(' ').concat(getSentenceDistractors(s.df, allWords))),
       speakText: s.df,
-      speakLang: 'df',
-      hint: s.df
+      speakLang: 'df'
     });
   });
 
@@ -2044,19 +2212,18 @@ function renderStep() {
   $('footerBtn').textContent = t('check');
   $('footerBtn').className = 'footer-btn check';
   $('footerBtn').disabled = true;
+  $('footerBtn').onclick = null;
   selectedAnswer = null;
   feedbackShown = false;
-  hintShown = false;
 
   const body = $('lessonBody');
   body.innerHTML = '';
   body.scrollTop = 0;
 
-  // Mascot
   const mascotWrap = document.createElement('div');
   mascotWrap.className = 'mascot-wrap';
   mascotWrap.innerHTML = `
-    <div class="mascot" id="lessonMascot">${mascotSVG()}</div>
+    <div class="mascot" id="lessonMascot">${mascotSVG(70)}</div>
     <div class="bubble" id="speechBubble">${getMascotMessage(step)}</div>
   `;
   body.appendChild(mascotWrap);
@@ -2066,19 +2233,16 @@ function renderStep() {
     return;
   }
 
-  // Question type label
   const typeLabel = document.createElement('div');
   typeLabel.className = 'q-type';
   typeLabel.textContent = step.promptLabel;
   body.appendChild(typeLabel);
 
-  // Prompt
   const prompt = document.createElement('div');
   prompt.className = 'q-prompt';
   prompt.textContent = step.prompt;
   body.appendChild(prompt);
 
-  // Speaker
   if (step.speakText) {
     const speaker = document.createElement('div');
     speaker.className = 'speaker-btn';
@@ -2093,39 +2257,22 @@ function renderStep() {
       });
       setTimeout(() => {
         speaker.classList.remove('playing');
-        if (mascot) mascot.classList.remove('talking');
-      }, 2000);
+        const m = $('lessonMascot');
+        if (m) m.classList.remove('talking');
+      }, 2500);
     });
     body.appendChild(speaker);
 
-    // Auto-play
     setTimeout(() => {
       const mascot = $('lessonMascot');
       if (mascot) mascot.classList.add('talking');
       tts.speak(step.speakText, step.speakLang, () => {
-        if (mascot) mascot.classList.remove('talking');
+        const m = $('lessonMascot');
+        if (m) m.classList.remove('talking');
       });
     }, 400);
   }
 
-  // Hint button
-  if (step.hint) {
-    const hintBtn = document.createElement('div');
-    hintBtn.className = 'hint-btn';
-    hintBtn.innerHTML = t('hint');
-    hintBtn.addEventListener('click', () => {
-      if (hintShown) return;
-      hintShown = true;
-      const hintText = document.createElement('div');
-      hintText.className = 'hint-text';
-      hintText.textContent = step.hint;
-      hintBtn.after(hintText);
-      hintBtn.style.opacity = '0.5';
-    });
-    body.appendChild(hintBtn);
-  }
-
-  // Render based on type
   if (step.type === 'mcq') {
     const choices = document.createElement('div');
     choices.className = 'choices';
@@ -2209,12 +2356,13 @@ function renderIntro(step, body) {
   step.words.forEach((w, i) => {
     const card = document.createElement('div');
     card.className = 'intro-word-card';
-    card.style.animationDelay = (i * 0.1) + 's';
-    const phonetic = tts.toPhonetic(w.df);
+    card.style.animationDelay = (i * 0.08) + 's';
     card.innerHTML = `
-      <div class="intro-df">${w.df}</div>
-      <div class="intro-phonetic">${phonetic}</div>
-      <div class="intro-src">${getSourceWord(w)}</div>
+      <div class="intro-icon">🔊</div>
+      <div class="intro-text">
+        <div class="intro-df">${w.df}</div>
+        <div class="intro-src">${getSourceWord(w)}</div>
+      </div>
     `;
     card.addEventListener('click', () => {
       const mascot = $('lessonMascot');
@@ -2226,17 +2374,16 @@ function renderIntro(step, body) {
     body.appendChild(card);
   });
 
-  // Auto-play sequence
   setTimeout(() => {
     const words = step.words.map(w => w.df);
     const mascot = $('lessonMascot');
     if (mascot) mascot.classList.add('talking');
     tts.speakSequence(words, 'df', () => {
-      if (mascot) mascot.classList.remove('talking');
+      const m = $('lessonMascot');
+      if (m) m.classList.remove('talking');
     });
   }, 500);
 
-  // Enable continue
   $('footerBtn').disabled = false;
   $('footerBtn').textContent = t('continue');
   $('footerBtn').onclick = () => {
@@ -2399,6 +2546,7 @@ $('goHomeBtn').addEventListener('click', () => {
 
 // ============ SETTINGS ============
 $('flagBtn').addEventListener('click', () => {
+  $('accountDisplay').textContent = currentUser;
   $('langDisplay').textContent = state.lang === 'da' ? 'Dansk' : 'English';
   $('xpDisplay').textContent = state.xp;
   const speedLabel = state.speed === 'slow' ? t('slow') : state.speed === 'fast' ? t('fast') : t('normal');
@@ -2449,7 +2597,7 @@ function renderVoiceList() {
     item.innerHTML = `
       <div>
         <div style="font-weight:700;">${voice.name}</div>
-        <div style="font-size:12px; color:#777;">${voice.lang}</div>
+        <div style="font-size:11px; color:#777;">${voice.lang}</div>
       </div>
       ${badge}
     `;
@@ -2476,32 +2624,48 @@ $('voiceModal').addEventListener('click', (e) => {
   if (e.target === $('voiceModal')) $('voiceModal').classList.remove('show');
 });
 
-$('resetBtn').addEventListener('click', () => {
-  if (confirm('Reset all progress?')) {
-    localStorage.removeItem(STATE_KEY);
-    location.reload();
-  }
+$('logoutBtn').addEventListener('click', () => {
+  if (confirm('Log out?')) logout();
 });
 
 // ============ INIT ============
-if (loadState() && state.lang) {
-  if (state.selectedVoiceName) {
-    const v = tts.getAllVoices().find(v => v.name === state.selectedVoiceName);
-    if (v) {
-      tts.setVoice(v);
-      $('voiceDisplay').textContent = v.name.split(' ')[0];
+$('authMascot').innerHTML = mascotSVG(110);
+$('obMascot').innerHTML = mascotSVG(110);
+
+const session = getSession();
+if (session) {
+  const accounts = getAccounts();
+  if (accounts[session]) {
+    currentUser = session;
+    loadUserState(session);
+    if (state.lang) {
+      renderHome();
+      showScreen('home');
+    } else {
+      showScreen('onboarding');
     }
+    // Apply saved voice
+    if (state.selectedVoiceName) {
+      setTimeout(() => {
+        const v = tts.getAllVoices().find(v => v.name === state.selectedVoiceName);
+        if (v) {
+          tts.setVoice(v);
+          $('voiceDisplay').textContent = v.name.split(' ')[0];
+        }
+      }, 500);
+    }
+    const rateMap = { slow: 0.7, normal: 0.9, fast: 1.1 };
+    tts.setRate(rateMap[state.speed] || 0.9);
+  } else {
+    clearSession();
+    showScreen('auth');
   }
-  const rateMap = { slow: 0.7, normal: 0.9, fast: 1.1 };
-  tts.setRate(rateMap[state.speed] || 0.9);
-  renderHome();
-  showScreen('home');
 } else {
-  showScreen('onboarding');
+  showScreen('auth');
 }
 
 setInterval(() => {
-  if (state.hearts < 5) {
+  if (currentUser && state.hearts < 5) {
     state.hearts = Math.min(5, state.hearts + 1);
     $('heartVal').textContent = state.hearts;
     saveState();
