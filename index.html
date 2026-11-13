@@ -66,6 +66,264 @@
   .screen.active { opacity: 1; pointer-events: all; transform: translateX(0); }
   .screen::-webkit-scrollbar { width: 0; }
 
+  /* ============ AUTH / REQUEST SCREEN ============ */
+  #auth {
+    justify-content: center;
+    align-items: center;
+    padding: 32px 20px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #E8F5D9 100%);
+  }
+
+  .auth-box {
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .auth-mascot {
+    width: 110px;
+    height: 110px;
+    margin-bottom: 16px;
+    animation: bounce 2.2s ease-in-out infinite;
+    filter: drop-shadow(0 10px 20px rgba(160,82,45,0.18));
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-12px) rotate(3deg); }
+  }
+
+  .auth-title {
+    font-size: 40px;
+    font-weight: 900;
+    color: #58CC02;
+    letter-spacing: -1.5px;
+    margin-bottom: 6px;
+    line-height: 1;
+  }
+
+  .auth-sub {
+    font-size: 14px;
+    color: #777;
+    font-weight: 600;
+    margin-bottom: 28px;
+    text-align: center;
+  }
+
+  .auth-card {
+    width: 100%;
+    background: white;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 12px 32px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .auth-label {
+    font-size: 13px;
+    font-weight: 800;
+    color: #3C3C3C;
+  }
+
+  .auth-input {
+    width: 100%;
+    padding: 13px 15px;
+    border: 2px solid #E5E5E5;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    outline: none;
+    background: #FAFAFA;
+    transition: all 0.2s;
+  }
+
+  .auth-input:focus {
+    border-color: #1CB0F6;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(28,176,246,0.12);
+  }
+
+  .auth-error {
+    color: #FF4B4B;
+    font-size: 12px;
+    font-weight: 700;
+    min-height: 16px;
+    margin-top: -2px;
+  }
+
+  .request-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: #58CC02;
+    color: white;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 0.4px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #46A302;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+  }
+
+  .request-btn:hover:not(:disabled) { background: #4FBA02; }
+  .request-btn:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 #46A302;
+  }
+
+  .request-btn[data-state="requesting"] {
+    background: #46A302;
+    box-shadow: 0 1px 0 #3D7A00;
+    transform: translateY(3px);
+    cursor: wait;
+  }
+
+  .request-btn[data-state="requested"] {
+    background: #2D5A00;
+    box-shadow: 0 2px 0 #1E3D00;
+    cursor: default;
+    opacity: 0.9;
+  }
+
+  .request-btn[data-state="approved"] {
+    background: #1CB0F6;
+    box-shadow: 0 4px 0 #1899D6;
+    cursor: pointer;
+  }
+
+  .request-btn[data-state="denied"] {
+    background: #FF4B4B;
+    box-shadow: 0 4px 0 #EA2B2B;
+  }
+
+  .auth-status {
+    font-size: 12px;
+    color: #777;
+    font-weight: 700;
+    text-align: center;
+    min-height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--blue);
+    animation: pulseDot 1.5s infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .auth-footer {
+    font-size: 11px;
+    color: #999;
+    font-weight: 700;
+    margin-top: 24px;
+    opacity: 0.6;
+  }
+
+  .loading-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ============ ADMIN PANEL ============ */
+  #adminScreen { background: #F7F7F7; }
+
+  .admin-header {
+    padding: 16px 20px;
+    background: white;
+    border-bottom: 2px solid #E5E5E5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .admin-title { font-size: 20px; font-weight: 900; color: #3C3C3C; }
+  .admin-sub { font-size: 11px; font-weight: 700; color: #777; }
+
+  .admin-body { padding: 16px; overflow-y: auto; flex: 1; }
+
+  .admin-card {
+    background: white;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  .admin-request-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #F0F0F0;
+    gap: 10px;
+  }
+
+  .admin-request-row:last-child { border-bottom: none; }
+  .admin-request-name { font-weight: 800; font-size: 15px; color: #3C3C3C; }
+  .admin-request-time { font-size: 11px; color: #999; font-weight: 600; margin-top: 1px; }
+
+  .admin-request-status {
+    font-size: 10px;
+    font-weight: 900;
+    padding: 2px 7px;
+    border-radius: 5px;
+    margin-top: 4px;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .admin-btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 9px;
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 12px;
+    cursor: pointer;
+    color: white;
+    transition: all 0.15s;
+  }
+
+  .admin-btn:active { transform: scale(0.96); }
+  .admin-btn-approve { background: #58CC02; box-shadow: 0 2px 0 #46A302; }
+  .admin-btn-deny { background: #FF4B4B; box-shadow: 0 2px 0 #EA2B2B; }
+  .admin-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ============ HOME ============ */
   .mascot-wrap {
     display: flex;
     flex-direction: row;
@@ -143,124 +401,6 @@
     border-right: 6px solid var(--bg-soft);
   }
 
-  #auth {
-    justify-content: center;
-    align-items: center;
-    padding: 24px;
-    background: linear-gradient(180deg, #FFFFFF 0%, #F0F9E8 100%);
-  }
-
-  .auth-box {
-    width: 100%;
-    max-width: 340px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .auth-mascot {
-    width: 110px;
-    height: 110px;
-    margin-bottom: 14px;
-    animation: bounce 2.2s ease-in-out infinite;
-  }
-
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0) rotate(-3deg); }
-    50% { transform: translateY(-12px) rotate(3deg); }
-  }
-
-  .auth-title {
-    font-size: 34px;
-    font-weight: 900;
-    color: var(--green);
-    letter-spacing: -1px;
-    margin-bottom: 4px;
-  }
-
-  .auth-sub {
-    font-size: 13px;
-    color: var(--gray-text);
-    margin-bottom: 24px;
-    text-align: center;
-  }
-
-  .auth-form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .auth-input {
-    width: 100%;
-    padding: 13px 14px;
-    border: 2px solid var(--gray);
-    border-bottom: 4px solid var(--gray-dark);
-    border-radius: 12px;
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 600;
-    outline: none;
-    background: white;
-  }
-
-  .auth-input:focus {
-    border-color: var(--blue);
-    border-bottom-color: var(--blue-dark);
-  }
-
-  .auth-error {
-    color: var(--red);
-    font-size: 12px;
-    font-weight: 700;
-    text-align: center;
-    min-height: 16px;
-  }
-
-  .auth-btn {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 14px;
-    background: var(--green);
-    box-shadow: 0 4px 0 var(--green-dark);
-    color: white;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    cursor: pointer;
-    margin-top: 4px;
-  }
-
-  .auth-btn:active {
-    transform: translateY(4px);
-    box-shadow: 0 0 0 var(--green-dark);
-  }
-
-  .auth-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .loading-spinner {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-radius: 50%;
-    border-top-color: white;
-    animation: spin 0.8s linear infinite;
-    margin-right: 8px;
-    vertical-align: middle;
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
   .top-bar {
     position: sticky;
     top: 0;
@@ -319,9 +459,7 @@
     padding-bottom: 70px;
   }
 
-  .units-wrap {
-    padding: 16px 0 20px;
-  }
+  .units-wrap { padding: 16px 0 20px; }
 
   .unit {
     margin: 0 16px 20px;
@@ -465,10 +603,7 @@
     color: var(--text);
   }
 
-  .search-box {
-    position: relative;
-    margin-bottom: 12px;
-  }
+  .search-box { position: relative; margin-bottom: 12px; }
 
   .search-input {
     width: 100%;
@@ -497,12 +632,7 @@
     color: var(--gray-text);
   }
 
-  .filter-tabs {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
+  .filter-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
 
   .filter-tab {
     padding: 6px 12px;
@@ -522,13 +652,8 @@
     color: var(--blue);
   }
 
-  .words-list {
-    padding: 16px;
-  }
-
-  .word-category {
-    margin-bottom: 20px;
-  }
+  .words-list { padding: 16px; }
+  .word-category { margin-bottom: 20px; }
 
   .category-title {
     font-size: 16px;
@@ -554,15 +679,8 @@
     transition: all 0.15s;
   }
 
-  .word-card:active {
-    transform: translateY(2px);
-    border-bottom-width: 2px;
-  }
-
-  .word-card.playing {
-    border-color: var(--blue);
-    background: #E7F7FF;
-  }
+  .word-card:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .word-card.playing { border-color: var(--blue); background: #E7F7FF; }
 
   .word-speaker {
     width: 36px;
@@ -577,26 +695,9 @@
   }
 
   .word-text { flex: 1; }
-
-  .word-df {
-    font-size: 16px;
-    font-weight: 900;
-    color: var(--green-dark);
-    margin-bottom: 2px;
-  }
-
-  .word-src {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--gray-text);
-  }
-
-  .no-results {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--gray-text);
-    font-weight: 700;
-  }
+  .word-df { font-size: 16px; font-weight: 900; color: var(--green-dark); margin-bottom: 2px; }
+  .word-src { font-size: 13px; font-weight: 600; color: var(--gray-text); }
+  .no-results { text-align: center; padding: 40px 20px; color: var(--gray-text); font-weight: 700; }
 
   /* ============ BOTTOM NAV ============ */
   .bottom-nav {
@@ -626,12 +727,10 @@
     transition: all 0.2s;
   }
 
-  .nav-item.active {
-    color: var(--blue);
-  }
-
+  .nav-item.active { color: var(--blue); }
   .nav-icon { font-size: 24px; }
 
+  /* ============ LESSON ============ */
   #lesson { display: flex; flex-direction: column; }
 
   .lesson-top {
@@ -942,20 +1041,10 @@
   }
 
   .intro-text { flex: 1; }
+  .intro-df { font-size: 17px; font-weight: 900; color: var(--green-dark); margin-bottom: 2px; }
+  .intro-src { font-size: 13px; font-weight: 600; color: var(--gray-text); }
 
-  .intro-df {
-    font-size: 17px;
-    font-weight: 900;
-    color: var(--green-dark);
-    margin-bottom: 2px;
-  }
-
-  .intro-src {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--gray-text);
-  }
-
+  /* ============ COMPLETE / GAMEOVER ============ */
   #complete {
     background: linear-gradient(180deg, #FFF9E0 0%, #FFFFFF 50%);
     justify-content: center;
@@ -1010,6 +1099,27 @@
   .reward-val { font-size: 18px; font-weight: 900; color: var(--text); }
   .reward-label { font-size: 9px; font-weight: 800; color: var(--gray-text); text-transform: uppercase; }
 
+  .gameover-icon { font-size: 70px; margin-bottom: 14px; }
+
+  .btn {
+    padding: 14px 24px;
+    border: none;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    cursor: pointer;
+    color: white;
+    min-width: 200px;
+  }
+  .btn-green { background: var(--green); box-shadow: 0 4px 0 var(--green-dark); }
+  .btn-red { background: var(--red); box-shadow: 0 4px 0 var(--red-dark); }
+  .btn-white { background: white; color: var(--text); border: 2px solid var(--gray); box-shadow: 0 4px 0 var(--gray-dark); }
+  .btn:active { transform: translateY(3px); }
+
+  /* ============ MODALS ============ */
   .modal-bg {
     position: fixed;
     inset: 0;
@@ -1146,8 +1256,6 @@
 
   .toast.show { transform: translateX(-50%) translateY(0); }
 
-  .gameover-icon { font-size: 70px; margin-bottom: 14px; }
-
   .user-chip {
     display: flex;
     align-items: center;
@@ -1179,20 +1287,40 @@
 
 <div class="app">
 
+  <!-- ============ REQUEST ACCESS SCREEN ============ -->
   <div class="screen active" id="auth">
     <div class="auth-box">
       <div class="auth-mascot" id="authMascot"></div>
       <div class="auth-title">Danfrolat</div>
-      <div class="auth-sub">Log in to continue learning</div>
-      <form class="auth-form" id="authForm" autocomplete="off">
-        <input type="text" class="auth-input" id="authUser" placeholder="Username" autocomplete="username" required>
-        <input type="password" class="auth-input" id="authPass" placeholder="Password" autocomplete="current-password" required>
+      <div class="auth-sub">Learn the magical Danfrolat language ✨</div>
+
+      <div class="auth-card">
+        <div class="auth-label">What should we call you?</div>
+        <input type="text" class="auth-input" id="authName" placeholder="Your name" maxlength="24" autocomplete="off" spellcheck="false" />
         <div class="auth-error" id="authError"></div>
-        <button type="submit" class="auth-btn" id="authSubmit">Log In</button>
-      </form>
+        <button class="request-btn" id="requestBtn" data-state="idle">
+          <span class="request-btn-text">Request Access</span>
+        </button>
+        <div class="auth-status" id="authStatus"></div>
+      </div>
+
+      <div class="auth-footer">Made with 💚</div>
     </div>
   </div>
 
+  <!-- ============ ADMIN PANEL ============ -->
+  <div class="screen" id="adminScreen">
+    <div class="admin-header">
+      <div>
+        <div class="admin-title">🔐 Admin</div>
+        <div class="admin-sub" id="adminSub">Access control</div>
+      </div>
+      <button class="admin-btn admin-btn-deny" id="adminExitBtn">Exit</button>
+    </div>
+    <div class="admin-body" id="adminBody"></div>
+  </div>
+
+  <!-- ============ HOME ============ -->
   <div class="screen" id="home">
     <div class="top-bar">
       <div class="flag-btn" id="flagBtn">🇬🇧</div>
@@ -1255,6 +1383,7 @@
     </div>
   </div>
 
+  <!-- ============ LESSON ============ -->
   <div class="screen" id="lesson">
     <div class="lesson-top">
       <button class="close-btn" id="closeLesson">✕</button>
@@ -1276,6 +1405,7 @@
     </div>
   </div>
 
+  <!-- ============ COMPLETE ============ -->
   <div class="screen" id="complete">
     <div class="complete-icon">🎉</div>
     <div class="complete-title" id="completeTitle">Lesson Complete!</div>
@@ -1300,6 +1430,7 @@
     <button class="btn btn-green" id="continueBtn">Continue</button>
   </div>
 
+  <!-- ============ GAMEOVER ============ -->
   <div class="screen" id="gameover">
     <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:24px; text-align:center;">
       <div class="gameover-icon">💔</div>
@@ -1310,6 +1441,7 @@
     </div>
   </div>
 
+  <!-- ============ SETTINGS MODAL ============ -->
   <div class="modal-bg" id="settingsModal">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
@@ -1339,6 +1471,7 @@
     </div>
   </div>
 
+  <!-- ============ VOICE MODAL ============ -->
   <div class="modal-bg" id="voiceModal">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
@@ -1353,45 +1486,119 @@
 </div>
 
 <script>
-// ============ CLOUD STORAGE ============
+// ============ CONFIG ============
 const CLOUD_CONFIG = {
   BIN_ID: '6745f3a8e41b4d34e4f7b8a2',
   API_KEY: '$2a$10$vWJ6qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8qZ8q',
   BASE_URL: 'https://api.jsonbin.io/v3/b'
 };
 
+const WEBHOOK_URL = 'https://discord.com/api/webhooks/1570781746486714438/DVlbOEoJ09BWN0jt1iX_v3A0TX-4OJKA148WOtUnFUzFsbvhKJIi7VwGY_D5mmnxFmKF';
+
+const ADMIN_PASSCODE = 'frolo2026'; // 👈 change me
+const SESSION_KEY = 'danfrolat_session_v6';
+const LASTNAME_KEY = 'danfrolat_lastname';
+
+// ============ CLOUD ============
 async function cloudGet() {
   try {
-    const response = await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}/latest`, {
+    const res = await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}/latest`, {
       headers: { 'X-Master-Key': CLOUD_CONFIG.API_KEY }
     });
-    if (!response.ok) return {};
-    const data = await response.json();
+    if (!res.ok) return {};
+    const data = await res.json();
     return data.record || {};
-  } catch (e) {
-    console.error('Cloud fetch error:', e);
-    return {};
-  }
+  } catch (e) { console.error('Cloud fetch error:', e); return {}; }
 }
 
 async function cloudSet(data) {
   try {
     await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': CLOUD_CONFIG.API_KEY
-      },
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': CLOUD_CONFIG.API_KEY },
       body: JSON.stringify(data)
     });
     return true;
-  } catch (e) {
-    console.error('Cloud save error:', e);
-    return false;
-  }
+  } catch (e) { console.error('Cloud save error:', e); return false; }
 }
 
-// ============ VOCABULARY ============
+async function setRequestStatus(name, status) {
+  const data = await cloudGet();
+  if (!data.__requests__) data.__requests__ = {};
+  data.__requests__[name] = { status, timestamp: Date.now(), name };
+  return await cloudSet(data);
+}
+
+async function getRequestStatus(name) {
+  const data = await cloudGet();
+  return data.__requests__?.[name]?.status || null;
+}
+
+// ============ ADMIN URL HELPERS ============
+const urlParams = new URLSearchParams(window.location.search);
+const isAdminMode = urlParams.get('admin') === '1';
+
+function buildAdminUrl(action, name) {
+  if (window.location.protocol === 'file:') return null;
+  const base = window.location.origin + window.location.pathname;
+  const p = new URLSearchParams();
+  p.set('admin', '1');
+  if (action) p.set('action', action);
+  if (name) p.set('name', name);
+  return base + '?' + p.toString();
+}
+
+// ============ DISCORD WEBHOOK ============
+async function sendDiscordRequest(name) {
+  const safe = name.replace(/[*_`~|\\]/g, '');
+  const approveUrl = buildAdminUrl('approve', name);
+  const denyUrl = buildAdminUrl('deny', name);
+
+  const payload = {
+    username: 'Danfrolat Access',
+    embeds: [{
+      title: '🔐 New Access Request',
+      description: `**${safe}** wants to access Danfrolat`,
+      color: 0x58CC02,
+      fields: [
+        { name: '👤 Username', value: '`' + safe + '`', inline: true },
+        { name: '🕐 Time', value: '<t:' + Math.floor(Date.now()/1000) + ':R>', inline: true }
+      ],
+      footer: {
+        text: approveUrl
+          ? 'Danfrolat Access Control'
+          : 'Deploy online (not file://) to enable buttons'
+      },
+      timestamp: new Date().toISOString()
+    }]
+  };
+
+  if (approveUrl && denyUrl) {
+    payload.components = [{
+      type: 1,
+      components: [
+        { type: 2, style: 5, label: 'Approve', url: approveUrl, emoji: { name: '✅' } },
+        { type: 2, style: 5, label: 'Deny',    url: denyUrl,    emoji: { name: '❌' } }
+      ]
+    }];
+  }
+
+  try {
+    const res = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    return res.ok;
+  } catch (e) { console.error('Webhook error:', e); return false; }
+}
+
+// ============ SESSION ============
+function getSession() { return localStorage.getItem(SESSION_KEY); }
+function setSession(u) { localStorage.setItem(SESSION_KEY, u); }
+function clearSession() { localStorage.removeItem(SESSION_KEY); }
+
+// ============ VOCAB ============
 const VOCAB = {
   1: { title: { en: "Greetings & People", da: "Hilsner og mennesker" }, icon: "👋", color: 1, words: [
     {da:"Hej", en:"Hello", df:"Bonhallo"}, {da:"Godmorgen", en:"Good morning", df:"Bonmora"}, {da:"Godnat", en:"Good night", df:"Bonnocta"},
@@ -1536,159 +1743,12 @@ const VOCAB = {
 };
 
 const PHONETIC_MAP = {
-  'bonhallo': 'bon-HAHL-lo', 'bonmora': 'bon-MO-ra', 'bonnocta': 'bon-NOCK-ta',
-  'adevara': 'ah-day-VAH-ra', 'familora': 'fah-MEE-lo-ra', 'madora': 'mah-DO-ra',
-  'padora': 'pah-DO-ra', 'sorina': 'so-REE-na', 'fratero': 'fra-TEH-ro',
-  'infanto': 'een-FAHN-to', 'humano': 'hoo-MAH-no', 'amivenn': 'ah-mee-VEN',
-  'grandmora': 'grahnd-MO-ra', 'grandpador': 'grahnd-PAH-dor', 'femina': 'FEH-mee-na',
-  'homaro': 'ho-MAH-ro', 'puella': 'poo-EH-la', 'garçono': 'gar-SO-no',
-  'bebina': 'beh-BEE-na', 'persona': 'per-SO-na', 'amorliv': 'ah-MOR-liv',
-  'joyara': 'joy-AH-ra', 'dolora': 'do-LO-ra', 'felicia': 'feh-LEE-sha',
-  'amistara': 'ah-mee-STAH-ra', 'saudora': 'sow-DO-ra', 'somnara': 'som-NAH-ra',
-  'espera': 'es-PE-ra', 'timora': 'tee-MO-ra', 'sorrisa': 'so-REE-sa',
-  'besora': 'beh-SO-ra', 'cordehjert': 'kor-deh-YERT', 'iraora': 'ee-rah-O-ra',
-  'calmina': 'kal-MEE-na', 'joyeux': 'joy-UH', 'tristora': 'tree-STO-ra',
-  'corajosa': 'ko-rah-HO-sa', 'fierté': 'fee-er-TAY', 'solitara': 'so-lee-TAH-ra',
-  'amorella': 'ah-mo-REH-la', 'maré': 'mah-RAY', 'aqua': 'AH-kwa',
-  'fuego': 'FWEH-go', 'terra': 'TEH-ra', 'cielum': 'SEE-lum',
-  'estrela': 'eh-STREH-la', 'florina': 'flo-REE-na', 'arbor': 'AR-bor',
-  'silvara': 'seel-VAH-ra', 'montara': 'mon-TAH-ra', 'ventora': 'ven-TOR-a',
-  'pluvia': 'PLOO-vee-a', 'nivora': 'nee-VO-ra', 'solaria': 'so-LAH-ree-a',
-  'lunalux': 'LOO-na-luks', 'plajara': 'plah-HAH-ra', 'rivora': 'ree-VO-ra',
-  'lakora': 'lah-KO-ra', 'herbina': 'her-BEE-na', 'nubela': 'noo-BEH-la',
-  'domora': 'do-MO-ra', 'camara': 'kah-MAH-ra', 'lectora': 'lek-TO-ra',
-  'sedora': 'seh-DO-ra', 'tabora': 'tah-BO-ra', 'portara': 'por-TAH-ra',
-  'fenestra': 'feh-NEH-strah', 'cozinara': 'ko-zee-NAH-ra', 'alimenta': 'ah-lee-MEN-ta',
-  'panora': 'pah-NO-ra', 'lacté': 'lak-TAY', 'pomara': 'po-MAH-ra',
-  'cafora': 'kah-FO-ra', 'libera': 'LEE-beh-ra', 'musica': 'MOO-zee-ka',
-  'telefoné': 'teh-leh-fo-NAY', 'computara': 'kom-poo-TAH-ra', 'clavora': 'klah-VO-ra',
-  'vestara': 'ves-TAH-ra', 'sapata': 'sah-PAH-ta', 'rubina': 'roo-BEE-na',
-  'azula': 'ah-ZOO-la', 'verdora': 'ver-DO-ra', 'amarela': 'ah-mah-REH-la',
-  'nigrum': 'NYE-grum', 'albina': 'al-BEE-na', 'rosalia': 'ro-SAH-lee-a',
-  'violara': 'vee-oh-LAH-ra', 'aurum': 'AW-rum', 'argenta': 'ar-JEN-ta',
-  'oranja': 'oh-RAHN-ya', 'brunora': 'broo-NO-ra', 'grisia': 'GREE-see-a',
-  'bellskøn': 'bel-SKUN', 'grandora': 'grahn-DO-ra', 'minora': 'mee-NO-ra',
-  'rapida': 'rah-PEE-da', 'lentora': 'len-TO-ra', 'calora': 'kah-LO-ra',
-  'frigora': 'free-GO-ra', 'diara': 'dee-AH-ra', 'noctara': 'noc-TAH-ra',
-  'matina': 'mah-TEE-na', 'vespara': 'ves-PAH-ra', 'hodiera': 'ho-DYEH-ra',
-  'amanora': 'ah-mah-NO-ra', 'heriora': 'heh-REE-or-a', 'tempora': 'TEM-po-ra',
-  'nuncé': 'noon-SAY', 'sempre': 'SEM-preh', 'nuncquam': 'NOON-kwam',
-  'semanara': 'seh-mah-NAH-ra', 'mensora': 'men-SO-ra', 'annora': 'ah-NO-ra',
-  'horina': 'ho-REE-na', 'minuta': 'mee-NOO-ta', 'seconda': 'seh-KON-da',
-  'antera': 'ahn-TE-ra', 'postara': 'pos-TAH-ra', 'proxima': 'PROK-see-ma',
-  'mio': 'MEE-o', 'tua': 'TOO-ah', 'elo': 'EH-lo', 'ela': 'EH-la',
-  'nos': 'nos', 'elar': 'EH-lar', 'mina': 'MEE-na', 'aqui': 'ah-KEE',
-  'alora': 'ah-LO-ra', 'oui': 'wee', 'non': 'non',
-  'merci tak': 'MER-see tahk', 'por favor': 'por fah-VOR', 'ubara': 'oo-BAH-ra',
-  'quisara': 'kee-SAH-ra', 'quora': 'KWO-ra', 'porqué': 'por-KAY',
-  'porque': 'por-KEH', 'talvez': 'tahl-VEZ', 'amora': 'ah-MO-ra',
-  'risora': 'ree-SO-ra', 'lacrima': 'lah-KREE-ma', 'mangera': 'mahn-JEH-ra',
-  'bibera': 'bee-BEH-ra', 'dormira': 'dor-MEE-ra', 'dansara': 'dahn-SAH-ra',
-  'cantora': 'kahn-TO-ra', 'currera': 'koo-REH-ra', 'ambular': 'am-boo-LAR',
-  'parlora': 'par-LO-ra', 'audira': 'ow-DEE-ra', 'vidora': 'vee-DO-ra',
-  'legora': 'leh-GO-ra', 'scriptora': 'skreep-TO-ra', 'ludora': 'loo-DO-ra',
-  'natara': 'nah-TAH-ra', 'volara': 'vo-LAH-ra', 'pensara': 'pen-SAH-ra',
-  'sorrira': 'so-REE-ra', 'magiora': 'mah-JO-ra', 'anima': 'AH-nee-ma',
-  'pacera': 'pah-SE-ra', 'libertara': 'lee-ber-TAH-ra', 'eternora': 'eh-ter-NO-ra',
-  'secretara': 'seh-kreh-TAH-ra', 'bellora': 'beh-LO-ra', 'universa': 'oo-nee-VER-sa',
-  'angelora': 'ahn-JEH-lo-ra', 'luxespera': 'luks-es-PE-ra', 'somniversa': 'som-nee-VER-sa',
-  'aventora': 'ah-ven-TO-ra', 'lun anima': 'loon AH-nee-ma', 'solcorda': 'sol-KOR-da',
-  'estrelpura': 'eh-strel-POO-ra', 'arcobella': 'ar-ko-BEH-la', 'lumina': 'LOO-mee-na',
-  'obscura': 'ob-SKOO-ra', 'miracula': 'mee-RAH-koo-la', 'enchantora': 'en-chan-TO-ra',
-  'scholarina': 'sko-lah-REE-na', 'magistera': 'mah-JEES-te-ra', 'amicora': 'ah-mee-KO-ra',
-  'aventurosa': 'ah-ven-too-RO-sa', 'matinara': 'mah-tee-NAH-ra', 'prandora': 'prahn-DO-ra',
-  'cenarina': 'seh-nah-REE-na', 'felina': 'feh-LEE-na', 'canora': 'kah-NO-ra',
-  'equina': 'eh-KWEE-na', 'aviora': 'ah-VEE-o-ra', 'estivara': 'es-tee-VAH-ra',
-  'inverna': 'een-VER-na', 'primavera': 'pree-mah-VE-ra', 'autumnara': 'aw-tum-NAH-ra',
-  'urbana': 'ur-BAH-na', 'paisora': 'pay-SO-ra', 'mundara': 'moon-DAH-ra',
-  'viatora': 'vee-ah-TO-ra', 'domina': 'do-MEE-na'
+  'bonhallo':'bon-HAHL-lo','bonmora':'bon-MO-ra','bonnocta':'bon-NOCK-ta','adevara':'ah-day-VAH-ra','familora':'fah-MEE-lo-ra','madora':'mah-DO-ra','padora':'pah-DO-ra','sorina':'so-REE-na','fratero':'fra-TEH-ro','infanto':'een-FAHN-to','humano':'hoo-MAH-no','amivenn':'ah-mee-VEN','grandmora':'grahnd-MO-ra','grandpador':'grahnd-PAH-dor','femina':'FEH-mee-na','homaro':'ho-MAH-ro','puella':'poo-EH-la','garçono':'gar-SO-no','bebina':'beh-BEE-na','persona':'per-SO-na','amorliv':'ah-MOR-liv','joyara':'joy-AH-ra','dolora':'do-LO-ra','felicia':'feh-LEE-sha','amistara':'ah-mee-STAH-ra','saudora':'sow-DO-ra','somnara':'som-NAH-ra','espera':'es-PE-ra','timora':'tee-MO-ra','sorrisa':'so-REE-sa','besora':'beh-SO-ra','cordehjert':'kor-deh-YERT','iraora':'ee-rah-O-ra','calmina':'kal-MEE-na','joyeux':'joy-UH','tristora':'tree-STO-ra','corajosa':'ko-rah-HO-sa','fierté':'fee-er-TAY','solitara':'so-lee-TAH-ra','amorella':'ah-mo-REH-la','maré':'mah-RAY','aqua':'AH-kwa','fuego':'FWEH-go','terra':'TEH-ra','cielum':'SEE-lum','estrela':'eh-STREH-la','florina':'flo-REE-na','arbor':'AR-bor','silvara':'seel-VAH-ra','montara':'mon-TAH-ra','ventora':'ven-TOR-a','pluvia':'PLOO-vee-a','nivora':'nee-VO-ra','solaria':'so-LAH-ree-a','lunalux':'LOO-na-luks','plajara':'plah-HAH-ra','rivora':'ree-VO-ra','lakora':'lah-KO-ra','herbina':'her-BEE-na','nubela':'noo-BEH-la','domora':'do-MO-ra','camara':'kah-MAH-ra','lectora':'lek-TO-ra','sedora':'seh-DO-ra','tabora':'tah-BO-ra','portara':'por-TAH-ra','fenestra':'feh-NEH-strah','cozinara':'ko-zee-NAH-ra','alimenta':'ah-lee-MEN-ta','panora':'pah-NO-ra','lacté':'lak-TAY','pomara':'po-MAH-ra','cafora':'kah-FO-ra','libera':'LEE-beh-ra','musica':'MOO-zee-ka','telefoné':'teh-leh-fo-NAY','computara':'kom-poo-TAH-ra','clavora':'klah-VO-ra','vestara':'ves-TAH-ra','sapata':'sah-PAH-ta','rubina':'roo-BEE-na','azula':'ah-ZOO-la','verdora':'ver-DO-ra','amarela':'ah-mah-REH-la','nigrum':'NYE-grum','albina':'al-BEE-na','rosalia':'ro-SAH-lee-a','violara':'vee-oh-LAH-ra','aurum':'AW-rum','argenta':'ar-JEN-ta','oranja':'oh-RAHN-ya','brunora':'broo-NO-ra','grisia':'GREE-see-a','bellskøn':'bel-SKUN','grandora':'grahn-DO-ra','minora':'mee-NO-ra','rapida':'rah-PEE-da','lentora':'len-TO-ra','calora':'kah-LO-ra','frigora':'free-GO-ra','diara':'dee-AH-ra','noctara':'noc-TAH-ra','matina':'mah-TEE-na','vespara':'ves-PAH-ra','hodiera':'ho-DYEH-ra','amanora':'ah-mah-NO-ra','heriora':'heh-REE-or-a','tempora':'TEM-po-ra','nuncé':'noon-SAY','sempre':'SEM-preh','nuncquam':'NOON-kwam','semanara':'seh-mah-NAH-ra','mensora':'men-SO-ra','annora':'ah-NO-ra','horina':'ho-REE-na','minuta':'mee-NOO-ta','seconda':'seh-KON-da','antera':'ahn-TE-ra','postara':'pos-TAH-ra','proxima':'PROK-see-ma','mio':'MEE-o','tua':'TOO-ah','elo':'EH-lo','ela':'EH-la','nos':'nos','elar':'EH-lar','mina':'MEE-na','aqui':'ah-KEE','alora':'ah-LO-ra','oui':'wee','non':'non','merci tak':'MER-see tahk','por favor':'por fah-VOR','ubara':'oo-BAH-ra','quisara':'kee-SAH-ra','quora':'KWO-ra','porqué':'por-KAY','porque':'por-KEH','talvez':'tahl-VEZ','amora':'ah-MO-ra','risora':'ree-SO-ra','lacrima':'lah-KREE-ma','mangera':'mahn-JEH-ra','bibera':'bee-BEH-ra','dormira':'dor-MEE-ra','dansara':'dahn-SAH-ra','cantora':'kahn-TO-ra','currera':'koo-REH-ra','ambular':'am-boo-LAR','parlora':'par-LO-ra','audira':'ow-DEE-ra','vidora':'vee-DO-ra','legora':'leh-GO-ra','scriptora':'skreep-TO-ra','ludora':'loo-DO-ra','natara':'nah-TAH-ra','volara':'vo-LAH-ra','pensara':'pen-SAH-ra','sorrira':'so-REE-ra','magiora':'mah-JO-ra','anima':'AH-nee-ma','pacera':'pah-SE-ra','libertara':'lee-ber-TAH-ra','eternora':'eh-ter-NO-ra','secretara':'seh-kreh-TAH-ra','bellora':'beh-LO-ra','universa':'oo-nee-VER-sa','angelora':'ahn-JEH-lo-ra','luxespera':'luks-es-PE-ra','somniversa':'som-nee-VER-sa','aventora':'ah-ven-TO-ra','lun anima':'loon AH-nee-ma','solcorda':'sol-KOR-da','estrelpura':'eh-strel-POO-ra','arcobella':'ar-ko-BEH-la','lumina':'LOO-mee-na','obscura':'ob-SKOO-ra','miracula':'mee-RAH-koo-la','enchantora':'en-chan-TO-ra','scholarina':'sko-lah-REE-na','magistera':'mah-JEES-te-ra','amicora':'ah-mee-KO-ra','aventurosa':'ah-ven-too-RO-sa','matinara':'mah-tee-NAH-ra','prandora':'prahn-DO-ra','cenarina':'seh-nah-REE-na','felina':'feh-LEE-na','canora':'kah-NO-ra','equina':'eh-KWEE-na','aviora':'ah-VEE-o-ra','estivara':'es-tee-VAH-ra','inverna':'een-VER-na','primavera':'pree-mah-VE-ra','autumnara':'aw-tum-NAH-ra','urbana':'ur-BAH-na','paisora':'pay-SO-ra','mundara':'moon-DAH-ra','viatora':'vee-ah-TO-ra','domina':'do-MEE-na'
 };
 
 const UI_TEXT = {
-  en: {
-    obSub: "Learn the magical Danfrolat language!",
-    obLabel: "I speak...",
-    startBtn: "Start Learning",
-    unit: "Unit",
-    lesson: "Lesson",
-    translateTo: "Translate to Danfrolat",
-    writeIn: "Write in Danfrolat",
-    whatMeans: "What does this mean?",
-    buildSentence: "Write this in Danfrolat",
-    typeTrans: "Type this translation",
-    check: "Check",
-    continue: "Continue",
-    correct: "Correct!",
-    wrong: "Not quite!",
-    correctAns: "Correct answer:",
-    lessonComplete: "Lesson Complete!",
-    greatProgress: "You're making great progress!",
-    continueBtn: "Continue",
-    outOfHearts: "Out of Hearts!",
-    ranOut: "You ran out of hearts.",
-    refill: "Refill Hearts",
-    goHome: "Go Home",
-    settings: "Settings",
-    myLang: "My Language",
-    totalXP: "Total XP",
-    reset: "Reset Progress",
-    close: "Close",
-    listen: "🔊 Listen",
-    refillDone: "Hearts refilled!",
-    mascotWelcome: "Hi! I'm Frolo!",
-    mascotGoodJob: "Amazing! You're a star!",
-    mascotKeepGoing: "Keep going!",
-    mascotOops: "Oops! Try again!",
-    mascotIntro: "Let's learn these words!",
-    selectVoice: "Select",
-    normal: "Normal",
-    slow: "Slow",
-    fast: "Fast",
-    newWords: "New words!",
-    letsPractice: "Let's practice!"
-  },
-  da: {
-    obSub: "Lær det magiske Danfrolat sprog!",
-    obLabel: "Jeg taler...",
-    startBtn: "Start læring",
-    unit: "Enhed",
-    lesson: "Lektion",
-    translateTo: "Oversæt til Danfrolat",
-    writeIn: "Skriv på Danfrolat",
-    whatMeans: "Hvad betyder dette?",
-    buildSentence: "Skriv dette på Danfrolat",
-    typeTrans: "Skriv denne oversættelse",
-    check: "Tjek",
-    continue: "Fortsæt",
-    correct: "Korrekt!",
-    wrong: "Ikke helt!",
-    correctAns: "Korrekt svar:",
-    lessonComplete: "Lektion fuldført!",
-    greatProgress: "Du gør det godt!",
-    continueBtn: "Fortsæt",
-    outOfHearts: "Ingen hjerter!",
-    ranOut: "Du løb tør for hjerter.",
-    refill: "Fyld hjerter",
-    goHome: "Gå hjem",
-    settings: "Indstillinger",
-    myLang: "Mit sprog",
-    totalXP: "Total XP",
-    reset: "Nulstil",
-    close: "Luk",
-    listen: "🔊 Lyt",
-    refillDone: "Hjerter fyldt!",
-    mascotWelcome: "Hej! Jeg er Frolo!",
-    mascotGoodJob: "Fantastisk!",
-    mascotKeepGoing: "Bliv ved!",
-    mascotOops: "Ups! Prøv igen!",
-    mascotIntro: "Lad os lære disse ord!",
-    selectVoice: "Vælg",
-    normal: "Normal",
-    slow: "Langsom",
-    fast: "Hurtig",
-    newWords: "Nye ord!",
-    letsPractice: "Lad os øve!"
-  }
+  en: { unit:"Unit", lesson:"Lesson", translateTo:"Translate to Danfrolat", writeIn:"Write in Danfrolat", whatMeans:"What does this mean?", buildSentence:"Write this in Danfrolat", typeTrans:"Type this translation", check:"Check", continue:"Continue", correct:"Correct!", wrong:"Not quite!", correctAns:"Correct answer:", lessonComplete:"Lesson Complete!", greatProgress:"You're making great progress!", listen:"🔊 Listen", mascotIntro:"Let's learn these words!", selectVoice:"Select", normal:"Normal", slow:"Slow", fast:"Fast", newWords:"New words!", letsPractice:"Let's practice!", mascotGoodJob:"Amazing! You're a star!", mascotKeepGoing:"Keep going!", mascotOops:"Oops! Try again!" },
+  da: { unit:"Enhed", lesson:"Lektion", translateTo:"Oversæt til Danfrolat", writeIn:"Skriv på Danfrolat", whatMeans:"Hvad betyder dette?", buildSentence:"Skriv dette på Danfrolat", typeTrans:"Skriv denne oversættelse", check:"Tjek", continue:"Fortsæt", correct:"Korrekt!", wrong:"Ikke helt!", correctAns:"Korrekt svar:", lessonComplete:"Lektion fuldført!", greatProgress:"Du gør det godt!", listen:"🔊 Lyt", mascotIntro:"Lad os lære disse ord!", selectVoice:"Vælg", normal:"Normal", slow:"Langsom", fast:"Hurtig", newWords:"Nye ord!", letsPractice:"Lad os øve!", mascotGoodJob:"Fantastisk!", mascotKeepGoing:"Bliv ved!", mascotOops:"Ups! Prøv igen!" }
 };
 
 function mascotSVG(size = 110) {
@@ -1725,6 +1785,7 @@ function mascotSVG(size = 110) {
   </svg>`;
 }
 
+// ============ TTS ============
 class NaturalTTS {
   constructor() {
     this.synth = window.speechSynthesis;
@@ -1733,228 +1794,125 @@ class NaturalTTS {
     this.rate = 0.9;
     this.init();
   }
-
   init() {
     if (!this.synth) return;
-    const load = () => {
-      this.voices = this.synth.getVoices();
-      this.sortVoices();
-    };
+    const load = () => { this.voices = this.synth.getVoices(); this.sortVoices(); };
     load();
-    if (this.synth.onvoiceschanged !== undefined) {
-      this.synth.onvoiceschanged = load;
-    }
+    if (this.synth.onvoiceschanged !== undefined) this.synth.onvoiceschanged = load;
   }
-
   sortVoices() {
-    const premiumKeywords = ['natural', 'enhanced', 'premium', 'google', 'microsoft', 
-                            'samantha', 'daniel', 'karen', 'moira', 'tessa', 'fiona',
-                            'serena', 'oliver', 'ava', 'allison', 'nick', 'alex',
-                            'neural', 'wavenet', 'studio', 'zira', 'hazel', 'david',
-                            'mark', 'markus', 'anna', 'alice', 'paulina'];
+    const premium = ['natural','enhanced','premium','google','microsoft','samantha','daniel','karen','moira','tessa','fiona','serena','oliver','ava','allison','nick','alex','neural','wavenet','studio','zira','hazel','david','mark','markus','anna','alice','paulina'];
     this.voices.sort((a, b) => {
-      const aName = a.name.toLowerCase();
-      const bName = b.name.toLowerCase();
-      const aPremium = premiumKeywords.some(k => aName.includes(k)) ? 1 : 0;
-      const bPremium = premiumKeywords.some(k => bName.includes(k)) ? 1 : 0;
-      if (aPremium !== bPremium) return bPremium - aPremium;
-      const femaleKeywords = ['samantha', 'karen', 'moira', 'tessa', 'fiona', 'serena', 
-                             'ava', 'allison', 'zira', 'hazel', 'anna', 'alice', 'paulina',
-                             'victoria', 'susan', 'kate', 'veena', 'sangeeta'];
-      const aFemale = femaleKeywords.some(k => aName.includes(k)) ? 1 : 0;
-      const bFemale = femaleKeywords.some(k => bName.includes(k)) ? 1 : 0;
-      if (aFemale !== bFemale) return bFemale - aFemale;
+      const aN = a.name.toLowerCase(), bN = b.name.toLowerCase();
+      const aP = premium.some(k => aN.includes(k)) ? 1 : 0;
+      const bP = premium.some(k => bN.includes(k)) ? 1 : 0;
+      if (aP !== bP) return bP - aP;
       return a.name.localeCompare(b.name);
     });
   }
-
   getBestVoice(lang) {
     if (this.selectedVoice) return this.selectedVoice;
-    const langMap = {
-      'en': ['en-US', 'en-GB', 'en-AU', 'en'],
-      'da': ['da-DK', 'da'],
-      'df': ['en-US', 'en-GB', 'en']
-    };
-    const prefs = langMap[lang] || ['en'];
-    for (const pref of prefs) {
-      const voice = this.voices.find(v => v.lang.startsWith(pref));
-      if (voice) return voice;
+    const map = { en: ['en-US','en-GB','en-AU','en'], da: ['da-DK','da'], df: ['en-US','en-GB','en'] };
+    const prefs = map[lang] || ['en'];
+    for (const p of prefs) {
+      const v = this.voices.find(x => x.lang.startsWith(p));
+      if (v) return v;
     }
     return this.voices[0] || null;
   }
-
   toPhonetic(text) {
-    const words = text.toLowerCase().split(/\s+/);
-    return words.map(w => {
+    return text.toLowerCase().split(/\s+/).map(w => {
       const clean = w.replace(/[.,!?]/g, '');
       if (PHONETIC_MAP[clean]) return PHONETIC_MAP[clean];
       return this.applyRules(clean);
     }).join(' ');
   }
-
   applyRules(word) {
-    let result = word;
-    result = result.replace(/ora$/g, 'O-ra');
-    result = result.replace(/ina$/g, 'EE-na');
-    result = result.replace(/ara$/g, 'AH-ra');
-    result = result.replace(/era$/g, 'EH-ra');
-    result = result.replace(/ura$/g, 'OO-ra');
-    return result;
+    let r = word;
+    r = r.replace(/ora$/g, 'O-ra').replace(/ina$/g, 'EE-na').replace(/ara$/g, 'AH-ra').replace(/era$/g, 'EH-ra').replace(/ura$/g, 'OO-ra');
+    return r;
   }
-
   speak(text, lang = 'en', onEnd = null) {
     if (!this.synth) return;
     this.stop();
-
-    let speakText = text;
-    let speakLang = lang;
-
-    if (lang === 'df') {
-      speakText = this.toPhonetic(text);
-      speakLang = 'en';
-    }
-
-    const utter = new SpeechSynthesisUtterance(speakText);
-    utter.rate = this.rate * (lang === 'df' ? 0.92 : 1);
-    utter.pitch = lang === 'df' ? 1.08 : 1;
-    utter.volume = 1;
-
-    const voice = this.getBestVoice(speakLang);
-    if (voice) utter.voice = voice;
-
-    if (onEnd) utter.onend = onEnd;
-
-    this.synth.speak(utter);
-    return utter;
+    let speakText = text, speakLang = lang;
+    if (lang === 'df') { speakText = this.toPhonetic(text); speakLang = 'en'; }
+    const u = new SpeechSynthesisUtterance(speakText);
+    u.rate = this.rate * (lang === 'df' ? 0.92 : 1);
+    u.pitch = lang === 'df' ? 1.08 : 1;
+    u.volume = 1;
+    const v = this.getBestVoice(speakLang);
+    if (v) u.voice = v;
+    if (onEnd) u.onend = onEnd;
+    this.synth.speak(u);
+    return u;
   }
-
   speakSequence(items, lang, onDone) {
-    if (!items || items.length === 0) {
-      if (onDone) onDone();
-      return;
-    }
-    let idx = 0;
+    if (!items || items.length === 0) { if (onDone) onDone(); return; }
+    let i = 0;
     const next = () => {
-      if (idx >= items.length) {
-        if (onDone) onDone();
-        return;
-      }
-      this.speak(items[idx], lang, () => {
-        idx++;
-        setTimeout(next, 250);
-      });
+      if (i >= items.length) { if (onDone) onDone(); return; }
+      this.speak(items[i], lang, () => { i++; setTimeout(next, 250); });
     };
     next();
   }
-
-  stop() {
-    if (this.synth && this.synth.speaking) this.synth.cancel();
-  }
-
-  setVoice(voice) { this.selectedVoice = voice; }
-  setRate(rate) { this.rate = rate; }
+  stop() { if (this.synth && this.synth.speaking) this.synth.cancel(); }
+  setVoice(v) { this.selectedVoice = v; }
+  setRate(r) { this.rate = r; }
   getAllVoices() { return this.voices; }
 }
 
 const tts = new NaturalTTS();
 
-const SESSION_KEY = 'danfrolat_session_v6';
-
-async function hashPassword(password) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password + '_danfrolat_salt_2026');
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-function getSession() {
-  return localStorage.getItem(SESSION_KEY);
-}
-
-function setSession(username) {
-  localStorage.setItem(SESSION_KEY, username);
-}
-
-function clearSession() {
-  localStorage.removeItem(SESSION_KEY);
-}
-
+// ============ STATE ============
 let currentUser = null;
 let state = {
-  lang: null,
-  xp: 0,
-  gems: 50,
-  hearts: 5,
-  streak: 0,
-  lastActive: null,
-  progress: {},
-  selectedVoiceName: null,
-  speed: 'normal'
+  lang: null, xp: 0, gems: 50, hearts: 5, streak: 0,
+  lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal'
 };
 
 async function saveState() {
   if (!currentUser) return;
-  const accounts = await cloudGet();
-  if (accounts[currentUser]) {
-    accounts[currentUser].data = state;
-    await cloudSet(accounts);
-  }
+  const data = await cloudGet();
+  data[currentUser] = { data: state };
+  await cloudSet(data);
 }
 
 async function loadUserState(username) {
-  const accounts = await cloudGet();
-  if (accounts[username]?.data) {
-    state = { ...state, ...accounts[username].data };
-  } else {
-    state = {
-      lang: null,
-      xp: 0,
-      gems: 50,
-      hearts: 5,
-      streak: 0,
-      lastActive: null,
-      progress: {},
-      selectedVoiceName: null,
-      speed: 'normal'
-    };
-  }
+  const data = await cloudGet();
+  if (data[username]?.data) state = { ...state, ...data[username].data };
+  else state = { lang: null, xp: 0, gems: 50, hearts: 5, streak: 0, lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal' };
 }
 
 function updateStreak() {
   const today = new Date().toDateString();
   if (state.lastActive === today) return;
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  if (state.lastActive === yesterday.toDateString()) state.streak += 1;
+  const y = new Date(); y.setDate(y.getDate() - 1);
+  if (state.lastActive === y.toDateString()) state.streak += 1;
   else if (state.lastActive !== today) state.streak = 1;
   state.lastActive = today;
   saveState();
 }
 
 const $ = id => document.getElementById(id);
-const t = key => UI_TEXT[state.lang][key];
+const t = key => (UI_TEXT[state.lang || 'en'])[key];
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   $(id).classList.add('active');
 }
 
-function bumpStat(el) {
-  el.classList.remove('bump');
-  void el.offsetWidth;
-  el.classList.add('bump');
-}
+function bumpStat(el) { el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
 
 function toast(msg) {
   const el = $('toast');
   el.textContent = msg;
   el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2000);
+  setTimeout(() => el.classList.remove('show'), 2200);
 }
 
 function confetti() {
-  const colors = ['#58CC02', '#1CB0F6', '#FFC800', '#FF4B4B', '#CE82FF'];
+  const colors = ['#58CC02','#1CB0F6','#FFC800','#FF4B4B','#CE82FF'];
   for (let i = 0; i < 60; i++) {
     const c = document.createElement('div');
     c.className = 'confetti';
@@ -1982,109 +1940,361 @@ function getSourceWord(w) { return state.lang === 'da' ? w.da : w.en; }
 function canAccessUnit(unitId) {
   if (unitId === 1) return true;
   const prev = state.progress[unitId - 1] || {};
-  const lessons = getLessonsForUnit(unitId - 1);
-  return lessons.every((_, i) => prev[i]?.completed);
+  return getLessonsForUnit(unitId - 1).every((_, i) => prev[i]?.completed);
 }
 
 function getLessonsForUnit(unitId) {
   const unit = VOCAB[unitId];
   const lessons = [];
-  const words = unit.words;
-  const sentences = unit.sentences;
+  const words = unit.words, sentences = unit.sentences;
   for (let i = 0; i < words.length; i += 5) {
-    const lessonWords = words.slice(i, i + 5);
-    const lessonSentences = sentences.slice(Math.floor(i / 5) * 2, Math.floor(i / 5) * 2 + 2);
-    lessons.push({ words: lessonWords, sentences: lessonSentences });
+    lessons.push({
+      words: words.slice(i, i + 5),
+      sentences: sentences.slice(Math.floor(i / 5) * 2, Math.floor(i / 5) * 2 + 2)
+    });
   }
   return lessons;
 }
 
-// ============ AUTH (HARDCODED) ============
-const VALID_USER = 'danfrolat';
-const VALID_PASS_HASH = '5f4dcc3b5aa765d61d8327deb882cf99'; // Pre-computed for "Iwanttolearndanfrolatonduolinga"
+// ============ REQUEST FLOW ============
+let requestState = 'idle';
+let currentRequestName = null;
+let pollTimer = null;
 
-$('authForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const username = $('authUser').value.trim().toLowerCase();
-  const password = $('authPass').value;
-  const errEl = $('authError');
-  const submitBtn = $('authSubmit');
+function setRequestState(newState) {
+  requestState = newState;
+  const btn = $('requestBtn');
+  const statusEl = $('authStatus');
+  btn.dataset.state = newState;
+  btn.disabled = newState === 'requesting' || newState === 'requested';
+  statusEl.style.color = '';
+  statusEl.innerHTML = '';
 
-  submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span class="loading-spinner"></span>Logging in...';
-
-  try {
-    const hash = await hashPassword(password);
-    
-    if (username === VALID_USER && hash === VALID_PASS_HASH) {
-      setSession(username);
-      currentUser = username;
-      await loadUserState(username);
-      if (state.lang) {
-        renderHome();
-        showScreen('home');
-      } else {
-        showScreen('home');
-        // Show language selection if not set
-        if (!state.lang) {
-          state.lang = 'en';
-          saveState();
-          renderHome();
-        }
-      }
-    } else {
-      errEl.textContent = 'Invalid username or password';
-    }
-  } catch (error) {
-    errEl.textContent = 'Network error. Please try again.';
-    console.error(error);
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Log In';
+  switch (newState) {
+    case 'idle':
+      btn.innerHTML = '<span class="request-btn-text">Request Access</span>';
+      break;
+    case 'requesting':
+      btn.innerHTML = '<span class="loading-spinner"></span><span class="request-btn-text">Requesting...</span>';
+      break;
+    case 'requested':
+      btn.innerHTML = '<span class="request-btn-text">✓ Requested</span>';
+      statusEl.innerHTML = '<span class="pulse-dot"></span> Waiting for approval...';
+      break;
+    case 'approved':
+      btn.innerHTML = '<span class="request-btn-text">Enter App →</span>';
+      statusEl.textContent = '✅ Access granted!';
+      statusEl.style.color = 'var(--green-dark)';
+      break;
+    case 'denied':
+      btn.innerHTML = '<span class="request-btn-text">Try Again</span>';
+      statusEl.textContent = '❌ Access was denied';
+      statusEl.style.color = 'var(--red-dark)';
+      break;
   }
-});
-
-function logout() {
-  tts.stop();
-  clearSession();
-  currentUser = null;
-  state = {
-    lang: null, xp: 0, gems: 50, hearts: 5, streak: 0,
-    lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal'
-  };
-  $('authUser').value = '';
-  $('authPass').value = '';
-  $('authError').textContent = '';
-  showScreen('auth');
 }
 
-// ============ BOTTOM NAV ============
+function startPolling(name) {
+  stopPolling();
+  pollTimer = setInterval(async () => {
+    try {
+      const status = await getRequestStatus(name);
+      if (status === 'approved') {
+        stopPolling();
+        setRequestState('approved');
+        toast('Access granted! 🎉');
+        await enterApp(name);
+      } else if (status === 'denied') {
+        stopPolling();
+        setRequestState('denied');
+      }
+    } catch (e) { console.error('Poll error:', e); }
+  }, 8000);
+}
+
+function stopPolling() {
+  if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+}
+
+async function handleRequestClick() {
+  if (requestState === 'approved' && currentRequestName) { await enterApp(currentRequestName); return; }
+  if (requestState === 'requesting' || requestState === 'requested') return;
+
+  const name = $('authName').value.trim();
+  if (!name) { $('authError').textContent = 'Please enter your name'; return; }
+  if (name.length < 2) { $('authError').textContent = 'Name must be at least 2 characters'; return; }
+  if (name.length > 24) { $('authError').textContent = 'Name is too long'; return; }
+  if (!/^[a-zA-Z0-9 _-]+$/.test(name)) { $('authError').textContent = 'Only letters, numbers, spaces, _ and - allowed'; return; }
+
+  $('authError').textContent = '';
+  currentRequestName = name;
+  localStorage.setItem(LASTNAME_KEY, name);
+  setRequestState('requesting');
+
+  try {
+    const existing = await getRequestStatus(name);
+    if (existing === 'approved') { setRequestState('approved'); await enterApp(name); return; }
+
+    await setRequestStatus(name, 'pending');
+    const ok = await sendDiscordRequest(name);
+    if (!ok) throw new Error('Webhook request failed');
+    setRequestState('requested');
+    startPolling(name);
+  } catch (e) {
+    console.error('Request error:', e);
+    setRequestState('idle');
+    $('authError').textContent = 'Could not send request. Please try again.';
+  }
+}
+
+let enteringApp = false;
+async function enterApp(name) {
+  if (enteringApp) return;
+  enteringApp = true;
+  try {
+    stopPolling();
+    setSession(name);
+    currentUser = name;
+    await loadUserState(name);
+    if (!state.lang) { state.lang = 'en'; await saveState(); }
+    renderHome();
+    showScreen('home');
+    if (state.selectedVoiceName) {
+      setTimeout(() => {
+        const v = tts.getAllVoices().find(x => x.name === state.selectedVoiceName);
+        if (v) { tts.setVoice(v); $('voiceDisplay').textContent = v.name.split(' ')[0]; }
+      }, 300);
+    }
+    const rateMap = { slow: 0.7, normal: 0.9, fast: 1.1 };
+    tts.setRate(rateMap[state.speed] || 0.9);
+  } finally {
+    enteringApp = false;
+  }
+}
+
+$('requestBtn').addEventListener('click', handleRequestClick);
+$('authName').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !$('requestBtn').disabled) { e.preventDefault(); handleRequestClick(); }
+});
+
+// ============ ADMIN PANEL ============
+function initAdminMode() {
+  showScreen('adminScreen');
+  const action = urlParams.get('action');
+  const name = urlParams.get('name');
+  if (action && name) renderAdminAction(action, name);
+  else renderAdminPanel();
+}
+
+function formatAgo(ts) {
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+  return Math.floor(diff / 86400) + 'd ago';
+}
+
+async function renderAdminAction(action, name) {
+  const body = $('adminBody');
+  const isApprove = action === 'approve';
+  $('adminSub').textContent = isApprove ? 'Approve request' : 'Deny request';
+  const actionText = isApprove ? 'Approve' : 'Deny';
+  const actionColor = isApprove ? '#58CC02' : '#FF4B4B';
+  const actionIcon = isApprove ? '✅' : '❌';
+
+  body.innerHTML = `
+    <div class="admin-card" style="text-align:center; padding:28px 20px;">
+      <div style="font-size:56px; margin-bottom:14px;">${actionIcon}</div>
+      <div style="font-size:22px; font-weight:900; margin-bottom:6px; color:#3C3C3C;">${actionText} request?</div>
+      <div style="font-size:14px; color:#777; font-weight:700; margin-bottom:6px;">User</div>
+      <div style="font-size:24px; font-weight:900; margin-bottom:22px; color:${actionColor};">${name}</div>
+      <input type="password" class="auth-input" id="adminPass" placeholder="Admin passcode" style="margin-bottom:8px; text-align:center;">
+      <div id="adminError" class="auth-error"></div>
+      <button class="admin-btn ${isApprove ? 'admin-btn-approve' : 'admin-btn-deny'}" id="adminActionBtn"
+              style="width:100%; padding:14px; font-size:14px; border-radius:12px; margin-top:4px;">
+        Confirm ${actionText}
+      </button>
+      <a href="?admin=1" class="admin-btn" style="display:block; width:100%; padding:12px; margin-top:10px; border-radius:12px; background:#E5E5E5; color:#777; text-decoration:none; text-align:center; font-size:13px;">Cancel</a>
+    </div>
+  `;
+  setTimeout(() => $('adminPass')?.focus(), 100);
+
+  $('adminActionBtn').addEventListener('click', async () => {
+    if ($('adminPass').value !== ADMIN_PASSCODE) { $('adminError').textContent = 'Incorrect passcode'; return; }
+    const btn = $('adminActionBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading-spinner"></span>';
+    try {
+      await setRequestStatus(name, isApprove ? 'approved' : 'denied');
+      body.innerHTML = `
+        <div class="admin-card" style="text-align:center; padding:32px 20px;">
+          <div style="font-size:64px; margin-bottom:12px;">${isApprove ? '🎉' : '🚫'}</div>
+          <div style="font-size:22px; font-weight:900; margin-bottom:6px;">${isApprove ? 'Approved!' : 'Denied'}</div>
+          <div style="font-size:14px; color:#777; font-weight:700; margin-bottom:22px;">${name}'s request has been ${isApprove ? 'approved' : 'denied'}.</div>
+          <a href="?admin=1" class="admin-btn admin-btn-approve" style="display:block; padding:12px; border-radius:12px; text-decoration:none; text-align:center; font-size:13px;">Back to Panel</a>
+        </div>
+      `;
+    } catch (e) {
+      $('adminError').textContent = 'Error: ' + e.message;
+      btn.disabled = false;
+      btn.textContent = 'Confirm ' + actionText;
+    }
+  });
+}
+
+async function renderAdminPanel() {
+  const body = $('adminBody');
+  $('adminSub').textContent = 'Access control';
+  const authed = sessionStorage.getItem('admin_authed') === '1';
+
+  if (!authed) {
+    body.innerHTML = `
+      <div class="admin-card" style="text-align:center; padding:28px 20px;">
+        <div style="font-size:44px; margin-bottom:12px;">🔐</div>
+        <div style="font-size:18px; font-weight:900; margin-bottom:6px;">Enter Admin Passcode</div>
+        <div style="font-size:12px; color:#777; font-weight:700; margin-bottom:18px;">To manage access requests</div>
+        <input type="password" class="auth-input" id="adminPass" placeholder="Passcode" style="margin-bottom:8px; text-align:center;">
+        <div id="adminError" class="auth-error"></div>
+        <button class="admin-btn admin-btn-approve" id="adminAuthBtn" style="width:100%; padding:14px; font-size:14px; border-radius:12px; margin-top:4px;">Unlock</button>
+      </div>
+    `;
+    setTimeout(() => $('adminPass')?.focus(), 100);
+    const tryUnlock = () => {
+      if ($('adminPass').value === ADMIN_PASSCODE) {
+        sessionStorage.setItem('admin_authed', '1');
+        renderAdminPanel();
+      } else $('adminError').textContent = 'Incorrect passcode';
+    };
+    $('adminAuthBtn').addEventListener('click', tryUnlock);
+    $('adminPass').addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlock(); });
+    return;
+  }
+
+  body.innerHTML = '<div style="text-align:center; padding:30px; color:#777; font-weight:700;">Loading…</div>';
+
+  try {
+    const data = await cloudGet();
+    const requests = data.__requests__ || {};
+    const entries = Object.entries(requests).sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
+
+    if (entries.length === 0) {
+      body.innerHTML = `
+        <div class="admin-card" style="text-align:center; padding:36px 20px;">
+          <div style="font-size:44px; margin-bottom:10px;">📭</div>
+          <div style="font-weight:800; color:#3C3C3C;">No requests yet</div>
+          <div style="font-size:12px; color:#999; margin-top:4px;">When someone requests access, they'll appear here.</div>
+        </div>
+      `;
+      return;
+    }
+
+    const pending = entries.filter(([, r]) => r.status === 'pending').length;
+    let html = `
+      <div class="admin-card" style="margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-weight:900; font-size:15px; color:#3C3C3C;">All Requests</div>
+          <div style="font-size:11px; font-weight:800; color:${pending ? '#FFC800' : '#58CC02'}; background:${pending ? '#FFF8E0' : '#E8F5D9'}; padding:3px 8px; border-radius:6px;">${pending} pending</div>
+        </div>
+      </div>
+      <div class="admin-card">
+    `;
+    entries.forEach(([name, r]) => {
+      const status = r.status || 'pending';
+      const statusColor = status === 'approved' ? '#58CC02' : status === 'denied' ? '#FF4B4B' : '#FFC800';
+      const statusBg    = status === 'approved' ? '#E8F5D9' : status === 'denied' ? '#FFE5E5' : '#FFF8E0';
+      const ago = r.timestamp ? formatAgo(r.timestamp) : '';
+      html += `
+        <div class="admin-request-row">
+          <div style="flex:1; min-width:0;">
+            <div class="admin-request-name">${name}</div>
+            ${ago ? `<div class="admin-request-time">${ago}</div>` : ''}
+            <div class="admin-request-status" style="background:${statusBg}; color:${statusColor};">${status}</div>
+          </div>
+          ${status === 'pending' ? `
+            <div style="display:flex; gap:6px; flex-shrink:0;">
+              <button class="admin-btn admin-btn-approve" data-action="approve" data-name="${name}">✓</button>
+              <button class="admin-btn admin-btn-deny" data-action="deny" data-name="${name}">✕</button>
+            </div>` : ''}
+        </div>
+      `;
+    });
+    html += '</div>';
+    body.innerHTML = html;
+
+    body.querySelectorAll('button[data-action]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        btn.disabled = true;
+        try {
+          await setRequestStatus(btn.dataset.name, btn.dataset.action === 'approve' ? 'approved' : 'denied');
+          renderAdminPanel();
+        } catch (e) { btn.disabled = false; alert('Error: ' + e.message); }
+      });
+    });
+  } catch (e) {
+    body.innerHTML = `
+      <div class="admin-card" style="text-align:center; padding:24px; color:#FF4B4B;">
+        <div style="font-weight:800;">Error loading requests</div>
+        <div style="font-size:12px; margin-top:4px;">${e.message}</div>
+      </div>
+    `;
+  }
+}
+
+$('adminExitBtn')?.addEventListener('click', () => {
+  sessionStorage.removeItem('admin_authed');
+  window.location.href = window.location.pathname;
+});
+
+// ============ BOOT ============
+$('authMascot').innerHTML = mascotSVG(110);
+
+async function boot() {
+  const session = getSession();
+  if (session) {
+    try {
+      const status = await getRequestStatus(session);
+      if (status === 'approved') { await enterApp(session); return; }
+      if (status === null) {
+        const data = await cloudGet();
+        if (data[session]?.data) { await enterApp(session); return; }
+      }
+      clearSession();
+    } catch (e) {
+      await enterApp(session);
+      return;
+    }
+  }
+
+  showScreen('auth');
+  const lastName = localStorage.getItem(LASTNAME_KEY);
+  if (lastName) {
+    $('authName').value = lastName;
+    currentRequestName = lastName;
+    try {
+      const status = await getRequestStatus(lastName);
+      if (status === 'approved') setRequestState('approved');
+      else if (status === 'pending') { setRequestState('requested'); startPolling(lastName); }
+      else if (status === 'denied') setRequestState('denied');
+    } catch (e) { /* offline */ }
+  }
+  setTimeout(() => $('authName')?.focus(), 350);
+}
+
+// ============ NAV ============
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', () => {
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
     item.classList.add('active');
-    
     const tab = item.dataset.tab;
-    if (tab === 'learn') {
-      $('learnTab').style.display = 'block';
-      $('wordsTab').style.display = 'none';
-    } else if (tab === 'words') {
-      $('learnTab').style.display = 'none';
-      $('wordsTab').style.display = 'block';
-      renderWordsList();
-    }
+    if (tab === 'learn') { $('learnTab').style.display = 'block'; $('wordsTab').style.display = 'none'; }
+    else if (tab === 'words') { $('learnTab').style.display = 'none'; $('wordsTab').style.display = 'block'; renderWordsList(); }
   });
 });
 
 // ============ WORDS TAB ============
 let currentFilter = 'all';
 let searchQuery = '';
-
-$('searchInput').addEventListener('input', (e) => {
-  searchQuery = e.target.value.toLowerCase();
-  renderWordsList();
-});
-
+$('searchInput').addEventListener('input', (e) => { searchQuery = e.target.value.toLowerCase(); renderWordsList(); });
 document.querySelectorAll('.filter-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
@@ -2097,75 +2307,48 @@ document.querySelectorAll('.filter-tab').forEach(tab => {
 function renderWordsList() {
   const list = $('wordsList');
   list.innerHTML = '';
-
-  let filteredUnits = Object.keys(VOCAB);
-  if (currentFilter !== 'all') {
-    filteredUnits = [currentFilter];
-  }
-
+  let units = Object.keys(VOCAB);
+  if (currentFilter !== 'all') units = [currentFilter];
   let hasResults = false;
 
-  filteredUnits.forEach(unitId => {
+  units.forEach(unitId => {
     const unit = VOCAB[unitId];
     let words = unit.words;
-
-    // Filter by search
     if (searchQuery) {
-      words = words.filter(w => 
+      words = words.filter(w =>
         w.da.toLowerCase().includes(searchQuery) ||
         w.en.toLowerCase().includes(searchQuery) ||
-        w.df.toLowerCase().includes(searchQuery)
-      );
+        w.df.toLowerCase().includes(searchQuery));
     }
-
     if (words.length === 0) return;
-
     hasResults = true;
-
-    const category = document.createElement('div');
-    category.className = 'word-category';
-    category.innerHTML = `
-      <div class="category-title">
-        <span>${unit.icon}</span>
-        <span>${unit.title[state.lang]}</span>
-      </div>
-    `;
-
+    const cat = document.createElement('div');
+    cat.className = 'word-category';
+    cat.innerHTML = `<div class="category-title"><span>${unit.icon}</span><span>${unit.title[state.lang || 'en']}</span></div>`;
     words.forEach(w => {
       const card = document.createElement('div');
       card.className = 'word-card';
-      card.innerHTML = `
-        <div class="word-speaker">🔊</div>
-        <div class="word-text">
-          <div class="word-df">${w.df}</div>
-          <div class="word-src">${getSourceWord(w)}</div>
-        </div>
-      `;
+      card.innerHTML = `<div class="word-speaker">🔊</div><div class="word-text"><div class="word-df">${w.df}</div><div class="word-src">${getSourceWord(w)}</div></div>`;
       card.addEventListener('click', () => {
         card.classList.add('playing');
-        tts.speak(w.df, 'df', () => {
-          card.classList.remove('playing');
-        });
+        tts.speak(w.df, 'df', () => card.classList.remove('playing'));
         setTimeout(() => card.classList.remove('playing'), 2000);
       });
-      category.appendChild(card);
+      cat.appendChild(card);
     });
-
-    list.appendChild(category);
+    list.appendChild(cat);
   });
-
-  if (!hasResults) {
-    list.innerHTML = '<div class="no-results">No words found</div>';
-  }
+  if (!hasResults) list.innerHTML = '<div class="no-results">No words found</div>';
 }
 
+// ============ HOME ============
 function renderHome() {
   $('streakVal').textContent = state.streak;
   $('gemVal').textContent = state.gems;
   $('heartVal').textContent = state.hearts;
   $('flagBtn').textContent = state.lang === 'da' ? '🇩🇰' : '🇬🇧';
   $('userName').textContent = currentUser;
-  $('userAvatar').textContent = currentUser.charAt(0).toUpperCase();
+  $('userAvatar').textContent = (currentUser || '?').charAt(0).toUpperCase();
 
   const wrap = $('unitsWrap');
   wrap.innerHTML = '';
@@ -2182,13 +2365,11 @@ function renderHome() {
       <div class="unit-header">
         <div class="unit-info">
           <h3>${t('unit')} ${unitId}</h3>
-          <p>${unit.title[state.lang]}</p>
+          <p>${unit.title[state.lang || 'en']}</p>
         </div>
         <div class="unit-badge">${unit.icon}</div>
       </div>
-      <div class="lessons"></div>
-    `;
-
+      <div class="lessons"></div>`;
     const lessonsWrap = unitEl.querySelector('.lessons');
 
     lessons.forEach((_, idx) => {
@@ -2196,29 +2377,20 @@ function renderHome() {
       const prevCompleted = idx === 0 || progress[idx - 1]?.completed;
       const isCurrent = !isCompleted && prevCompleted && accessible;
       const isLocked = !accessible || (!prevCompleted && !isCompleted);
-
       const node = document.createElement('div');
       node.className = 'lesson-node';
       if (isCompleted) node.classList.add('completed');
       if (isCurrent) node.classList.add('current');
       if (isLocked) node.classList.add('locked');
-
-      node.innerHTML = `
-        <span>${isLocked ? '🔒' : unit.icon}</span>
-        <div class="lesson-tooltip">${t('lesson')} ${idx + 1}</div>
-      `;
-
-      if (!isLocked) {
-        node.addEventListener('click', () => startLesson(parseInt(unitId), idx));
-      }
-
+      node.innerHTML = `<span>${isLocked ? '🔒' : unit.icon}</span><div class="lesson-tooltip">${t('lesson')} ${idx + 1}</div>`;
+      if (!isLocked) node.addEventListener('click', () => startLesson(parseInt(unitId), idx));
       lessonsWrap.appendChild(node);
     });
-
     wrap.appendChild(unitEl);
   });
 }
 
+// ============ LESSON ============
 let currentLesson = null;
 let currentStep = 0;
 let steps = [];
@@ -2228,7 +2400,6 @@ let feedbackShown = false;
 
 function startLesson(unitId, lessonIdx) {
   if (state.hearts <= 0) { showScreen('gameover'); return; }
-
   const lesson = getLessonsForUnit(unitId)[lessonIdx];
   currentLesson = { unitId, lessonIdx, ...lesson };
   steps = buildSteps(lesson);
@@ -2236,7 +2407,6 @@ function startLesson(unitId, lessonIdx) {
   correctCount = 0;
   selectedAnswer = null;
   feedbackShown = false;
-
   $('lessonHearts').textContent = state.hearts;
   showScreen('lesson');
   renderStep();
@@ -2244,79 +2414,51 @@ function startLesson(unitId, lessonIdx) {
 
 function buildSteps(lesson) {
   const allWords = VOCAB[currentLesson.unitId].words;
-  const stepsList = [];
-
-  stepsList.push({ type: 'intro', words: lesson.words });
-
+  const list = [];
+  list.push({ type: 'intro', words: lesson.words });
   lesson.words.forEach((w, i) => {
-    stepsList.push({
-      type: 'mcq',
-      prompt: getSourceWord(w),
-      promptLabel: t('translateTo'),
-      correct: w.df,
+    list.push({
+      type: 'mcq', prompt: getSourceWord(w), promptLabel: t('translateTo'), correct: w.df,
       choices: shuffle([w.df, ...getDistractors(w, allWords, 3, 'df')]),
-      speakText: w.df,
-      speakLang: 'df'
+      speakText: w.df, speakLang: 'df'
     });
-
     if (i % 2 === 0) {
-      stepsList.push({
-        type: 'type',
-        prompt: getSourceWord(w),
-        promptLabel: t('writeIn'),
-        correct: w.df,
-        speakText: w.df,
-        speakLang: 'df'
-      });
+      list.push({ type: 'type', prompt: getSourceWord(w), promptLabel: t('writeIn'), correct: w.df, speakText: w.df, speakLang: 'df' });
     }
-
     if (i % 2 === 1) {
-      stepsList.push({
-        type: 'mcq',
-        prompt: w.df,
-        promptLabel: t('whatMeans'),
-        correct: getSourceWord(w),
+      list.push({
+        type: 'mcq', prompt: w.df, promptLabel: t('whatMeans'), correct: getSourceWord(w),
         choices: shuffle([getSourceWord(w), ...getDistractors(w, allWords, 3, state.lang)]),
-        speakText: w.df,
-        speakLang: 'df'
+        speakText: w.df, speakLang: 'df'
       });
     }
   });
-
   lesson.sentences.forEach(s => {
-    stepsList.push({
-      type: 'bank',
-      prompt: getSourceWord(s),
-      promptLabel: t('buildSentence'),
-      correct: s.df,
+    list.push({
+      type: 'bank', prompt: getSourceWord(s), promptLabel: t('buildSentence'), correct: s.df,
       words: shuffle(s.df.split(' ').concat(getSentenceDistractors(s.df, allWords))),
-      speakText: s.df,
-      speakLang: 'df'
+      speakText: s.df, speakLang: 'df'
     });
   });
-
-  return stepsList;
+  return list;
 }
 
 function getDistractors(word, pool, count, langKey) {
-  const others = pool.filter(w => w.df !== word.df);
-  const shuffled = shuffle(others);
-  if (langKey === 'df') return shuffled.slice(0, count).map(w => w.df);
-  return shuffled.slice(0, count).map(w => langKey === 'da' ? w.da : w.en);
+  const others = shuffle(pool.filter(w => w.df !== word.df));
+  if (langKey === 'df') return others.slice(0, count).map(w => w.df);
+  return others.slice(0, count).map(w => langKey === 'da' ? w.da : w.en);
 }
 
-function getSentenceDistractors(correctSentence, pool) {
-  const correctWords = correctSentence.split(' ');
-  const allWords = pool.flatMap(w => w.df.split(' '));
-  const unique = [...new Set(allWords)].filter(w => !correctWords.includes(w));
-  return shuffle(unique).slice(0, 2);
+function getSentenceDistractors(correct, pool) {
+  const cw = correct.split(' ');
+  const all = pool.flatMap(w => w.df.split(' '));
+  const uniq = [...new Set(all)].filter(w => !cw.includes(w));
+  return shuffle(uniq).slice(0, 2);
 }
 
 function renderStep() {
   const step = steps[currentStep];
-  const progress = (currentStep / steps.length) * 100;
-  $('progressFill').style.width = progress + '%';
-
+  $('progressFill').style.width = (currentStep / steps.length) * 100 + '%';
   $('feedback').classList.remove('show', 'correct', 'wrong');
   $('footerBtn').textContent = t('check');
   $('footerBtn').className = 'footer-btn check';
@@ -2331,21 +2473,15 @@ function renderStep() {
 
   const mascotWrap = document.createElement('div');
   mascotWrap.className = 'mascot-wrap';
-  mascotWrap.innerHTML = `
-    <div class="mascot" id="lessonMascot">${mascotSVG(70)}</div>
-    <div class="bubble" id="speechBubble">${getMascotMessage(step)}</div>
-  `;
+  mascotWrap.innerHTML = `<div class="mascot" id="lessonMascot">${mascotSVG(70)}</div><div class="bubble" id="speechBubble">${getMascotMessage(step)}</div>`;
   body.appendChild(mascotWrap);
 
-  if (step.type === 'intro') {
-    renderIntro(step, body);
-    return;
-  }
+  if (step.type === 'intro') { renderIntro(step, body); return; }
 
-  const typeLabel = document.createElement('div');
-  typeLabel.className = 'q-type';
-  typeLabel.textContent = step.promptLabel;
-  body.appendChild(typeLabel);
+  const label = document.createElement('div');
+  label.className = 'q-type';
+  label.textContent = step.promptLabel;
+  body.appendChild(label);
 
   const prompt = document.createElement('div');
   prompt.className = 'q-prompt';
@@ -2353,32 +2489,24 @@ function renderStep() {
   body.appendChild(prompt);
 
   if (step.speakText) {
-    const speaker = document.createElement('div');
-    speaker.className = 'speaker-btn';
-    speaker.innerHTML = t('listen');
-    speaker.addEventListener('click', () => {
-      speaker.classList.add('playing');
-      const mascot = $('lessonMascot');
-      if (mascot) mascot.classList.add('talking');
+    const sp = document.createElement('div');
+    sp.className = 'speaker-btn';
+    sp.innerHTML = t('listen');
+    sp.addEventListener('click', () => {
+      sp.classList.add('playing');
+      const m = $('lessonMascot');
+      if (m) m.classList.add('talking');
       tts.speak(step.speakText, step.speakLang, () => {
-        speaker.classList.remove('playing');
-        if (mascot) mascot.classList.remove('talking');
-      });
-      setTimeout(() => {
-        speaker.classList.remove('playing');
-        const m = $('lessonMascot');
+        sp.classList.remove('playing');
         if (m) m.classList.remove('talking');
-      }, 2500);
+      });
+      setTimeout(() => { sp.classList.remove('playing'); const mm = $('lessonMascot'); if (mm) mm.classList.remove('talking'); }, 2500);
     });
-    body.appendChild(speaker);
-
+    body.appendChild(sp);
     setTimeout(() => {
-      const mascot = $('lessonMascot');
-      if (mascot) mascot.classList.add('talking');
-      tts.speak(step.speakText, step.speakLang, () => {
-        const m = $('lessonMascot');
-        if (m) m.classList.remove('talking');
-      });
+      const m = $('lessonMascot');
+      if (m) m.classList.add('talking');
+      tts.speak(step.speakText, step.speakLang, () => { const mm = $('lessonMascot'); if (mm) mm.classList.remove('talking'); });
     }, 400);
   }
 
@@ -2404,24 +2532,15 @@ function renderStep() {
     input.type = 'text';
     input.className = 'type-input';
     input.placeholder = t('typeTrans');
-    input.autocomplete = 'off';
-    input.autocapitalize = 'off';
-    input.spellcheck = false;
-    input.addEventListener('input', () => {
-      selectedAnswer = input.value.trim();
-      $('footerBtn').disabled = selectedAnswer.length === 0;
-    });
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !$('footerBtn').disabled) $('footerBtn').click();
-    });
+    input.autocomplete = 'off'; input.autocapitalize = 'off'; input.spellcheck = false;
+    input.addEventListener('input', () => { selectedAnswer = input.value.trim(); $('footerBtn').disabled = selectedAnswer.length === 0; });
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !$('footerBtn').disabled) $('footerBtn').click(); });
     body.appendChild(input);
     setTimeout(() => input.focus(), 100);
   } else if (step.type === 'bank') {
     const zone = document.createElement('div');
-    zone.className = 'answer-zone';
-    zone.id = 'answerZone';
+    zone.className = 'answer-zone'; zone.id = 'answerZone';
     body.appendChild(zone);
-
     const bank = document.createElement('div');
     bank.className = 'word-bank';
     step.words.forEach((w, i) => {
@@ -2466,31 +2585,20 @@ function renderIntro(step, body) {
     const card = document.createElement('div');
     card.className = 'intro-word-card';
     card.style.animationDelay = (i * 0.08) + 's';
-    card.innerHTML = `
-      <div class="intro-icon">🔊</div>
-      <div class="intro-text">
-        <div class="intro-df">${w.df}</div>
-        <div class="intro-src">${getSourceWord(w)}</div>
-      </div>
-    `;
+    card.innerHTML = `<div class="intro-icon">🔊</div><div class="intro-text"><div class="intro-df">${w.df}</div><div class="intro-src">${getSourceWord(w)}</div></div>`;
     card.addEventListener('click', () => {
-      const mascot = $('lessonMascot');
-      if (mascot) mascot.classList.add('talking');
-      tts.speak(w.df, 'df', () => {
-        if (mascot) mascot.classList.remove('talking');
-      });
+      const m = $('lessonMascot');
+      if (m) m.classList.add('talking');
+      tts.speak(w.df, 'df', () => { if (m) m.classList.remove('talking'); });
     });
     body.appendChild(card);
   });
 
   setTimeout(() => {
     const words = step.words.map(w => w.df);
-    const mascot = $('lessonMascot');
-    if (mascot) mascot.classList.add('talking');
-    tts.speakSequence(words, 'df', () => {
-      const m = $('lessonMascot');
-      if (m) m.classList.remove('talking');
-    });
+    const m = $('lessonMascot');
+    if (m) m.classList.add('talking');
+    tts.speakSequence(words, 'df', () => { const mm = $('lessonMascot'); if (mm) mm.classList.remove('talking'); });
   }, 500);
 
   $('footerBtn').disabled = false;
@@ -2512,10 +2620,9 @@ function getMascotMessage(step) {
 function updateBankAnswer() {
   const zone = $('answerZone');
   if (!zone) return;
-  const chips = zone.querySelectorAll('.word-chip');
-  const answer = Array.from(chips).map(c => c.textContent).join(' ');
-  selectedAnswer = answer;
-  $('footerBtn').disabled = answer.length === 0;
+  const ans = Array.from(zone.querySelectorAll('.word-chip')).map(c => c.textContent).join(' ');
+  selectedAnswer = ans;
+  $('footerBtn').disabled = ans.length === 0;
 }
 
 $('footerBtn').addEventListener('click', async () => {
@@ -2525,7 +2632,6 @@ $('footerBtn').addEventListener('click', async () => {
     else renderStep();
     return;
   }
-
   const step = steps[currentStep];
   if (step.type === 'intro') return;
 
@@ -2533,7 +2639,6 @@ $('footerBtn').addEventListener('click', async () => {
   feedbackShown = true;
   const fb = $('feedback');
   fb.classList.add('show');
-
   const mascot = $('lessonMascot');
   const bubble = $('speechBubble');
 
@@ -2545,42 +2650,30 @@ $('footerBtn').addEventListener('click', async () => {
     $('footerBtn').textContent = t('continue');
     $('footerBtn').className = 'footer-btn continue-correct';
     $('footerBtn').disabled = false;
-
     if (mascot) { mascot.classList.remove('sad'); mascot.classList.add('happy'); }
     if (bubble) bubble.textContent = t('mascotGoodJob');
     setTimeout(() => { if (mascot) mascot.classList.remove('happy'); }, 700);
-
-    document.querySelectorAll('.choice').forEach(c => {
-      if (c.textContent === step.correct) c.classList.add('correct');
-    });
+    document.querySelectorAll('.choice').forEach(c => { if (c.textContent === step.correct) c.classList.add('correct'); });
   } else {
     state.hearts = Math.max(0, state.hearts - 1);
     $('lessonHearts').textContent = state.hearts;
     $('heartVal').textContent = state.hearts;
     bumpStat($('heartChip'));
-
     fb.classList.add('wrong');
     $('feedbackTitle').innerHTML = `❌ ${t('wrong')}`;
     $('feedbackBody').innerHTML = `${t('correctAns')} <strong>${step.correct}</strong>`;
     $('footerBtn').textContent = t('continue');
     $('footerBtn').className = 'footer-btn continue-wrong';
     $('footerBtn').disabled = false;
-
     if (mascot) { mascot.classList.remove('happy'); mascot.classList.add('sad'); }
     if (bubble) bubble.textContent = t('mascotOops');
     setTimeout(() => { if (mascot) mascot.classList.remove('sad'); }, 700);
-
     document.querySelectorAll('.choice').forEach(c => {
       if (c.textContent === selectedAnswer) c.classList.add('wrong');
       if (c.textContent === step.correct) c.classList.add('correct');
     });
-
-    if (state.hearts <= 0) {
-      setTimeout(() => showScreen('gameover'), 1200);
-      return;
-    }
+    if (state.hearts <= 0) { setTimeout(() => showScreen('gameover'), 1200); return; }
   }
-
   await saveState();
   $('progressFill').style.width = ((currentStep + 1) / steps.length) * 100 + '%';
 });
@@ -2588,76 +2681,42 @@ $('footerBtn').addEventListener('click', async () => {
 function checkAnswer(step, answer) {
   if (!answer) return false;
   if (step.type === 'mcq') return answer === step.correct;
-  if (step.type === 'type' || step.type === 'bank') {
-    return answer.trim().toLowerCase() === step.correct.trim().toLowerCase();
-  }
+  if (step.type === 'type' || step.type === 'bank') return answer.trim().toLowerCase() === step.correct.trim().toLowerCase();
   return false;
 }
 
 async function finishLesson() {
   const xpGain = 15 + (correctCount * 2);
   const gemGain = 5;
-
   state.xp += xpGain;
   state.gems += gemGain;
-
   if (!state.progress[currentLesson.unitId]) state.progress[currentLesson.unitId] = {};
   const prev = state.progress[currentLesson.unitId][currentLesson.lessonIdx];
-  state.progress[currentLesson.unitId][currentLesson.lessonIdx] = {
-    completed: true,
-    best: Math.max(prev?.best || 0, correctCount)
-  };
-
+  state.progress[currentLesson.unitId][currentLesson.lessonIdx] = { completed: true, best: Math.max(prev?.best || 0, correctCount) };
   updateStreak();
   await saveState();
-
   $('xpEarned').textContent = '+' + xpGain;
   $('gemEarned').textContent = '+' + gemGain;
   $('accuracyVal').textContent = Math.round((correctCount / steps.length) * 100) + '%';
   $('completeTitle').textContent = t('lessonComplete');
   $('completeSub').textContent = t('greatProgress');
-
   showScreen('complete');
   confetti();
 }
 
-$('continueBtn').addEventListener('click', () => {
-  renderHome();
-  showScreen('home');
-});
-
-$('closeLesson').addEventListener('click', () => {
-  if (confirm('Quit lesson?')) {
-    tts.stop();
-    renderHome();
-    showScreen('home');
-  }
-});
-
+$('continueBtn').addEventListener('click', () => { renderHome(); showScreen('home'); });
+$('closeLesson').addEventListener('click', () => { if (confirm('Quit lesson?')) { tts.stop(); renderHome(); showScreen('home'); } });
 $('refillBtn').addEventListener('click', async () => {
-  if (state.gems >= 50) {
-    state.gems -= 50;
-    state.hearts = 5;
-    await saveState();
-    toast(t('refillDone'));
-    renderHome();
-    showScreen('home');
-  } else {
-    toast('Not enough gems 💎');
-  }
+  if (state.gems >= 50) { state.gems -= 50; state.hearts = 5; await saveState(); toast('Hearts refilled!'); renderHome(); showScreen('home'); }
+  else toast('Not enough gems 💎');
 });
-
-$('goHomeBtn').addEventListener('click', () => {
-  renderHome();
-  showScreen('home');
-});
+$('goHomeBtn').addEventListener('click', () => { renderHome(); showScreen('home'); });
 
 $('flagBtn').addEventListener('click', () => {
   $('accountDisplay').textContent = currentUser;
   $('langDisplay').textContent = state.lang === 'da' ? 'Dansk' : 'English';
   $('xpDisplay').textContent = state.xp;
-  const speedLabel = state.speed === 'slow' ? t('slow') : state.speed === 'fast' ? t('fast') : t('normal');
-  $('speedDisplay').textContent = speedLabel;
+  $('speedDisplay').textContent = state.speed === 'slow' ? t('slow') : state.speed === 'fast' ? t('fast') : t('normal');
   $('settingsModal').classList.add('show');
 });
 
@@ -2671,107 +2730,57 @@ $('langDisplay').addEventListener('click', () => {
 
 $('speedDisplay').addEventListener('click', () => {
   const speeds = ['slow', 'normal', 'fast'];
-  const idx = speeds.indexOf(state.speed);
-  state.speed = speeds[(idx + 1) % speeds.length];
+  const i = speeds.indexOf(state.speed);
+  state.speed = speeds[(i + 1) % speeds.length];
   const rateMap = { slow: 0.7, normal: 0.9, fast: 1.1 };
   tts.setRate(rateMap[state.speed]);
-  const label = state.speed === 'slow' ? t('slow') : state.speed === 'fast' ? t('fast') : t('normal');
-  $('speedDisplay').textContent = label;
+  $('speedDisplay').textContent = state.speed === 'slow' ? t('slow') : state.speed === 'fast' ? t('fast') : t('normal');
   saveState();
   tts.speak('Hello!', 'en');
 });
 
-$('voiceDisplay').addEventListener('click', () => {
-  renderVoiceList();
-  $('voiceModal').classList.add('show');
-});
+$('voiceDisplay').addEventListener('click', () => { renderVoiceList(); $('voiceModal').classList.add('show'); });
 
 function renderVoiceList() {
-  const voices = tts.getAllVoices();
   const list = $('voiceList');
   list.innerHTML = '';
-
-  const premiumKeywords = ['natural', 'enhanced', 'premium', 'google', 'microsoft', 'neural', 'wavenet'];
-
-  voices.forEach((voice) => {
+  const premium = ['natural','enhanced','premium','google','microsoft','neural','wavenet'];
+  tts.getAllVoices().forEach(v => {
     const item = document.createElement('div');
     item.className = 'voice-item';
-    if (state.selectedVoiceName === voice.name) item.classList.add('selected');
-
-    const isPremium = premiumKeywords.some(k => voice.name.toLowerCase().includes(k));
-    const badge = isPremium ? '<span class="voice-badge">HD</span>' : '';
-
-    item.innerHTML = `
-      <div>
-        <div style="font-weight:700;">${voice.name}</div>
-        <div style="font-size:11px; color:#777;">${voice.lang}</div>
-      </div>
-      ${badge}
-    `;
-
+    if (state.selectedVoiceName === v.name) item.classList.add('selected');
+    const isP = premium.some(k => v.name.toLowerCase().includes(k));
+    item.innerHTML = `<div><div style="font-weight:700;">${v.name}</div><div style="font-size:11px; color:#777;">${v.lang}</div></div>${isP ? '<span class="voice-badge">HD</span>' : ''}`;
     item.addEventListener('click', () => {
-      tts.setVoice(voice);
-      state.selectedVoiceName = voice.name;
+      tts.setVoice(v);
+      state.selectedVoiceName = v.name;
       saveState();
-      $('voiceDisplay').textContent = voice.name.split(' ')[0];
+      $('voiceDisplay').textContent = v.name.split(' ')[0];
       $('voiceModal').classList.remove('show');
       tts.speak('Hello! This is my voice.', 'en');
     });
-
     list.appendChild(item);
   });
 }
 
 $('closeVoiceModal').addEventListener('click', () => $('voiceModal').classList.remove('show'));
 $('closeSettings').addEventListener('click', () => $('settingsModal').classList.remove('show'));
-$('settingsModal').addEventListener('click', (e) => {
-  if (e.target === $('settingsModal')) $('settingsModal').classList.remove('show');
-});
-$('voiceModal').addEventListener('click', (e) => {
-  if (e.target === $('voiceModal')) $('voiceModal').classList.remove('show');
-});
+$('settingsModal').addEventListener('click', (e) => { if (e.target === $('settingsModal')) $('settingsModal').classList.remove('show'); });
+$('voiceModal').addEventListener('click', (e) => { if (e.target === $('voiceModal')) $('voiceModal').classList.remove('show'); });
 
 $('logoutBtn').addEventListener('click', () => {
-  if (confirm('Log out?')) logout();
+  if (confirm('Log out?')) {
+    tts.stop();
+    stopPolling();
+    clearSession();
+    currentUser = null;
+    state = { lang: null, xp: 0, gems: 50, hearts: 5, streak: 0, lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal' };
+    $('authError').textContent = '';
+    setRequestState('idle');
+    showScreen('auth');
+    setTimeout(() => $('authName').focus(), 300);
+  }
 });
-
-$('authMascot').innerHTML = mascotSVG(110);
-
-const session = getSession();
-if (session) {
-  (async () => {
-    const accounts = await cloudGet();
-    if (accounts[session] || session === VALID_USER) {
-      currentUser = session;
-      await loadUserState(session);
-      if (state.lang) {
-        renderHome();
-        showScreen('home');
-      } else {
-        state.lang = 'en';
-        saveState();
-        renderHome();
-        showScreen('home');
-      }
-      if (state.selectedVoiceName) {
-        setTimeout(() => {
-          const v = tts.getAllVoices().find(v => v.name === state.selectedVoiceName);
-          if (v) {
-            tts.setVoice(v);
-            $('voiceDisplay').textContent = v.name.split(' ')[0];
-          }
-        }, 500);
-      }
-      const rateMap = { slow: 0.7, normal: 0.9, fast: 1.1 };
-      tts.setRate(rateMap[state.speed] || 0.9);
-    } else {
-      clearSession();
-      showScreen('auth');
-    }
-  })();
-} else {
-  showScreen('auth');
-}
 
 setInterval(async () => {
   if (currentUser && state.hearts < 5) {
@@ -2781,6 +2790,9 @@ setInterval(async () => {
   }
 }, 30 * 60 * 1000);
 
+// ============ GO ============
+if (isAdminMode) initAdminMode();
+else boot();
 </script>
 
 </body>
