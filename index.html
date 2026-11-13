@@ -217,6 +217,7 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
+    line-height: 1.4;
   }
 
   .pulse-dot {
@@ -1410,7 +1411,6 @@
 
 <script>
 // ============ CONFIG ============
-// ⚠️ DO NOT CHANGE THESE - these are your working credentials
 const CLOUD_CONFIG = {
   BIN_ID: '6af727e7ac6210605a853a74',
   API_KEY: '$2a$10$0Iv/9aI8ROmnVBDmYP/W0eDFZkS22TfFItJPz07yKsEpiKuU7pLSu',
@@ -1419,7 +1419,9 @@ const CLOUD_CONFIG = {
 
 const SESSION_KEY = 'danfrolat_session_v6';
 const LASTNAME_KEY = 'danfrolat_lastname';
+const DEVICE_ID_KEY = 'danfrolat_device_id';
 
+// ============ CLOUD ============
 async function cloudGet() {
   try {
     const res = await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}/latest?t=${Date.now()}`, {
@@ -1442,18 +1444,47 @@ async function cloudSet(data) {
   } catch (e) { console.error('Cloud save error:', e); return false; }
 }
 
-async function setRequestStatus(name, status) {
+// ============ DEVICE ID ============
+function getOrCreateDeviceId() {
+  let id = localStorage.getItem(DEVICE_ID_KEY);
+  if (!id) {
+    const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = 'DF-';
+    for (let i = 0; i < 4; i++) code += c[Math.floor(Math.random() * c.length)];
+    code += '-';
+    for (let i = 0; i < 4; i++) code += c[Math.floor(Math.random() * c.length)];
+    id = code;
+    localStorage.setItem(DEVICE_ID_KEY, id);
+  }
+  return id;
+}
+
+async function claimOwnership(name, deviceId) {
+  const data = await cloudGet();
+  if (!data[name]) data[name] = {};
+  data[name].ownerDeviceId = deviceId;
+  await cloudSet(data);
+}
+
+// ============ REQUEST STATUS ============
+async function setRequestStatus(name, status, extraFields = {}) {
   const data = await cloudGet();
   if (!data.__requests__) data.__requests__ = {};
-  data.__requests__[name] = { status, timestamp: Date.now(), name };
+  data.__requests__[name] = { 
+    status, 
+    timestamp: Date.now(), 
+    name,
+    ...extraFields
+  };
   return await cloudSet(data);
 }
 
-async function getRequestStatus(name) {
+async function getRequestRecord(name) {
   const data = await cloudGet();
-  return data.__requests__?.[name]?.status || null;
+  return data.__requests__?.[name] || null;
 }
 
+// ============ SESSION ============
 function getSession() { return localStorage.getItem(SESSION_KEY); }
 function setSession(u) { localStorage.setItem(SESSION_KEY, u); }
 function clearSession() { localStorage.removeItem(SESSION_KEY); }
@@ -1807,7 +1838,12 @@ let state = {
 async function saveState() {
   if (!currentUser) return;
   const data = await cloudGet();
-  data[currentUser] = { data: state };
+  const existing = data[currentUser] || {};
+  data[currentUser] = {
+    ...existing,
+    data: state,
+    ownerDeviceId: existing.ownerDeviceId || getOrCreateDeviceId()
+  };
   await cloudSet(data);
 }
 
@@ -1894,7 +1930,7 @@ let requestState = 'idle';
 let currentRequestName = null;
 let pollTimer = null;
 
-function setRequestState(newState) {
+function setRequestState(newState, customMsg) {
   requestState = newState;
   const btn = $('requestBtn');
   const statusEl = $('authStatus');
@@ -1904,8 +1940,13 @@ function setRequestState(newState) {
   switch (newState) {
     case 'idle':
       btn.innerHTML = '<span class="request-btn-text">Request Access</span>';
-      statusEl.innerHTML = '';
-      statusEl.style.color = '';
+      if (customMsg) {
+        statusEl.textContent = customMsg;
+        statusEl.style.color = 'var(--yellow-dark)';
+      } else {
+        statusEl.innerHTML = '';
+        statusEl.style.color = '';
+      }
       break;
     case 'requesting':
       btn.innerHTML = '<span class="loading-spinner"></span><span class="request-btn-text">Requesting...</span>';
@@ -1913,17 +1954,22 @@ function setRequestState(newState) {
       break;
     case 'requested':
       btn.innerHTML = '<span class="request-btn-text">✓ Requested</span>';
-      statusEl.innerHTML = '<span class="pulse-dot"></span> Waiting for approval...';
+      statusEl.innerHTML = '';
+      const dot = document.createElement('span');
+      dot.className = 'pulse-dot';
+      statusEl.appendChild(dot);
+      statusEl.appendChild(document.createTextNode(' ' + (customMsg || 'Waiting for approval...')));
       statusEl.style.color = '';
       break;
     case 'approved':
       btn.innerHTML = '<span class="request-btn-text">Enter App →</span>';
+      btn.disabled = false;
       statusEl.textContent = '✅ Access granted!';
       statusEl.style.color = 'var(--green-dark)';
       break;
     case 'denied':
       btn.innerHTML = '<span class="request-btn-text">Try Again</span>';
-      statusEl.textContent = '❌ Access was denied';
+      statusEl.textContent = customMsg || '❌ Access was denied';
       statusEl.style.color = 'var(--red-dark)';
       break;
   }
@@ -1931,19 +1977,37 @@ function setRequestState(newState) {
 
 function startPolling(name) {
   stopPolling();
+  const myDevice = getOrCreateDeviceId();
   pollTimer = setInterval(async () => {
     try {
       const data = await cloudGet();
       const req = data.__requests__?.[name];
-      const hasData = !!data[name]?.data;
-      if (req?.status === 'approved' || hasData) {
+      const existing = data[name];
+
+      if (!req) return;
+
+      if (req.status === 'approved') {
+        // Is someone else already claiming it?
+        if (existing?.ownerDeviceId && existing.ownerDeviceId !== myDevice) {
+          stopPolling();
+          setRequestState('denied', '❌ Name is now owned by another device');
+          return;
+        }
+        // Claim if not claimed
+        if (!existing?.ownerDeviceId) {
+          await claimOwnership(name, myDevice);
+        }
         stopPolling();
         setRequestState('approved');
         toast('Access granted! 🎉');
         await enterApp(name);
-      } else if (req?.status === 'denied') {
+      } else if (req.status === 'denied' && req.requestingDeviceId === myDevice) {
         stopPolling();
         setRequestState('denied');
+      } else if (req.status === 'pending' && req.requestingDeviceId !== myDevice) {
+        // Someone else overwrote our request — show idle
+        stopPolling();
+        setRequestState('idle', 'Someone else requested this name. Try again.');
       }
     } catch (e) { console.error('Poll error:', e); }
   }, 8000);
@@ -1968,33 +2032,66 @@ async function handleRequestClick() {
   localStorage.setItem(LASTNAME_KEY, name);
   setRequestState('requesting');
 
+  const myDevice = getOrCreateDeviceId();
+
   try {
     const data = await cloudGet();
+    const existing = data[name];
     const req = data.__requests__?.[name];
-    const hasData = !!data[name]?.data;
 
-    // AUTO-ENTER: they were approved before OR have saved progress
-    if (req?.status === 'approved' || hasData) {
-      setRequestState('approved');
-      await enterApp(name);
+    // CASE 1: I already own this account
+    if (existing?.ownerDeviceId === myDevice) {
+      // Check if approved or has data — enter
+      if (req?.status === 'approved' || existing.data) {
+        setRequestState('approved');
+        await enterApp(name);
+        return;
+      }
+      // I'm the owner but pending — resume
+      if (req?.status === 'pending' && req.requestingDeviceId === myDevice) {
+        setRequestState('requested');
+        startPolling(name);
+        return;
+      }
+    }
+
+    // CASE 2: Owned by ANOTHER device — submit takeover request
+    if (existing?.ownerDeviceId && existing.ownerDeviceId !== myDevice) {
+      await setRequestStatus(name, 'pending', {
+        requestingDeviceId: myDevice,
+        isTakeover: true,
+        originalOwner: existing.ownerDeviceId
+      });
+      setRequestState('requested', 'This name is on another device. Waiting for admin...');
+      startPolling(name);
       return;
     }
 
-    // Already pending — resume waiting
-    if (req?.status === 'pending') {
+    // CASE 3: Unclaimed (legacy or new) — submit normal request
+    if (req?.status === 'pending' && req.requestingDeviceId === myDevice) {
       setRequestState('requested');
       startPolling(name);
       return;
     }
 
-    // Denied — show denied
-    if (req?.status === 'denied') {
+    if (req?.status === 'approved') {
+      // Legacy: approved but no owner → claim it
+      await claimOwnership(name, myDevice);
+      setRequestState('approved');
+      await enterApp(name);
+      return;
+    }
+
+    if (req?.status === 'denied' && req.requestingDeviceId === myDevice) {
       setRequestState('denied');
       return;
     }
 
-    // Brand new — send request
-    await setRequestStatus(name, 'pending');
+    // Fresh request
+    await setRequestStatus(name, 'pending', {
+      requestingDeviceId: myDevice,
+      isTakeover: false
+    });
     setRequestState('requested');
     startPolling(name);
   } catch (e) {
@@ -2013,6 +2110,13 @@ async function enterApp(name) {
     setSession(name);
     currentUser = name;
     await loadUserState(name);
+    // Ensure ownership is claimed
+    const data = await cloudGet();
+    if (!data[name]?.ownerDeviceId) {
+      if (!data[name]) data[name] = {};
+      data[name].ownerDeviceId = getOrCreateDeviceId();
+      await cloudSet(data);
+    }
     if (!state.lang) { state.lang = 'en'; await saveState(); }
     renderHome();
     showScreen('home');
@@ -2036,22 +2140,36 @@ $('authName').addEventListener('keydown', (e) => {
 
 // ============ BOOT ============
 $('authMascot').innerHTML = mascotSVG(110);
+getOrCreateDeviceId();
 
 async function boot() {
+  const myDevice = getOrCreateDeviceId();
   const session = getSession();
+
   if (session) {
     try {
       const data = await cloudGet();
+      const existing = data[session];
       const req = data.__requests__?.[session];
-      const hasData = !!data[session]?.data;
 
-      // AUTO-ENTER: approved OR has saved progress
-      if (req?.status === 'approved' || hasData) {
+      // Owned by me — enter
+      if (existing?.ownerDeviceId === myDevice && (existing.data || req?.status === 'approved')) {
         await enterApp(session);
         return;
       }
 
-      if (req?.status === 'pending') {
+      // Owned by someone else — clear session
+      if (existing?.ownerDeviceId && existing.ownerDeviceId !== myDevice) {
+        clearSession();
+        showScreen('auth');
+        $('authName').value = session;
+        currentRequestName = session;
+        setRequestState('idle', '🔒 This name is on another device');
+        return;
+      }
+
+      // My pending request — show waiting
+      if (req?.status === 'pending' && req.requestingDeviceId === myDevice) {
         currentRequestName = session;
         $('authName').value = session;
         setRequestState('requested');
@@ -2060,18 +2178,17 @@ async function boot() {
         return;
       }
 
-      if (req?.status === 'denied') {
-        currentRequestName = session;
-        $('authName').value = session;
-        setRequestState('denied');
-        showScreen('auth');
+      // Approved but not claimed — claim and enter
+      if (req?.status === 'approved' && req.requestingDeviceId === myDevice) {
+        await claimOwnership(session, myDevice);
+        await enterApp(session);
         return;
       }
 
       clearSession();
     } catch (e) {
-      // Offline fallback — trust session
-      await enterApp(session);
+      // Offline — trust session only if we have data cached locally (we don't, so just show auth)
+      showScreen('auth');
       return;
     }
   }
@@ -2083,12 +2200,21 @@ async function boot() {
     currentRequestName = lastName;
     try {
       const data = await cloudGet();
+      const existing = data[lastName];
       const req = data.__requests__?.[lastName];
-      const hasData = !!data[lastName]?.data;
 
-      if (req?.status === 'approved' || hasData) setRequestState('approved');
-      else if (req?.status === 'pending') { setRequestState('requested'); startPolling(lastName); }
-      else if (req?.status === 'denied') setRequestState('denied');
+      if (existing?.ownerDeviceId === myDevice && (existing.data || req?.status === 'approved')) {
+        setRequestState('approved');
+      } else if (existing?.ownerDeviceId && existing.ownerDeviceId !== myDevice) {
+        setRequestState('idle', '🔒 This name is on another device');
+      } else if (req?.status === 'pending' && req.requestingDeviceId === myDevice) {
+        setRequestState('requested');
+        startPolling(lastName);
+      } else if (req?.status === 'approved' && req.requestingDeviceId === myDevice) {
+        setRequestState('approved');
+      } else if (req?.status === 'denied' && req.requestingDeviceId === myDevice) {
+        setRequestState('denied');
+      }
     } catch (e) { /* offline */ }
   }
   setTimeout(() => $('authName')?.focus(), 350);
