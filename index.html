@@ -17,6 +17,7 @@
     --red-dark: #EA2B2B;
     --yellow: #FFC800;
     --yellow-dark: #E5A000;
+    --yellow-light: #FFF8E0;
     --purple: #CE82FF;
     --gray: #E5E5E5;
     --gray-dark: #CACACA;
@@ -546,7 +547,7 @@
     padding: 16px;
     color: white;
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* FIXED: removed hidden so tooltips show */
   }
 
   .unit-header {
@@ -659,17 +660,21 @@
     border: 2px solid white;
   }
 
+  /* RESTORED: White pulse ring */
   .lesson-node.current { animation: pulse 2s infinite; }
   .lesson-node.final-node.current { animation: finalGlow 2.2s ease-in-out infinite, pulse 2s infinite; }
 
   @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+    0%, 100% { transform: scale(1); box-shadow: 0 5px 0 rgba(0,0,0,0.15), 0 0 0 0 rgba(255,255,255,0.6); }
+    50% { transform: scale(1.05); box-shadow: 0 5px 0 rgba(0,0,0,0.15), 0 0 0 10px rgba(255,255,255,0); }
   }
 
+  /* FIXED: Tooltip now on the right side, with little arrow */
   .lesson-tooltip {
     position: absolute;
-    top: 72px;
+    top: 50%;
+    left: calc(100% + 12px);
+    transform: translateY(-50%);
     background: white;
     color: var(--text);
     padding: 8px 12px;
@@ -681,13 +686,27 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s;
-    z-index: 10;
+    z-index: 100;
+  }
+
+  .lesson-tooltip::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 6px solid white;
   }
 
   .lesson-node.final-node .lesson-tooltip {
     background: #FFD700;
     color: #7A5C00;
     font-weight: 900;
+  }
+  .lesson-node.final-node .lesson-tooltip::before {
+    border-right-color: #FFD700;
   }
 
   .lesson-node.current .lesson-tooltip { opacity: 1; }
@@ -1054,9 +1073,18 @@
     font-weight: 700;
     outline: none;
     margin-bottom: 12px;
+    transition: all 0.2s;
   }
 
   .type-input:focus { border-color: var(--blue); border-bottom-color: var(--blue-dark); }
+  
+  /* NEW: Almost correct state (missing accents) */
+  .type-input.almost {
+    border-color: var(--yellow);
+    border-bottom-color: var(--yellow-dark);
+    background: var(--yellow-light);
+    color: var(--yellow-dark);
+  }
 
   .word-bank {
     display: flex;
@@ -1116,6 +1144,8 @@
   .feedback.show { display: block; }
   .feedback.correct { background: var(--green-light); color: var(--green-dark); }
   .feedback.wrong { background: #FFE5E5; color: var(--red-dark); }
+  /* NEW: Almost feedback */
+  .feedback.almost { background: var(--yellow-light); color: var(--yellow-dark); }
 
   .feedback-title {
     font-size: 16px;
@@ -2364,8 +2394,8 @@ const PHONETIC_MAP = {
 };
 
 const UI_TEXT = {
-  en: { unit:"Unit", lesson:"Lesson", translateTo:"Translate to Danfrolat", writeIn:"Write in Danfrolat", whatMeans:"What does this mean?", buildSentence:"Write this in Danfrolat", typeTrans:"Type this translation", check:"Check", continue:"Continue", correct:"Correct!", wrong:"Not quite!", correctAns:"Correct answer:", lessonComplete:"Lesson Complete!", greatProgress:"You're making great progress!", listen:"🔊 Listen", mascotIntro:"Let's learn these words!", selectVoice:"Select", normal:"Normal", slow:"Slow", fast:"Fast", newWords:"New words!", letsPractice:"Let's practice!", mascotGoodJob:"Amazing! You're a star!", mascotKeepGoing:"Keep going!", mascotOops:"Oops! Try again!", review:"Review", retry:"Retry", finalChallenge:"Final Challenge", typeTheMeaning:"Type the meaning", typeInDanfrolat:"Type in Danfrolat", finalComplete:"Final Challenge Complete!", legendary:"LEGENDARY!" },
-  da: { unit:"Enhed", lesson:"Lektion", translateTo:"Oversæt til Danfrolat", writeIn:"Skriv på Danfrolat", whatMeans:"Hvad betyder dette?", buildSentence:"Skriv dette på Danfrolat", typeTrans:"Skriv denne oversættelse", check:"Tjek", continue:"Fortsæt", correct:"Korrekt!", wrong:"Ikke helt!", correctAns:"Korrekt svar:", lessonComplete:"Lektion fuldført!", greatProgress:"Du gør det godt!", listen:"🔊 Lyt", mascotIntro:"Lad os lære disse ord!", selectVoice:"Vælg", normal:"Normal", slow:"Langsom", fast:"Hurtig", newWords:"Nye ord!", letsPractice:"Lad os øve!", mascotGoodJob:"Fantastisk!", mascotKeepGoing:"Bliv ved!", mascotOops:"Ups! Prøv igen!", review:"Repetition", retry:"Igen", finalChallenge:"Sidste Udfordring", typeTheMeaning:"Skriv betydningen", typeInDanfrolat:"Skriv på Danfrolat", finalComplete:"Udfordring Fuldført!", legendary:"LEGENDAARISK!" }
+  en: { unit:"Unit", lesson:"Lesson", translateTo:"Translate to Danfrolat", writeIn:"Write in Danfrolat", whatMeans:"What does this mean?", buildSentence:"Write this in Danfrolat", typeTrans:"Type this translation", check:"Check", continue:"Continue", correct:"Correct!", wrong:"Not quite!", correctAns:"Correct answer:", lessonComplete:"Lesson Complete!", greatProgress:"You're making great progress!", listen:"🔊 Listen", mascotIntro:"Let's learn these words!", selectVoice:"Select", normal:"Normal", slow:"Slow", fast:"Fast", newWords:"New words!", letsPractice:"Let's practice!", mascotGoodJob:"Amazing! You're a star!", mascotKeepGoing:"Keep going!", mascotOops:"Oops! Try again!", review:"Review", retry:"Retry", finalChallenge:"Final Challenge", typeTheMeaning:"Type the meaning", typeInDanfrolat:"Type in Danfrolat", finalComplete:"Final Challenge Complete!", legendary:"LEGENDARY!", almost:"Almost! Watch the accents." },
+  da: { unit:"Enhed", lesson:"Lektion", translateTo:"Oversæt til Danfrolat", writeIn:"Skriv på Danfrolat", whatMeans:"Hvad betyder dette?", buildSentence:"Skriv dette på Danfrolat", typeTrans:"Skriv denne oversættelse", check:"Tjek", continue:"Fortsæt", correct:"Korrekt!", wrong:"Ikke helt!", correctAns:"Korrekt svar:", lessonComplete:"Lektion fuldført!", greatProgress:"Du gør det godt!", listen:"🔊 Lyt", mascotIntro:"Lad os lære disse ord!", selectVoice:"Vælg", normal:"Normal", slow:"Langsom", fast:"Hurtig", newWords:"Nye ord!", letsPractice:"Lad os øve!", mascotGoodJob:"Fantastisk!", mascotKeepGoing:"Bliv ved!", mascotOops:"Ups! Prøv igen!", review:"Repetition", retry:"Igen", finalChallenge:"Sidste Udfordring", typeTheMeaning:"Skriv betydningen", typeInDanfrolat:"Skriv på Danfrolat", finalComplete:"Udfordring Fuldført!", legendary:"LEGENDAARISK!", almost:"Næsten! Tjek accenterne." }
 };
 
 function mascotSVG(size = 110) {
@@ -2579,7 +2609,18 @@ function canAccessUnit(unitId) {
   return getLessonsForUnit(unitId - 1).every((_, i) => prev[i]?.completed);
 }
 
-// ═══════════ UPDATED: adds final lesson at end of every unit ═══════════
+// NEW: Strip accents/diacritics to allow "almost correct" checks
+function normalizeText(str) {
+  if (!str) return '';
+  return str.toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/ø/g, "o")
+    .replace(/æ/g, "ae")
+    .replace(/å/g, "a")
+    .replace(/ß/g, "ss");
+}
+
 function getLessonsForUnit(unitId) {
   const unit = VOCAB[unitId];
   const lessons = [];
@@ -2591,7 +2632,6 @@ function getLessonsForUnit(unitId) {
       isFinal: false
     });
   }
-  // Final Challenge — all words, all sentences, no meaning shown
   lessons.push({
     words: [...words],
     sentences: [...sentences],
@@ -2600,7 +2640,7 @@ function getLessonsForUnit(unitId) {
   return lessons;
 }
 
-// ═══════════ REQUEST FLOW ═══════════
+// ============ REQUEST FLOW ============
 let requestState = 'idle';
 let currentRequestName = null;
 let pollTimer = null;
@@ -3005,7 +3045,6 @@ function renderWordsList() {
   if (!hasResults) list.innerHTML = '<div class="no-results">No words found</div>';
 }
 
-// ═══════════ HOME — renders final lesson with special styling ═══════════
 function renderHome() {
   recomputeHearts();
   $('streakVal').textContent = state.streak;
@@ -3082,7 +3121,6 @@ function startLesson(unitId, lessonIdx) {
   renderStep();
 }
 
-// ═══════════ BUILD STEPS ═══════════
 function buildSteps(lesson) {
   const cumulativeWords = [];
   for (let u = 1; u <= currentLesson.unitId; u++) {
@@ -3137,13 +3175,11 @@ function buildSteps(lesson) {
   return list;
 }
 
-// ═══════════ FINAL CHALLENGE BUILDER — no intro, all words tested, no meaning hints ═══════════
 function buildFinalSteps(lesson, cumulativeWords) {
   const list = [];
   const allWords = lesson.words;
   const allSentences = lesson.sentences;
 
-  // Phase 1 — Recognition: every word as MCQ (Danfrolat → Meaning) — no translation shown upfront
   const phase1 = shuffle([...allWords]).slice(0, Math.min(25, allWords.length));
   phase1.forEach(w => {
     const sourceWord = getSourceWord(w);
@@ -3153,59 +3189,33 @@ function buildFinalSteps(lesson, cumulativeWords) {
       ...others.slice(0, 3).map(x => state.lang === 'da' ? x.da : x.en)
     ]);
     list.push({
-      type: 'mcq',
-      prompt: w.df,
-      promptLabel: t('whatMeans'),
-      correct: sourceWord,
-      choices,
-      isFinal: true,
-      speakText: w.df,
-      speakLang: 'df'
+      type: 'mcq', prompt: w.df, promptLabel: t('whatMeans'), correct: sourceWord, choices, isFinal: true, speakText: w.df, speakLang: 'df'
     });
   });
 
-  // Phase 2 — Recall: type the meaning for a sample of words
   const phase2 = shuffle([...allWords]).slice(0, Math.min(8, Math.ceil(allWords.length * 0.4)));
   phase2.forEach(w => {
     list.push({
-      type: 'type',
-      prompt: w.df,
-      promptLabel: t('typeTheMeaning'),
-      correct: getSourceWord(w),
-      isFinal: true,
-      speakText: w.df,
-      speakLang: 'df'
+      type: 'type', prompt: w.df, promptLabel: t('typeTheMeaning'), correct: getSourceWord(w), isFinal: true, speakText: w.df, speakLang: 'df'
     });
   });
 
-  // Phase 3 — Production: type the Danfrolat for a sample of meanings (no hints)
   const phase3 = shuffle([...allWords]).slice(0, Math.min(6, Math.ceil(allWords.length * 0.3)));
   phase3.forEach(w => {
     list.push({
-      type: 'type',
-      prompt: getSourceWord(w),
-      promptLabel: t('typeInDanfrolat'),
-      correct: w.df,
-      isFinal: true
+      type: 'type', prompt: getSourceWord(w), promptLabel: t('typeInDanfrolat'), correct: w.df, isFinal: true
     });
   });
 
-  // Phase 4 — Sentences (up to 3)
   const phase4 = allSentences.slice(0, 3);
   phase4.forEach(s => {
     list.push({
-      type: 'bank',
-      prompt: getSourceWord(s),
-      promptLabel: t('buildSentence'),
-      correct: s.df,
+      type: 'bank', prompt: getSourceWord(s), promptLabel: t('buildSentence'), correct: s.df,
       words: shuffle(s.df.split(' ').concat(getSentenceDistractors(s.df, cumulativeWords))),
-      isFinal: true,
-      speakText: s.df,
-      speakLang: 'df'
+      isFinal: true, speakText: s.df, speakLang: 'df'
     });
   });
 
-  // Phase 5 — Cross-unit review (3 hard MCQs from earlier units)
   if (currentLesson.unitId > 1) {
     const previousUnits = [];
     for (let u = 1; u < currentLesson.unitId; u++) previousUnits.push(u);
@@ -3220,19 +3230,10 @@ function buildFinalSteps(lesson, cumulativeWords) {
         ...others.slice(0, 3).map(x => state.lang === 'da' ? x.da : x.en)
       ]);
       list.push({
-        type: 'mcq',
-        prompt: rw.df,
-        promptLabel: t('whatMeans'),
-        correct: sourceWord,
-        choices,
-        isFinal: true,
-        isReview: true,
-        speakText: rw.df,
-        speakLang: 'df'
+        type: 'mcq', prompt: rw.df, promptLabel: t('whatMeans'), correct: sourceWord, choices, isFinal: true, isReview: true, speakText: rw.df, speakLang: 'df'
       });
     }
   }
-
   return list;
 }
 
@@ -3253,7 +3254,7 @@ function renderStep() {
   const step = steps[currentStep];
   const progress = Math.min(100, (currentStep / initialStepsCount) * 100);
   $('progressFill').style.width = progress + '%';
-  $('feedback').classList.remove('show', 'correct', 'wrong');
+  $('feedback').classList.remove('show', 'correct', 'wrong', 'almost');
   $('footerBtn').textContent = t('check');
   $('footerBtn').className = 'footer-btn check';
   $('footerBtn').disabled = true;
@@ -3426,6 +3427,26 @@ function updateBankAnswer() {
   $('footerBtn').disabled = ans.length === 0;
 }
 
+// NEW: CheckAnswer returns 'correct', 'almost', or 'wrong'
+function checkAnswer(step, answer) {
+  if (!answer) return 'wrong';
+  
+  if (step.type === 'mcq') {
+    return answer === step.correct ? 'correct' : 'wrong';
+  }
+  
+  if (step.type === 'type' || step.type === 'bank') {
+    const user = answer.trim().toLowerCase();
+    const correct = step.correct.trim().toLowerCase();
+    
+    if (user === correct) return 'correct';
+    if (normalizeText(user) === normalizeText(correct)) return 'almost';
+    return 'wrong';
+  }
+  
+  return 'wrong';
+}
+
 $('footerBtn').addEventListener('click', async () => {
   if (feedbackShown) {
     currentStep++;
@@ -3436,24 +3457,38 @@ $('footerBtn').addEventListener('click', async () => {
   const step = steps[currentStep];
   if (step.type === 'intro') return;
 
-  const isCorrect = checkAnswer(step, selectedAnswer);
+  const result = checkAnswer(step, selectedAnswer);
+  const isCorrect = (result === 'correct' || result === 'almost');
   feedbackShown = true;
+  
   const fb = $('feedback');
+  fb.classList.remove('show', 'correct', 'wrong', 'almost');
   fb.classList.add('show');
+  
   const mascot = $('lessonMascot');
   const bubble = $('speechBubble');
+  const typeInput = document.querySelector('.type-input');
+  if (typeInput) typeInput.classList.remove('almost');
 
   if (isCorrect) {
     correctCount++;
     if (!step.isRetry) firstTryCorrect++;
-    fb.classList.add('correct');
-    $('feedbackTitle').innerHTML = `✅ ${t('correct')}`;
+    
+    if (result === 'almost') {
+      fb.classList.add('almost');
+      $('feedbackTitle').innerHTML = `⚠️ ${t('almost')}`;
+      if (typeInput) typeInput.classList.add('almost');
+    } else {
+      fb.classList.add('correct');
+      $('feedbackTitle').innerHTML = `✅ ${t('correct')}`;
+    }
+    
     $('feedbackBody').textContent = '';
     $('footerBtn').textContent = t('continue');
     $('footerBtn').className = 'footer-btn continue-correct';
     $('footerBtn').disabled = false;
     if (mascot) { mascot.classList.remove('sad'); mascot.classList.add('happy'); }
-    if (bubble) bubble.textContent = t('mascotGoodJob');
+    if (bubble) bubble.textContent = result === 'almost' ? t('almost') : t('mascotGoodJob');
     setTimeout(() => { if (mascot) mascot.classList.remove('happy'); }, 700);
     document.querySelectorAll('.choice').forEach(c => { if (c.textContent === step.correct) c.classList.add('correct'); });
   } else {
@@ -3476,7 +3511,6 @@ $('footerBtn').addEventListener('click', async () => {
     });
     if (state.hearts <= 0) { setTimeout(() => showScreen('gameover'), 1200); return; }
 
-    // Re-queue the mistake
     const retryStep = JSON.parse(JSON.stringify(step));
     retryStep.isRetry = true;
     if (retryStep.choices) retryStep.choices = shuffle(retryStep.choices);
@@ -3487,13 +3521,6 @@ $('footerBtn').addEventListener('click', async () => {
   const progress = Math.min(100, ((currentStep + 1) / initialStepsCount) * 100);
   $('progressFill').style.width = progress + '%';
 });
-
-function checkAnswer(step, answer) {
-  if (!answer) return false;
-  if (step.type === 'mcq') return answer === step.correct;
-  if (step.type === 'type' || step.type === 'bank') return answer.trim().toLowerCase() === step.correct.trim().toLowerCase();
-  return false;
-}
 
 async function finishLesson() {
   const xpGain = 15 + (correctCount * 2);
