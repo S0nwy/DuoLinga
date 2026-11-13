@@ -255,72 +255,6 @@
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  #adminScreen { background: #F7F7F7; }
-
-  .admin-header {
-    padding: 16px 20px;
-    background: white;
-    border-bottom: 2px solid #E5E5E5;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-shrink: 0;
-  }
-
-  .admin-title { font-size: 20px; font-weight: 900; color: #3C3C3C; }
-  .admin-sub { font-size: 11px; font-weight: 700; color: #777; }
-
-  .admin-body { padding: 16px; overflow-y: auto; flex: 1; }
-
-  .admin-card {
-    background: white;
-    border-radius: 14px;
-    padding: 18px;
-    margin-bottom: 10px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  }
-
-  .admin-request-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid #F0F0F0;
-    gap: 10px;
-  }
-
-  .admin-request-row:last-child { border-bottom: none; }
-  .admin-request-name { font-weight: 800; font-size: 15px; color: #3C3C3C; }
-  .admin-request-time { font-size: 11px; color: #999; font-weight: 600; margin-top: 1px; }
-
-  .admin-request-status {
-    font-size: 10px;
-    font-weight: 900;
-    padding: 2px 7px;
-    border-radius: 5px;
-    margin-top: 4px;
-    display: inline-block;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-  }
-
-  .admin-btn {
-    padding: 8px 14px;
-    border: none;
-    border-radius: 9px;
-    font-family: inherit;
-    font-weight: 800;
-    font-size: 12px;
-    cursor: pointer;
-    color: white;
-    transition: all 0.15s;
-  }
-
-  .admin-btn:active { transform: scale(0.96); }
-  .admin-btn-approve { background: #58CC02; box-shadow: 0 2px 0 #46A302; }
-  .admin-btn-deny { background: #FF4B4B; box-shadow: 0 2px 0 #EA2B2B; }
-  .admin-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
   .mascot-wrap {
     display: flex;
     flex-direction: row;
@@ -1299,17 +1233,6 @@
     </div>
   </div>
 
-  <div class="screen" id="adminScreen">
-    <div class="admin-header">
-      <div>
-        <div class="admin-title">🔐 Admin</div>
-        <div class="admin-sub" id="adminSub">Access control</div>
-      </div>
-      <button class="admin-btn admin-btn-deny" id="adminExitBtn">Exit</button>
-    </div>
-    <div class="admin-body" id="adminBody"></div>
-  </div>
-
   <div class="screen" id="home">
     <div class="top-bar">
       <div class="flag-btn" id="flagBtn">🇬🇧</div>
@@ -1477,13 +1400,9 @@ const CLOUD_CONFIG = {
   BASE_URL: 'https://api.jsonbin.io/v3/b'
 };
 
-const WEBHOOK_URL = 'https://discord.com/api/webhooks/1570781746486714438/DVlbOEoJ09BWN0jt1iX_v3A0TX-4OJKA148WOtUnFUzFsbvhKJIi7VwGY_D5mmnxFmKF';
-
-const ADMIN_PASSCODE = 'frolo2026';
 const SESSION_KEY = 'danfrolat_session_v6';
 const LASTNAME_KEY = 'danfrolat_lastname';
 
-// ============ CLOUD ============
 async function cloudGet() {
   try {
     const res = await fetch(`${CLOUD_CONFIG.BASE_URL}/${CLOUD_CONFIG.BIN_ID}/latest`, {
@@ -1518,100 +1437,6 @@ async function getRequestStatus(name) {
   return data.__requests__?.[name]?.status || null;
 }
 
-// ============ ADMIN URL ============
-const urlParams = new URLSearchParams(window.location.search);
-const isAdminMode = urlParams.get('admin') === '1';
-
-function buildAdminUrl(action, name) {
-  try {
-    if (!window.location.href || window.location.protocol === 'file:') {
-      console.warn('[Danfrolat] Cannot build admin URL: file:// protocol');
-      return null;
-    }
-    const u = new URL(window.location.href);
-    if (u.protocol !== 'http:' && u.protocol !== 'https:') {
-      console.warn('[Danfrolat] Cannot build admin URL: bad protocol', u.protocol);
-      return null;
-    }
-    const base = u.origin + u.pathname;
-    const p = new URLSearchParams();
-    p.set('admin', '1');
-    if (action) p.set('action', action);
-    if (name) p.set('name', name);
-    const finalUrl = base + '?' + p.toString();
-    console.log('[Danfrolat] Built admin URL:', finalUrl);
-    return finalUrl;
-  } catch (e) {
-    console.error('[Danfrolat] URL build error:', e);
-    return null;
-  }
-}
-
-// ============ DISCORD WEBHOOK ============
-async function sendDiscordRequest(name) {
-  const safe = name.replace(/[*_`~|\\]/g, '');
-  const approveUrl = buildAdminUrl('approve', name);
-  const denyUrl = buildAdminUrl('deny', name);
-
-  console.log('[Danfrolat] Admin URLs:', { approveUrl, denyUrl });
-
-  const payload = {
-    username: 'Danfrolat Access',
-    embeds: [{
-      title: '🔐 New Access Request',
-      description: `**${safe}** wants to access Danfrolat`,
-      color: 0x58CC02,
-      fields: [
-        { name: '👤 Username', value: '`' + safe + '`', inline: true },
-        { name: '🕐 Time', value: '<t:' + Math.floor(Date.now()/1000) + ':R>', inline: true }
-      ],
-      footer: {
-        text: (approveUrl && denyUrl)
-          ? 'Use the buttons below'
-          : 'Deploy online (not file://) to enable buttons'
-      },
-      timestamp: new Date().toISOString()
-    }]
-  };
-
-  if (approveUrl && denyUrl) {
-    payload.components = [{
-      type: 1,
-      components: [
-        { type: 2, style: 5, label: 'Approve', url: approveUrl },
-        { type: 2, style: 5, label: 'Deny', url: denyUrl }
-      ]
-    }];
-    console.log('[Danfrolat] Sending with components:', JSON.stringify(payload.components));
-  } else {
-    console.warn('[Danfrolat] No components — URL build failed');
-  }
-
-  try {
-    const res = await fetch(WEBHOOK_URL + '?wait=true', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    const text = await res.text();
-    console.log('[Danfrolat] Discord HTTP status:', res.status);
-    console.log('[Danfrolat] Discord response body:', text);
-    if (!res.ok) {
-      console.error('[Danfrolat] Webhook rejected request');
-      return false;
-    }
-    try {
-      const msg = JSON.parse(text);
-      console.log('[Danfrolat] Message components that Discord stored:', msg.components);
-    } catch {}
-    return true;
-  } catch (e) {
-    console.error('[Danfrolat] Fetch error:', e);
-    return false;
-  }
-}
-
-// ============ SESSION ============
 function getSession() { return localStorage.getItem(SESSION_KEY); }
 function setSession(u) { localStorage.setItem(SESSION_KEY, u); }
 function clearSession() { localStorage.removeItem(SESSION_KEY); }
@@ -2054,8 +1879,6 @@ async function handleRequestClick() {
     if (existing === 'approved') { setRequestState('approved'); await enterApp(name); return; }
 
     await setRequestStatus(name, 'pending');
-    const ok = await sendDiscordRequest(name);
-    if (!ok) throw new Error('Webhook request failed');
     setRequestState('requested');
     startPolling(name);
   } catch (e) {
@@ -2093,174 +1916,6 @@ async function enterApp(name) {
 $('requestBtn').addEventListener('click', handleRequestClick);
 $('authName').addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !$('requestBtn').disabled) { e.preventDefault(); handleRequestClick(); }
-});
-
-// ============ ADMIN ============
-function initAdminMode() {
-  showScreen('adminScreen');
-  const action = urlParams.get('action');
-  const name = urlParams.get('name');
-  if (action && name) renderAdminAction(action, name);
-  else renderAdminPanel();
-}
-
-function formatAgo(ts) {
-  const diff = Math.floor((Date.now() - ts) / 1000);
-  if (diff < 60) return 'just now';
-  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
-  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
-  return Math.floor(diff / 86400) + 'd ago';
-}
-
-async function renderAdminAction(action, name) {
-  const body = $('adminBody');
-  const isApprove = action === 'approve';
-  $('adminSub').textContent = isApprove ? 'Approve request' : 'Deny request';
-  const actionText = isApprove ? 'Approve' : 'Deny';
-  const actionColor = isApprove ? '#58CC02' : '#FF4B4B';
-  const actionIcon = isApprove ? '✅' : '❌';
-
-  body.innerHTML = `
-    <div class="admin-card" style="text-align:center; padding:28px 20px;">
-      <div style="font-size:56px; margin-bottom:14px;">${actionIcon}</div>
-      <div style="font-size:22px; font-weight:900; margin-bottom:6px; color:#3C3C3C;">${actionText} request?</div>
-      <div style="font-size:14px; color:#777; font-weight:700; margin-bottom:6px;">User</div>
-      <div style="font-size:24px; font-weight:900; margin-bottom:22px; color:${actionColor};">${name}</div>
-      <input type="password" class="auth-input" id="adminPass" placeholder="Admin passcode" style="margin-bottom:8px; text-align:center;">
-      <div id="adminError" class="auth-error"></div>
-      <button class="admin-btn ${isApprove ? 'admin-btn-approve' : 'admin-btn-deny'}" id="adminActionBtn"
-              style="width:100%; padding:14px; font-size:14px; border-radius:12px; margin-top:4px;">
-        Confirm ${actionText}
-      </button>
-      <a href="?admin=1" class="admin-btn" style="display:block; width:100%; padding:12px; margin-top:10px; border-radius:12px; background:#E5E5E5; color:#777; text-decoration:none; text-align:center; font-size:13px;">Cancel</a>
-    </div>
-  `;
-  setTimeout(() => $('adminPass')?.focus(), 100);
-
-  $('adminActionBtn').addEventListener('click', async () => {
-    if ($('adminPass').value !== ADMIN_PASSCODE) { $('adminError').textContent = 'Incorrect passcode'; return; }
-    const btn = $('adminActionBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="loading-spinner"></span>';
-    try {
-      await setRequestStatus(name, isApprove ? 'approved' : 'denied');
-      body.innerHTML = `
-        <div class="admin-card" style="text-align:center; padding:32px 20px;">
-          <div style="font-size:64px; margin-bottom:12px;">${isApprove ? '🎉' : '🚫'}</div>
-          <div style="font-size:22px; font-weight:900; margin-bottom:6px;">${isApprove ? 'Approved!' : 'Denied'}</div>
-          <div style="font-size:14px; color:#777; font-weight:700; margin-bottom:22px;">${name}'s request has been ${isApprove ? 'approved' : 'denied'}.</div>
-          <a href="?admin=1" class="admin-btn admin-btn-approve" style="display:block; padding:12px; border-radius:12px; text-decoration:none; text-align:center; font-size:13px;">Back to Panel</a>
-        </div>
-      `;
-    } catch (e) {
-      $('adminError').textContent = 'Error: ' + e.message;
-      btn.disabled = false;
-      btn.textContent = 'Confirm ' + actionText;
-    }
-  });
-}
-
-async function renderAdminPanel() {
-  const body = $('adminBody');
-  $('adminSub').textContent = 'Access control';
-  const authed = sessionStorage.getItem('admin_authed') === '1';
-
-  if (!authed) {
-    body.innerHTML = `
-      <div class="admin-card" style="text-align:center; padding:28px 20px;">
-        <div style="font-size:44px; margin-bottom:12px;">🔐</div>
-        <div style="font-size:18px; font-weight:900; margin-bottom:6px;">Enter Admin Passcode</div>
-        <div style="font-size:12px; color:#777; font-weight:700; margin-bottom:18px;">To manage access requests</div>
-        <input type="password" class="auth-input" id="adminPass" placeholder="Passcode" style="margin-bottom:8px; text-align:center;">
-        <div id="adminError" class="auth-error"></div>
-        <button class="admin-btn admin-btn-approve" id="adminAuthBtn" style="width:100%; padding:14px; font-size:14px; border-radius:12px; margin-top:4px;">Unlock</button>
-      </div>
-    `;
-    setTimeout(() => $('adminPass')?.focus(), 100);
-    const tryUnlock = () => {
-      if ($('adminPass').value === ADMIN_PASSCODE) {
-        sessionStorage.setItem('admin_authed', '1');
-        renderAdminPanel();
-      } else $('adminError').textContent = 'Incorrect passcode';
-    };
-    $('adminAuthBtn').addEventListener('click', tryUnlock);
-    $('adminPass').addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlock(); });
-    return;
-  }
-
-  body.innerHTML = '<div style="text-align:center; padding:30px; color:#777; font-weight:700;">Loading…</div>';
-
-  try {
-    const data = await cloudGet();
-    const requests = data.__requests__ || {};
-    const entries = Object.entries(requests).sort((a, b) => (b[1].timestamp || 0) - (a[1].timestamp || 0));
-
-    if (entries.length === 0) {
-      body.innerHTML = `
-        <div class="admin-card" style="text-align:center; padding:36px 20px;">
-          <div style="font-size:44px; margin-bottom:10px;">📭</div>
-          <div style="font-weight:800; color:#3C3C3C;">No requests yet</div>
-          <div style="font-size:12px; color:#999; margin-top:4px;">When someone requests access, they'll appear here.</div>
-        </div>
-      `;
-      return;
-    }
-
-    const pending = entries.filter(([, r]) => r.status === 'pending').length;
-    let html = `
-      <div class="admin-card" style="margin-bottom:12px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="font-weight:900; font-size:15px; color:#3C3C3C;">All Requests</div>
-          <div style="font-size:11px; font-weight:800; color:${pending ? '#FFC800' : '#58CC02'}; background:${pending ? '#FFF8E0' : '#E8F5D9'}; padding:3px 8px; border-radius:6px;">${pending} pending</div>
-        </div>
-      </div>
-      <div class="admin-card">
-    `;
-    entries.forEach(([name, r]) => {
-      const status = r.status || 'pending';
-      const statusColor = status === 'approved' ? '#58CC02' : status === 'denied' ? '#FF4B4B' : '#FFC800';
-      const statusBg    = status === 'approved' ? '#E8F5D9' : status === 'denied' ? '#FFE5E5' : '#FFF8E0';
-      const ago = r.timestamp ? formatAgo(r.timestamp) : '';
-      html += `
-        <div class="admin-request-row">
-          <div style="flex:1; min-width:0;">
-            <div class="admin-request-name">${name}</div>
-            ${ago ? `<div class="admin-request-time">${ago}</div>` : ''}
-            <div class="admin-request-status" style="background:${statusBg}; color:${statusColor};">${status}</div>
-          </div>
-          ${status === 'pending' ? `
-            <div style="display:flex; gap:6px; flex-shrink:0;">
-              <button class="admin-btn admin-btn-approve" data-action="approve" data-name="${name}">✓</button>
-              <button class="admin-btn admin-btn-deny" data-action="deny" data-name="${name}">✕</button>
-            </div>` : ''}
-        </div>
-      `;
-    });
-    html += '</div>';
-    body.innerHTML = html;
-
-    body.querySelectorAll('button[data-action]').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        btn.disabled = true;
-        try {
-          await setRequestStatus(btn.dataset.name, btn.dataset.action === 'approve' ? 'approved' : 'denied');
-          renderAdminPanel();
-        } catch (e) { btn.disabled = false; alert('Error: ' + e.message); }
-      });
-    });
-  } catch (e) {
-    body.innerHTML = `
-      <div class="admin-card" style="text-align:center; padding:24px; color:#FF4B4B;">
-        <div style="font-weight:800;">Error loading requests</div>
-        <div style="font-size:12px; margin-top:4px;">${e.message}</div>
-      </div>
-    `;
-  }
-}
-
-$('adminExitBtn')?.addEventListener('click', () => {
-  sessionStorage.removeItem('admin_authed');
-  window.location.href = window.location.pathname;
 });
 
 // ============ BOOT ============
@@ -2808,9 +2463,8 @@ setInterval(async () => {
   }
 }, 30 * 60 * 1000);
 
-// ============ GO ============
-if (isAdminMode) initAdminMode();
-else boot();
+// GO
+boot();
 </script>
 
 </body>
