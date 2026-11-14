@@ -593,6 +593,99 @@
   .unit-20 { background: linear-gradient(135deg, #DC2626, #7F1D1D); }
   .unit-21 { background: linear-gradient(135deg, #06B6D4, #0E7490); }
 
+  /* NEW: Review banner */
+  .review-banner {
+    margin: 16px 16px 0;
+    display: none;
+  }
+  .review-banner.visible { display: block; }
+  .review-card {
+    background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+    border-radius: 18px;
+    padding: 14px 16px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+    position: relative;
+    overflow: hidden;
+  }
+  .review-card::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 110px;
+    height: 110px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .review-card-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+  }
+  .review-card-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    animation: floatyIcon 2.5s ease-in-out infinite;
+  }
+  .review-card-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+  .review-card-title {
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 0.2px;
+    line-height: 1.1;
+  }
+  .review-card-sub {
+    font-size: 11px;
+    font-weight: 700;
+    opacity: 0.85;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .review-card-btn {
+    padding: 10px 16px;
+    background: white;
+    color: #6D28D9;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.15);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    transition: all 0.15s var(--ease);
+  }
+  .review-card-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 0 0;
+  }
+  .review-banner.urgent .review-card {
+    animation: reviewPulse 2.4s ease-in-out infinite;
+  }
+  @keyframes reviewPulse {
+    0%, 100% { box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25); }
+    50% { box-shadow: 0 4px 20px rgba(139, 92, 246, 0.55); }
+  }
+
   .lessons {
     display: flex;
     flex-direction: column;
@@ -1813,6 +1906,18 @@
 
     <div class="main-content">
       <div id="learnTab">
+        <div class="review-banner" id="reviewBanner">
+          <div class="review-card">
+            <div class="review-card-left">
+              <div class="review-card-icon">🔁</div>
+              <div class="review-card-text">
+                <div class="review-card-title">Daily Review</div>
+                <div class="review-card-sub" id="reviewDueText">Practice what you've learned</div>
+              </div>
+            </div>
+            <button class="review-card-btn" id="reviewStartBtn">Review</button>
+          </div>
+        </div>
         <div class="units-wrap" id="unitsWrap"></div>
       </div>
       <div id="wordsTab" style="display:none;">
@@ -2586,7 +2691,8 @@ let currentUser = null;
 let state = {
   lang: null, xp: 0, gems: 50, hearts: 5, streak: 0,
   lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal',
-  heartTimerStartedAt: null
+  heartTimerStartedAt: null,
+  wordStats: {}
 };
 
 async function saveState() {
@@ -2607,10 +2713,14 @@ async function loadUserState(username) {
   const defaults = {
     lang: null, xp: 0, gems: 50, hearts: 5, streak: 0,
     lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal',
-    heartTimerStartedAt: null
+    heartTimerStartedAt: null,
+    wordStats: {}
   };
   if (data[username]?.data) state = { ...defaults, ...data[username].data };
   else state = { ...defaults };
+  if (!state.wordStats || typeof state.wordStats !== 'object' || Array.isArray(state.wordStats)) {
+    state.wordStats = {};
+  }
   if (state.hearts >= MAX_HEARTS) state.heartTimerStartedAt = null;
   if (state.hearts < MAX_HEARTS && !state.heartTimerStartedAt) state.heartTimerStartedAt = Date.now();
 }
@@ -2685,6 +2795,160 @@ function normalizeText(str) {
     .replace(/ß/g, "ss");
 }
 
+// ============ SPACED REPETITION HELPERS ============
+function wordKey(unitId, wordIdx) { return `${unitId}:${wordIdx}`; }
+
+function updateWordStat(unitId, wordIdx, wasCorrect) {
+  if (unitId === undefined || unitId === null || wordIdx === undefined || wordIdx === null) return;
+  if (unitId < 1) return; // skip synthetic unit 0 (review mode)
+  const key = wordKey(unitId, wordIdx);
+  if (!state.wordStats[key]) {
+    state.wordStats[key] = { seen: 0, correct: 0, wrong: 0, lastSeen: 0 };
+  }
+  const s = state.wordStats[key];
+  s.seen++;
+  if (wasCorrect) s.correct++;
+  else s.wrong++;
+  s.lastSeen = Date.now();
+}
+
+function getLearnedWords() {
+  const learned = [];
+  Object.keys(VOCAB).forEach(uid => {
+    const unitId = parseInt(uid);
+    if (!canAccessUnit(unitId)) return;
+    VOCAB[uid].words.forEach((w, idx) => {
+      const key = wordKey(unitId, idx);
+      const s = state.wordStats[key];
+      if (s && s.seen > 0) {
+        learned.push({ unitId, idx, word: w, key });
+      }
+    });
+  });
+  return learned;
+}
+
+function getDueReviewCount() {
+  const learned = getLearnedWords();
+  const now = Date.now();
+  let due = 0;
+  learned.forEach(item => {
+    const s = state.wordStats[item.key];
+    if (!s) return;
+    const strength = (s.correct + 1) / (s.seen + 2);
+    const ageDays = (now - s.lastSeen) / (1000 * 60 * 60 * 24);
+    if (strength < 0.72 || ageDays > 1.5) due++;
+  });
+  return { due, total: learned.length };
+}
+
+function buildReviewQuestions(count, excludeKeys = null) {
+  const learned = getLearnedWords();
+  let pool = learned;
+  if (excludeKeys && excludeKeys.size > 0) {
+    pool = learned.filter(item => !excludeKeys.has(item.key));
+  }
+  if (pool.length === 0) return [];
+
+  const allWords = [];
+  Object.keys(VOCAB).forEach(uid => allWords.push(...VOCAB[uid].words));
+
+  const now = Date.now();
+  const scored = pool.map(item => {
+    const s = state.wordStats[item.key];
+    const strength = (s.correct + 1) / (s.seen + 2);
+    const ageDays = (now - s.lastSeen) / (1000 * 60 * 60 * 24);
+    const priority = (1 - strength) * 2 + Math.min(ageDays, 7) / 7;
+    return { ...item, priority, strength };
+  });
+
+  scored.sort((a, b) => b.priority - a.priority);
+  const topPool = scored.slice(0, Math.max(count * 2, 10));
+  const picked = shuffle(topPool).slice(0, Math.min(count, topPool.length));
+
+  return picked.map((item, i) => {
+    const w = item.word;
+    const trackInfo = { trackUnit: item.unitId, trackIdx: item.idx };
+    if (i % 4 === 0) {
+      return {
+        type: 'type',
+        prompt: getSourceWord(w),
+        promptLabel: t('writeIn'),
+        correct: w.df,
+        isReview: true,
+        speakText: w.df, speakLang: 'df',
+        ...trackInfo
+      };
+    } else if (i % 4 === 1) {
+      const others = shuffle(allWords.filter(x => x.df !== w.df)).slice(0, 3);
+      return {
+        type: 'mcq',
+        prompt: w.df,
+        promptLabel: t('whatMeans'),
+        correct: getSourceWord(w),
+        choices: shuffle([getSourceWord(w), ...others.map(x => state.lang === 'da' ? x.da : x.en)]),
+        isReview: true,
+        speakText: w.df, speakLang: 'df',
+        ...trackInfo
+      };
+    } else if (i % 4 === 2) {
+      const others = shuffle(allWords.filter(x => x.df !== w.df)).slice(0, 3);
+      return {
+        type: 'mcq',
+        prompt: getSourceWord(w),
+        promptLabel: t('translateTo'),
+        correct: w.df,
+        choices: shuffle([w.df, ...others.map(x => x.df)]),
+        isReview: true,
+        speakText: w.df, speakLang: 'df',
+        ...trackInfo
+      };
+    } else {
+      return {
+        type: 'type',
+        prompt: w.df,
+        promptLabel: t('typeTheMeaning'),
+        correct: getSourceWord(w),
+        isReview: true,
+        speakText: w.df, speakLang: 'df',
+        ...trackInfo
+      };
+    }
+  });
+}
+
+// Seeds wordStats from existing completed lessons (for users upgrading to this version)
+async function ensureBootstrapStats() {
+  if (Object.keys(state.wordStats).length > 0) return;
+  let seeded = 0;
+  const progressKeys = Object.keys(state.progress).map(k => parseInt(k)).sort((a,b) => a - b);
+  progressKeys.forEach(unitId => {
+    if (!VOCAB[unitId]) return;
+    const unitLessons = getLessonsForUnit(unitId);
+    const lessonProgress = state.progress[unitId] || {};
+    Object.keys(lessonProgress).forEach(lidStr => {
+      const lid = parseInt(lidStr);
+      const info = lessonProgress[lidStr];
+      if (!info?.completed) return;
+      const lesson = unitLessons[lid];
+      if (!lesson) return;
+      if (lesson.isFinal) return; // final reuses words from non-final lessons
+      const startIdx = lesson.startIdx || 0;
+      lesson.words.forEach((_, i) => {
+        const key = wordKey(unitId, startIdx + i);
+        if (!state.wordStats[key]) {
+          state.wordStats[key] = { seen: 1, correct: 0, wrong: 0, lastSeen: 0 };
+          seeded++;
+        }
+      });
+    });
+  });
+  if (seeded > 0) {
+    console.log(`Bootstrapped ${seeded} word stats from existing progress`);
+    await saveState();
+  }
+}
+
 function getLessonsForUnit(unitId) {
   const unit = VOCAB[unitId];
   const lessons = [];
@@ -2693,13 +2957,15 @@ function getLessonsForUnit(unitId) {
     lessons.push({
       words: words.slice(i, i + 5),
       sentences: sentences.slice(Math.floor(i / 5) * 2, Math.floor(i / 5) * 2 + 2),
-      isFinal: false
+      isFinal: false,
+      startIdx: i
     });
   }
   lessons.push({
     words: [...words],
     sentences: [...sentences],
-    isFinal: true
+    isFinal: true,
+    startIdx: 0
   });
   return lessons;
 }
@@ -2821,6 +3087,7 @@ async function enterApp(name) {
     setSession(name);
     currentUser = name;
     await loadUserState(name);
+    await ensureBootstrapStats();
     recomputeHearts();
     const data = await cloudGet();
     if (!data[name]) data[name] = {};
@@ -3118,6 +3385,24 @@ function renderHome() {
   $('userAvatar').textContent = (currentUser || '?').charAt(0).toUpperCase();
   updateHeartUI();
 
+  // Review banner
+  const reviewInfo = getDueReviewCount();
+  const reviewBanner = $('reviewBanner');
+  if (reviewInfo.total >= 3) {
+    reviewBanner.classList.add('visible');
+    let dueText;
+    if (reviewInfo.due === 0) {
+      dueText = `All ${reviewInfo.total} learned word${reviewInfo.total === 1 ? '' : 's'} caught up`;
+    } else {
+      dueText = `${reviewInfo.due} of ${reviewInfo.total} word${reviewInfo.total === 1 ? '' : 's'} need practice`;
+    }
+    $('reviewDueText').textContent = dueText;
+    if (reviewInfo.due >= 5) reviewBanner.classList.add('urgent');
+    else reviewBanner.classList.remove('urgent');
+  } else {
+    reviewBanner.classList.remove('visible', 'urgent');
+  }
+
   const wrap = $('unitsWrap');
   wrap.innerHTML = '';
   Object.keys(VOCAB).forEach(unitId => {
@@ -3185,6 +3470,34 @@ function startLesson(unitId, lessonIdx) {
   renderStep();
 }
 
+function startReviewLesson() {
+  if (state.hearts <= 0) { showScreen('gameover'); return; }
+  const dueInfo = getDueReviewCount();
+  const reviewCount = Math.min(25, Math.max(10, dueInfo.due));
+  const reviewQs = buildReviewQuestions(reviewCount);
+  if (reviewQs.length === 0) { toast('Nothing to review yet — complete a lesson first!'); return; }
+  currentLesson = {
+    unitId: 0,
+    lessonIdx: 0,
+    words: [],
+    sentences: [],
+    isFinal: false,
+    isReviewMode: true
+  };
+  steps = reviewQs;
+  initialStepsCount = steps.length;
+  currentStep = 0;
+  correctCount = 0;
+  firstTryCorrect = 0;
+  selectedAnswer = null;
+  feedbackShown = false;
+  $('lessonHearts').textContent = state.hearts;
+  const pf = $('progressFill');
+  pf.classList.remove('final-fill');
+  showScreen('lesson');
+  renderStep();
+}
+
 function buildSteps(lesson) {
   const cumulativeWords = [];
   for (let u = 1; u <= currentLesson.unitId; u++) {
@@ -3194,17 +3507,25 @@ function buildSteps(lesson) {
 
   const list = [];
   list.push({ type: 'intro', words: lesson.words });
+  const startIdx = lesson.startIdx || 0;
   lesson.words.forEach((w, i) => {
+    const absoluteIdx = startIdx + i;
     list.push({
       type: 'mcq', prompt: getSourceWord(w), promptLabel: t('translateTo'), correct: w.df,
       choices: shuffle([w.df, ...getDistractors(w, cumulativeWords, 3, 'df')]),
-      speakText: w.df, speakLang: 'df'
+      speakText: w.df, speakLang: 'df',
+      trackUnit: currentLesson.unitId, trackIdx: absoluteIdx
     });
-    if (i % 2 === 0) list.push({ type: 'type', prompt: getSourceWord(w), promptLabel: t('writeIn'), correct: w.df, speakText: w.df, speakLang: 'df' });
+    if (i % 2 === 0) list.push({
+      type: 'type', prompt: getSourceWord(w), promptLabel: t('writeIn'), correct: w.df,
+      speakText: w.df, speakLang: 'df',
+      trackUnit: currentLesson.unitId, trackIdx: absoluteIdx
+    });
     if (i % 2 === 1) list.push({
       type: 'mcq', prompt: w.df, promptLabel: t('whatMeans'), correct: getSourceWord(w),
       choices: shuffle([getSourceWord(w), ...getDistractors(w, cumulativeWords, 3, state.lang)]),
-      speakText: w.df, speakLang: 'df'
+      speakText: w.df, speakLang: 'df',
+      trackUnit: currentLesson.unitId, trackIdx: absoluteIdx
     });
   });
   lesson.sentences.forEach(s => {
@@ -3214,27 +3535,15 @@ function buildSteps(lesson) {
       speakText: s.df, speakLang: 'df'
     });
   });
-  if (currentLesson.unitId > 2) {
-    const reviewCount = Math.min(3, Math.floor((currentLesson.unitId - 2) / 3));
-    const previousUnits = [];
-    for (let u = 1; u < currentLesson.unitId; u++) previousUnits.push(u);
-    for (let r = 0; r < reviewCount; r++) {
-      if (previousUnits.length === 0) break;
-      const randomUnitId = previousUnits[Math.floor(Math.random() * previousUnits.length)];
-      const reviewWords = VOCAB[randomUnitId].words;
-      if (!reviewWords || reviewWords.length === 0) continue;
-      const randomWord = reviewWords[Math.floor(Math.random() * reviewWords.length)];
-      if (r % 2 === 0) list.push({
-        type: 'mcq', prompt: getSourceWord(randomWord), promptLabel: t('translateTo'), isReview: true,
-        correct: randomWord.df,
-        choices: shuffle([randomWord.df, ...getDistractors(randomWord, cumulativeWords, 3, 'df')]),
-        speakText: randomWord.df, speakLang: 'df'
-      });
-      else list.push({
-        type: 'type', prompt: getSourceWord(randomWord), promptLabel: t('writeIn'), isReview: true,
-        correct: randomWord.df, speakText: randomWord.df, speakLang: 'df'
-      });
-    }
+
+  // CUMULATIVE REVIEW: always pull a chunk of weak/stale words from prior learning
+  const excludeKeys = new Set();
+  lesson.words.forEach((_, i) => excludeKeys.add(wordKey(currentLesson.unitId, startIdx + i)));
+  const learnedCount = getLearnedWords().length;
+  if (learnedCount > 0) {
+    const reviewCount = Math.min(8, Math.max(2, Math.floor(learnedCount / 12)));
+    const reviewQs = buildReviewQuestions(reviewCount, excludeKeys);
+    list.push(...reviewQs);
   }
   return list;
 }
@@ -3243,9 +3552,10 @@ function buildFinalSteps(lesson, cumulativeWords) {
   const list = [];
   const allWords = lesson.words;
   const allSentences = lesson.sentences;
+  const indexedWords = allWords.map((w, idx) => ({ w, idx }));
 
-  const phase1 = shuffle([...allWords]).slice(0, Math.min(25, allWords.length));
-  phase1.forEach(w => {
+  const phase1 = shuffle([...indexedWords]).slice(0, Math.min(25, allWords.length));
+  phase1.forEach(({ w, idx }) => {
     const sourceWord = getSourceWord(w);
     const others = shuffle(cumulativeWords.filter(x => x.df !== w.df));
     const choices = shuffle([
@@ -3253,21 +3563,26 @@ function buildFinalSteps(lesson, cumulativeWords) {
       ...others.slice(0, 3).map(x => state.lang === 'da' ? x.da : x.en)
     ]);
     list.push({
-      type: 'mcq', prompt: w.df, promptLabel: t('whatMeans'), correct: sourceWord, choices, isFinal: true, speakText: w.df, speakLang: 'df'
+      type: 'mcq', prompt: w.df, promptLabel: t('whatMeans'), correct: sourceWord, choices, isFinal: true,
+      speakText: w.df, speakLang: 'df',
+      trackUnit: currentLesson.unitId, trackIdx: idx
     });
   });
 
-  const phase2 = shuffle([...allWords]).slice(0, Math.min(8, Math.ceil(allWords.length * 0.4)));
-  phase2.forEach(w => {
+  const phase2 = shuffle([...indexedWords]).slice(0, Math.min(8, Math.ceil(allWords.length * 0.4)));
+  phase2.forEach(({ w, idx }) => {
     list.push({
-      type: 'type', prompt: w.df, promptLabel: t('typeTheMeaning'), correct: getSourceWord(w), isFinal: true, speakText: w.df, speakLang: 'df'
+      type: 'type', prompt: w.df, promptLabel: t('typeTheMeaning'), correct: getSourceWord(w), isFinal: true,
+      speakText: w.df, speakLang: 'df',
+      trackUnit: currentLesson.unitId, trackIdx: idx
     });
   });
 
-  const phase3 = shuffle([...allWords]).slice(0, Math.min(6, Math.ceil(allWords.length * 0.3)));
-  phase3.forEach(w => {
+  const phase3 = shuffle([...indexedWords]).slice(0, Math.min(6, Math.ceil(allWords.length * 0.3)));
+  phase3.forEach(({ w, idx }) => {
     list.push({
-      type: 'type', prompt: getSourceWord(w), promptLabel: t('typeInDanfrolat'), correct: w.df, isFinal: true
+      type: 'type', prompt: getSourceWord(w), promptLabel: t('typeInDanfrolat'), correct: w.df, isFinal: true,
+      trackUnit: currentLesson.unitId, trackIdx: idx
     });
   });
 
@@ -3280,24 +3595,18 @@ function buildFinalSteps(lesson, cumulativeWords) {
     });
   });
 
-  if (currentLesson.unitId > 1) {
-    const previousUnits = [];
-    for (let u = 1; u < currentLesson.unitId; u++) previousUnits.push(u);
-    for (let r = 0; r < 3; r++) {
-      if (previousUnits.length === 0) break;
-      const rid = previousUnits[Math.floor(Math.random() * previousUnits.length)];
-      const rw = VOCAB[rid].words[Math.floor(Math.random() * VOCAB[rid].words.length)];
-      const sourceWord = getSourceWord(rw);
-      const others = shuffle(cumulativeWords.filter(x => x.df !== rw.df));
-      const choices = shuffle([
-        sourceWord,
-        ...others.slice(0, 3).map(x => state.lang === 'da' ? x.da : x.en)
-      ]);
-      list.push({
-        type: 'mcq', prompt: rw.df, promptLabel: t('whatMeans'), correct: sourceWord, choices, isFinal: true, isReview: true, speakText: rw.df, speakLang: 'df'
-      });
-    }
+  // Final review: weak/stale words from OTHER units (exclude current unit to avoid duplicates)
+  const currentUnitWordKeys = new Set();
+  if (VOCAB[currentLesson.unitId]) {
+    VOCAB[currentLesson.unitId].words.forEach((_, i) => {
+      currentUnitWordKeys.add(wordKey(currentLesson.unitId, i));
+    });
   }
+  const finalReviewCount = Math.min(6, Math.max(3, Math.floor(Math.max(1, currentLesson.unitId) / 3)));
+  const finalReviewQs = buildReviewQuestions(finalReviewCount, currentUnitWordKeys);
+  finalReviewQs.forEach(q => { q.isFinal = true; });
+  list.push(...finalReviewQs);
+
   return list;
 }
 
@@ -3474,6 +3783,9 @@ function renderIntro(step, body) {
 }
 
 function getMascotMessage(step) {
+  if (currentLesson?.isReviewMode) {
+    return "Let's practice what you've learned! 🔁";
+  }
   if (currentLesson?.isFinal) {
     if (currentStep === 0) return '🏆 Final Challenge! No hints — trust your memory!';
     return 'Stay sharp — you got this!';
@@ -3523,7 +3835,12 @@ $('footerBtn').addEventListener('click', async () => {
   const result = checkAnswer(step, selectedAnswer);
   const isCorrect = (result === 'correct' || result === 'almost');
   feedbackShown = true;
-  
+
+  // === SPACED REPETITION TRACKING ===
+  if (step.trackUnit !== undefined && step.trackIdx !== undefined) {
+    updateWordStat(step.trackUnit, step.trackIdx, isCorrect);
+  }
+
   const fb = $('feedback');
   fb.classList.remove('show', 'correct', 'wrong', 'almost');
   fb.classList.add('show');
@@ -3590,16 +3907,23 @@ async function finishLesson() {
   const gemGain = 5;
   state.xp += xpGain;
   state.gems += gemGain;
-  if (!state.progress[currentLesson.unitId]) state.progress[currentLesson.unitId] = {};
-  const prev = state.progress[currentLesson.unitId][currentLesson.lessonIdx];
-  state.progress[currentLesson.unitId][currentLesson.lessonIdx] = { completed: true, best: Math.max(prev?.best || 0, correctCount) };
+
+  if (!currentLesson.isReviewMode) {
+    if (!state.progress[currentLesson.unitId]) state.progress[currentLesson.unitId] = {};
+    const prev = state.progress[currentLesson.unitId][currentLesson.lessonIdx];
+    state.progress[currentLesson.unitId][currentLesson.lessonIdx] = { completed: true, best: Math.max(prev?.best || 0, correctCount) };
+  }
+
   updateStreak();
   await saveState();
   $('xpEarned').textContent = '+' + xpGain;
   $('gemEarned').textContent = '+' + gemGain;
   const acc = initialStepsCount > 0 ? Math.round((firstTryCorrect / initialStepsCount) * 100) : 100;
   $('accuracyVal').textContent = acc + '%';
-  if (currentLesson.isFinal) {
+  if (currentLesson.isReviewMode) {
+    $('completeTitle').textContent = '🔁 Review Complete!';
+    $('completeSub').textContent = t('greatProgress');
+  } else if (currentLesson.isFinal) {
     $('completeTitle').textContent = '🏆 ' + t('finalComplete');
     $('completeSub').textContent = t('legendary');
   } else {
@@ -3614,6 +3938,7 @@ $('continueBtn').addEventListener('click', () => { renderHome(); showScreen('hom
 $('closeLesson').addEventListener('click', () => { openQuitModal(); });
 $('refillBtn').addEventListener('click', refillHearts);
 $('goHomeBtn').addEventListener('click', () => { renderHome(); showScreen('home'); });
+$('reviewStartBtn').addEventListener('click', startReviewLesson);
 
 $('flagBtn').addEventListener('click', () => {
   $('accountDisplay').textContent = currentUser;
@@ -3677,7 +4002,7 @@ $('logoutBtn').addEventListener('click', () => {
     stopPolling();
     clearSession();
     currentUser = null;
-    state = { lang: null, xp: 0, gems: 50, hearts: 5, streak: 0, lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal', heartTimerStartedAt: null };
+    state = { lang: null, xp: 0, gems: 50, hearts: 5, streak: 0, lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal', heartTimerStartedAt: null, wordStats: {} };
     $('authError').textContent = '';
     setRequestState('idle');
     showScreen('auth');
