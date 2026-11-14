@@ -31,7 +31,7 @@
   .load-bar-fill{height:100%;background:var(--green);border-radius:10px;width:30%;animation:loadSlide 1.4s ease-in-out infinite}
   @keyframes loadSlide{0%{width:10%}50%{width:70%}100%{width:95%}}
 
-  #lockedScreen{display:none;padding:40px 20px;text-align:center;min-height:100vh;flex-direction:column;align-items:center;justify-content:center}
+  #lockedScreen{display:none;padding:40px 20px 60px;text-align:center;min-height:100vh;flex-direction:column;align-items:center;justify-content:flex-start}
   #lockedScreen.show{display:flex}
   .lock-icon{font-size:70px;margin-bottom:16px;animation:lockWobble 2s ease-in-out infinite}
   @keyframes lockWobble{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
@@ -46,6 +46,54 @@
   .lock-info{font-size:12px;color:var(--gray-text);font-weight:700;margin-top:14px;line-height:1.5}
   .go-back-btn{margin-top:12px;padding:12px 24px;background:#fff;border:2px solid var(--gray);color:var(--text);border-radius:12px;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 3px 0 var(--gray-dark);text-decoration:none;display:inline-block}
   .go-back-btn:active{transform:translateY(3px);box-shadow:0 0 0}
+
+  /* NEW: Setup instructions */
+  .setup-instructions{
+    width:100%;max-width:380px;background:#fff;border-radius:18px;
+    padding:20px;box-shadow:0 4px 24px rgba(0,0,0,.08);
+    margin-bottom:20px;text-align:left;
+  }
+  .setup-instructions-title{
+    font-size:12px;font-weight:900;color:var(--gray-text);
+    text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;
+    display:flex;align-items:center;gap:6px;
+  }
+  .setup-step{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
+  .setup-step:last-child{margin-bottom:0}
+  .setup-step-num{
+    width:22px;height:22px;border-radius:50%;
+    background:var(--blue);color:#fff;font-size:11px;font-weight:900;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;margin-top:1px;
+  }
+  .setup-step-text{font-size:12px;font-weight:700;color:var(--text);line-height:1.5}
+  .setup-step-text code{
+    background:var(--bg);padding:1px 5px;border-radius:4px;
+    font-size:11px;font-weight:800;color:var(--blue-dark);font-family:monospace;
+  }
+  .setup-snippet-label{
+    font-size:10px;font-weight:900;color:var(--gray-text);
+    text-transform:uppercase;letter-spacing:.6px;margin:14px 0 6px;
+  }
+  .setup-snippet{
+    display:flex;align-items:center;gap:8px;
+    background:var(--bg);padding:8px 10px;border-radius:8px;
+    border:2px solid var(--gray);
+  }
+  .setup-snippet code{
+    flex:1;font-family:monospace;font-size:11px;
+    color:var(--text);word-break:break-all;user-select:all;
+  }
+  .snippet-copy-btn{
+    padding:6px 10px;background:var(--blue);color:#fff;
+    border:none;border-radius:6px;font-family:inherit;
+    font-size:10px;font-weight:900;text-transform:uppercase;
+    letter-spacing:.3px;cursor:pointer;
+    box-shadow:0 2px 0 var(--blue-dark);flex-shrink:0;
+    transition:all .12s;
+  }
+  .snippet-copy-btn:active{transform:translateY(2px);box-shadow:0 0 0}
+  .snippet-copy-btn.copied{background:var(--green);box-shadow:0 2px 0 var(--green-dark)}
 
   .admin-header{background:#fff;border-bottom:2px solid var(--gray);position:sticky;top:0;z-index:50;padding:14px 16px 0;box-shadow:0 2px 12px rgba(0,0,0,.03)}
   .header-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
@@ -212,7 +260,6 @@
 
   .acct-actions{padding:8px 24px 20px;display:flex;flex-direction:column;gap:10px}
   
-  /* NEW: Give Heart Button */
   .give-heart-btn {
     width: 100%;
     padding: 14px;
@@ -302,13 +349,41 @@
 <div class="app" id="lockedScreen">
   <div class="lock-icon">🔒</div>
   <div class="lock-title">Setup Mode</div>
-  <div class="lock-sub">Send the code below to the admin. Once it's added, tap "Check Access" below.</div>
+  <div class="lock-sub">Add this device to the admin list to unlock the panel.</div>
 
   <div class="device-card">
     <div class="device-label">Your Device Code</div>
     <div class="device-code" id="deviceCode">—</div>
     <button class="copy-btn" id="copyBtn">📋 Copy Code</button>
     <div class="lock-info">This code is permanent for this browser.</div>
+  </div>
+
+  <div class="setup-instructions">
+    <div class="setup-instructions-title">📝 How to add this device</div>
+    <div class="setup-step">
+      <div class="setup-step-num">1</div>
+      <div class="setup-step-text">Open <strong>jsonbin.io</strong>, log in, and open the record your app uses.</div>
+    </div>
+    <div class="setup-step">
+      <div class="setup-step-num">2</div>
+      <div class="setup-step-text">Find the <code>__admin_devices__</code> array. If it doesn't exist, create it as a top-level key.</div>
+    </div>
+    <div class="setup-step">
+      <div class="setup-step-num">3</div>
+      <div class="setup-step-text">Add your device code to the array, save the bin, then tap <strong>Check Access</strong> below.</div>
+    </div>
+
+    <div class="setup-snippet-label">Add this string to the array:</div>
+    <div class="setup-snippet">
+      <code id="jsonSnippet">"DF-XXXX-XXXX"</code>
+      <button class="snippet-copy-btn" id="copySnippetBtn">Copy</button>
+    </div>
+
+    <div class="setup-snippet-label">Or paste this whole block if the array is missing:</div>
+    <div class="setup-snippet">
+      <code id="jsonFullSnippet">{ "__admin_devices__": ["DF-XXXX-XXXX"] }</code>
+      <button class="snippet-copy-btn" id="copyFullSnippetBtn">Copy</button>
+    </div>
   </div>
 
   <button class="copy-btn" id="checkBtn" style="max-width:380px;background:var(--blue);box-shadow:0 3px 0 var(--blue-dark);">✓ I've been added — Check Access</button>
@@ -957,18 +1032,30 @@ $('refreshBtn').addEventListener('click',async()=>{
   setTimeout(()=>btn.classList.remove('spinning'),400);
 });
 
-$('copyBtn').addEventListener('click',async()=>{
-  const code=currentDeviceId;
-  const btn=$('copyBtn');
-  try{ await navigator.clipboard.writeText(code); }
+async function copyToClipboard(text, btn, originalLabel, successLabel) {
+  try { await navigator.clipboard.writeText(text); }
   catch(e){
     const ta=document.createElement('textarea');
-    ta.value=code; document.body.appendChild(ta);
+    ta.value=text; document.body.appendChild(ta);
     ta.select(); document.execCommand('copy'); ta.remove();
   }
-  btn.textContent='✓ Copied!';
+  btn.textContent = successLabel || '✓ Copied!';
   btn.classList.add('copied');
-  setTimeout(()=>{btn.textContent='📋 Copy Code';btn.classList.remove('copied');},2000);
+  setTimeout(()=>{ btn.textContent = originalLabel; btn.classList.remove('copied'); }, 2000);
+}
+
+$('copyBtn').addEventListener('click',async()=>{
+  await copyToClipboard(currentDeviceId, $('copyBtn'), '📋 Copy Code', '✓ Copied!');
+});
+
+// NEW: copy JSON snippets for pasting into bin
+$('copySnippetBtn').addEventListener('click', async () => {
+  await copyToClipboard(`"${currentDeviceId}"`, $('copySnippetBtn'), 'Copy');
+});
+
+$('copyFullSnippetBtn').addEventListener('click', async () => {
+  const fullJson = `{ "__admin_devices__": ["${currentDeviceId}"] }`;
+  await copyToClipboard(fullJson, $('copyFullSnippetBtn'), 'Copy');
 });
 
 $('checkBtn').addEventListener('click',async()=>{
@@ -985,7 +1072,7 @@ $('checkBtn').addEventListener('click',async()=>{
   } else {
     btn.disabled=false;
     btn.innerHTML=orig;
-    showToast({name:'?',color:'#FFC800',title:'Not added yet',sub:'Ask the admin to add your code, then try again'});
+    showToast({name:'?',color:'#FFC800',title:'Not added yet',sub:'Add your code to the bin, then try again'});
   }
 });
 
@@ -1419,6 +1506,9 @@ async function boot(){
 
   if(isSetupMode){
     $('deviceCode').textContent=currentDeviceId;
+    // NEW: fill in the JSON snippets with the real device code
+    $('jsonSnippet').textContent = `"${currentDeviceId}"`;
+    $('jsonFullSnippet').textContent = `{ "__admin_devices__": ["${currentDeviceId}"] }`;
     $('lockedScreen').classList.add('show');
     return;
   }
