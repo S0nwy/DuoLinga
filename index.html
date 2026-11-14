@@ -1829,177 +1829,6 @@
     color: var(--gray-text);
     line-height: 1.5;
   }
-
-  /* ===== NEW: Admin panel ===== */
-  #adminPanel {
-    background: var(--bg-soft);
-    overflow-y: auto;
-  }
-
-  .admin-title-bar {
-    position: sticky;
-    top: 0;
-    background: white;
-    z-index: 50;
-    padding: 12px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid var(--gray);
-    flex-shrink: 0;
-  }
-
-  .admin-title {
-    font-weight: 900;
-    font-size: 16px;
-  }
-
-  .admin-content { padding: 16px; }
-
-  .admin-section {
-    background: white;
-    border: 2px solid var(--gray);
-    border-bottom: 4px solid var(--gray-dark);
-    border-radius: 14px;
-    padding: 14px;
-    margin-bottom: 14px;
-  }
-
-  .admin-section-title {
-    font-weight: 900;
-    font-size: 15px;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .admin-count {
-    background: var(--blue);
-    color: white;
-    border-radius: 10px;
-    padding: 1px 8px;
-    font-size: 11px;
-  }
-
-  .admin-count.red {
-    background: var(--red);
-  }
-
-  .admin-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--gray);
-    gap: 8px;
-  }
-
-  .admin-item:last-child { border-bottom: none; }
-
-  .admin-item-info { flex: 1; min-width: 0; }
-
-  .admin-item-name {
-    font-weight: 800;
-    font-size: 14px;
-    word-break: break-word;
-  }
-
-  .admin-item-sub {
-    font-size: 11px;
-    color: var(--gray-text);
-    font-weight: 600;
-    margin-top: 2px;
-  }
-
-  .admin-actions { display: flex; gap: 6px; flex-shrink: 0; }
-
-  .admin-btn {
-    padding: 6px 10px;
-    border: none;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 11px;
-    font-weight: 900;
-    cursor: pointer;
-    transition: transform 0.1s;
-  }
-
-  .admin-btn:active { transform: scale(0.95); }
-
-  .admin-btn.approve {
-    background: var(--green);
-    color: white;
-    box-shadow: 0 2px 0 var(--green-dark);
-  }
-
-  .admin-btn.deny {
-    background: var(--red);
-    color: white;
-    box-shadow: 0 2px 0 var(--red-dark);
-  }
-
-  .admin-btn.remove {
-    background: var(--bg-soft);
-    color: var(--gray-text);
-    border: 1.5px solid var(--gray);
-  }
-
-  .admin-add-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-  }
-
-  .admin-input {
-    flex: 1;
-    padding: 10px 12px;
-    border: 2px solid var(--gray);
-    border-radius: 10px;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    outline: none;
-    background: var(--bg-soft);
-  }
-
-  .admin-input:focus { border-color: var(--blue); background: white; }
-
-  .admin-add-btn {
-    padding: 10px 16px;
-    background: var(--blue);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 900;
-    cursor: pointer;
-    box-shadow: 0 3px 0 var(--blue-dark);
-    transition: transform 0.1s;
-  }
-
-  .admin-add-btn:active { transform: translateY(3px); box-shadow: 0 0 0 var(--blue-dark); }
-
-  .admin-empty {
-    text-align: center;
-    padding: 20px 10px;
-    color: var(--gray-text);
-    font-weight: 700;
-    font-size: 13px;
-  }
-
-  .admin-banner {
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    color: #5C4300;
-    padding: 12px 14px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 800;
-    margin-bottom: 14px;
-    line-height: 1.5;
-    border: 2px solid var(--yellow-dark);
-  }
 </style>
 </head>
 <body>
@@ -2115,36 +1944,6 @@
     </div>
   </div>
 
-  <!-- NEW: Admin Panel -->
-  <div class="screen" id="adminPanel">
-    <div class="admin-title-bar">
-      <button class="close-btn" id="adminBack">←</button>
-      <div class="admin-title">👑 Admin Panel</div>
-      <div style="width:30px;"></div>
-    </div>
-    <div class="admin-content" id="adminContent">
-      <div class="admin-banner" id="adminBanner">
-        💡 Admin access is granted to device <strong>DF-ANCZ-J4YA</strong> and to any username in the <code>"__admins__"</code> array in your JSONBin.
-      </div>
-      <div class="admin-section">
-        <div class="admin-section-title">📋 Pending Requests <span class="admin-count red" id="adminPendingCount">0</span></div>
-        <div id="adminPendingList"><div class="admin-empty">Loading...</div></div>
-      </div>
-      <div class="admin-section">
-        <div class="admin-section-title">👑 Admins</div>
-        <div id="adminAdminsList"><div class="admin-empty">Loading...</div></div>
-        <div class="admin-add-row">
-          <input type="text" class="admin-input" id="adminNewAdmin" placeholder="Username" maxlength="24" autocomplete="off" spellcheck="false">
-          <button class="admin-add-btn" id="adminAddBtn">Add</button>
-        </div>
-      </div>
-      <div class="admin-section">
-        <div class="admin-section-title">👥 All Users</div>
-        <div id="adminUsersList"><div class="admin-empty">Loading...</div></div>
-      </div>
-    </div>
-  </div>
-
   <div class="screen" id="lesson">
     <div class="lesson-top">
       <button class="close-btn" id="closeLesson">✕</button>
@@ -2224,8 +2023,8 @@
         <div class="setting-label">Total XP</div>
         <div class="setting-value" id="xpDisplay" style="cursor:default;">0</div>
       </div>
-      <!-- Admin panel button (no claim button) -->
-      <button class="btn btn-green" style="width:100%; margin-top:16px; display:none;" id="openAdminPanel">👑 Admin Panel</button>
+      <!-- Admin: opens external admin.html in a new tab -->
+      <button class="btn btn-green" style="width:100%; margin-top:16px; display:none;" id="openAdminPanel">👑 Open Admin Panel</button>
       <button class="danger-btn" id="logoutBtn">Log Out</button>
       <button class="btn btn-white" style="width:100%; margin-top:8px;" id="closeSettings">Close</button>
     </div>
@@ -2283,8 +2082,11 @@ const SESSION_KEY = 'danfrolat_session_v6';
 const LASTNAME_KEY = 'danfrolat_lastname';
 const DEVICE_ID_KEY = 'danfrolat_device_id';
 
-// ===== NEW: device IDs that are always admin =====
+// ===== device IDs that are always admin =====
 const ADMIN_DEVICE_IDS = ['DF-ANCZ-J4YA'];
+// ===== external admin panel URL =====
+// Change this if your admin.html lives somewhere else.
+const ADMIN_PANEL_URL = 'admin.html';
 
 const MAX_HEARTS = 5;
 const HEART_REGEN_MS = 5 * 60 * 60 * 1000;
@@ -2837,7 +2639,6 @@ async function refreshAdminStatus() {
   try {
     const data = await cloudGet();
     const admins = Array.isArray(data.__admins__) ? data.__admins__ : [];
-    // Admin if: this device is in ADMIN_DEVICE_IDS OR current user is in __admins__ list
     isCurrentUserAdmin = isAdminDevice() || admins.includes(currentUser);
     const reqs = data.__requests__ || {};
     pendingRequestsCount = Object.values(reqs).filter(r => r.status === 'pending').length;
@@ -4006,218 +3807,14 @@ $('logoutBtn').addEventListener('click', () => {
   }
 });
 
-// ============ ADMIN PANEL ============
-
-async function openAdminPanel() {
-  showScreen('adminPanel');
-  await renderAdminPanel();
-}
-
-async function renderAdminPanel() {
-  const pendingList = $('adminPendingList');
-  const adminsList = $('adminAdminsList');
-  const usersList = $('adminUsersList');
-  if (!pendingList) return;
-
-  pendingList.innerHTML = '<div class="admin-empty">Loading...</div>';
-  adminsList.innerHTML = '<div class="admin-empty">Loading...</div>';
-  usersList.innerHTML = '<div class="admin-empty">Loading...</div>';
-
-  let data;
-  try { data = await cloudGet(); }
-  catch (e) {
-    pendingList.innerHTML = '<div class="admin-empty">Failed to load</div>';
-    return;
-  }
-
-  const admins = Array.isArray(data.__admins__) ? data.__admins__ : [];
-  const requests = data.__requests__ || {};
-  const pending = Object.entries(requests).filter(([n, r]) => r.status === 'pending');
-  const users = Object.keys(data).filter(k => !k.startsWith('__'));
-
-  // Pending
-  $('adminPendingCount').textContent = pending.length;
-  if (pending.length === 0) {
-    pendingList.innerHTML = '<div class="admin-empty">No pending requests 🎉</div>';
-  } else {
-    pendingList.innerHTML = '';
-    pending.forEach(([name, req]) => {
-      const item = document.createElement('div');
-      item.className = 'admin-item';
-      const tag = req.isTakeover ? ' <span style="color:var(--yellow-dark);font-size:11px;">(takeover)</span>' : '';
-      const when = new Date(req.timestamp || Date.now()).toLocaleString();
-      item.innerHTML = `
-        <div class="admin-item-info">
-          <div class="admin-item-name">${escapeHtmlHTML(name)}${tag}</div>
-          <div class="admin-item-sub">${when}</div>
-        </div>
-        <div class="admin-actions">
-          <button class="admin-btn approve" data-approve="${escapeHtmlHTML(name)}">Approve</button>
-          <button class="admin-btn deny" data-deny="${escapeHtmlHTML(name)}">Deny</button>
-        </div>`;
-      pendingList.appendChild(item);
-    });
-  }
-
-  // Admins
-  adminsList.innerHTML = '';
-  // Show admin device first
-  ADMIN_DEVICE_IDS.forEach(devId => {
-    const item = document.createElement('div');
-    item.className = 'admin-item';
-    item.innerHTML = `
-      <div class="admin-item-info">
-        <div class="admin-item-name">👑 Device: ${escapeHtmlHTML(devId)}</div>
-        <div class="admin-item-sub">Always admin (built-in)</div>
-      </div>`;
-    adminsList.appendChild(item);
-  });
-  if (admins.length === 0) {
-    const empty = document.createElement('div');
-    empty.className = 'admin-empty';
-    empty.textContent = 'No additional admins yet';
-    adminsList.appendChild(empty);
-  } else {
-    admins.forEach(name => {
-      const item = document.createElement('div');
-      item.className = 'admin-item';
-      const selfTag = name === currentUser ? ' <span style="color:var(--gray-text);font-size:11px;">(you)</span>' : '';
-      item.innerHTML = `
-        <div class="admin-item-info">
-          <div class="admin-item-name">👑 ${escapeHtmlHTML(name)}${selfTag}</div>
-          <div class="admin-item-sub">by username</div>
-        </div>
-        <div class="admin-actions">
-          <button class="admin-btn remove" data-remove-admin="${escapeHtmlHTML(name)}">Remove</button>
-        </div>`;
-      adminsList.appendChild(item);
-    });
-  }
-
-  // Users
-  usersList.innerHTML = '';
-  if (users.length === 0) {
-    usersList.innerHTML = '<div class="admin-empty">No users yet</div>';
-  } else {
-    users.forEach(name => {
-      const u = data[name];
-      const req = requests[name];
-      let status = 'unknown';
-      if (admins.includes(name)) status = 'admin';
-      else if (req?.status === 'pending') status = 'pending';
-      else if (req?.status === 'denied') status = 'denied';
-      else if (u?.ownerDeviceId) status = 'approved';
-      const emoji = status === 'admin' ? '👑' : status === 'approved' ? '✅' : status === 'pending' ? '⏳' : status === 'denied' ? '❌' : '❓';
-      const item = document.createElement('div');
-      item.className = 'admin-item';
-      item.innerHTML = `
-        <div class="admin-item-info">
-          <div class="admin-item-name">${escapeHtmlHTML(name)}</div>
-          <div class="admin-item-sub">${emoji} ${status}</div>
-        </div>`;
-      usersList.appendChild(item);
-    });
-  }
-
-  // Wire buttons
-  pendingList.querySelectorAll('[data-approve]').forEach(btn => {
-    btn.addEventListener('click', () => approveRequest(btn.dataset.approve));
-  });
-  pendingList.querySelectorAll('[data-deny]').forEach(btn => {
-    btn.addEventListener('click', () => denyRequest(btn.dataset.deny));
-  });
-  adminsList.querySelectorAll('[data-remove-admin]').forEach(btn => {
-    btn.addEventListener('click', () => removeAdmin(btn.dataset.removeAdmin));
-  });
-}
-
-async function approveRequest(name) {
-  try {
-    const data = await cloudGet();
-    if (!data.__requests__?.[name]) { toast('Request not found'); return; }
-    data.__requests__[name].status = 'approved';
-    data.__requests__[name].approvedBy = currentUser;
-    data.__requests__[name].approvedAt = Date.now();
-    await cloudSet(data);
-    toast(`✅ Approved ${name}`);
-    await refreshAdminStatus();
-    await renderAdminPanel();
-  } catch (e) { toast('Failed to approve'); }
-}
-
-async function denyRequest(name) {
-  try {
-    const data = await cloudGet();
-    if (!data.__requests__?.[name]) { toast('Request not found'); return; }
-    data.__requests__[name].status = 'denied';
-    data.__requests__[name].deniedBy = currentUser;
-    data.__requests__[name].deniedAt = Date.now();
-    await cloudSet(data);
-    toast(`❌ Denied ${name}`);
-    await refreshAdminStatus();
-    await renderAdminPanel();
-  } catch (e) { toast('Failed to deny'); }
-}
-
-async function addAdmin(name) {
-  name = name.trim();
-  if (!name) return;
-  if (!/^[a-zA-Z0-9 _-]+$/.test(name)) { toast('Invalid username'); return; }
-  try {
-    const data = await cloudGet();
-    if (!Array.isArray(data.__admins__)) data.__admins__ = [];
-    if (data.__admins__.includes(name)) { toast(`${name} is already an admin`); return; }
-    data.__admins__.push(name);
-    await cloudSet(data);
-    toast(`👑 ${name} is now an admin`);
-    await refreshAdminStatus();
-    await renderAdminPanel();
-  } catch (e) { toast('Failed to add admin'); }
-}
-
-async function removeAdmin(name) {
-  if (name === currentUser) {
-    if (!confirm('Remove yourself as admin? You will lose admin access.')) return;
-  }
-  try {
-    const data = await cloudGet();
-    if (Array.isArray(data.__admins__)) {
-      data.__admins__ = data.__admins__.filter(n => n !== name);
-      await cloudSet(data);
-      toast(`Removed ${name} from admins`);
-      await refreshAdminStatus();
-      await renderAdminPanel();
-      if (name === currentUser) {
-        showScreen('home');
-        renderHome();
-      }
-    }
-  } catch (e) { toast('Failed to remove admin'); }
-}
-
-$('adminBack').addEventListener('click', () => {
-  renderHome();
-  showScreen('home');
-});
-
-$('adminAddBtn').addEventListener('click', async () => {
-  const input = $('adminNewAdmin');
-  const name = input.value.trim();
-  if (!name) return;
-  await addAdmin(name);
-  input.value = '';
-});
-
-$('adminNewAdmin').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') { e.preventDefault(); $('adminAddBtn').click(); }
-});
-
+// ============ EXTERNAL ADMIN PANEL LINK ============
+// Opens your admin.html in a new tab. No in-app admin UI.
 $('openAdminPanel').addEventListener('click', () => {
   $('settingsModal').classList.remove('show');
-  openAdminPanel();
+  window.open(ADMIN_PANEL_URL, '_blank', 'noopener');
 });
 
-// Poll pending requests for admins every 30s
+// Poll pending requests for admins every 30s (for the badge only)
 setInterval(async () => {
   if (!currentUser || !isCurrentUserAdmin) return;
   try {
@@ -4227,8 +3824,6 @@ setInterval(async () => {
     updateAdminUI();
   } catch (e) {}
 }, 30000);
-
-// ============ END ADMIN PANEL ============
 
 setInterval(() => {
   if (!currentUser) return;
