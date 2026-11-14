@@ -1437,6 +1437,8 @@
     font-weight: 700;
     color: var(--text);
     border: 2px solid var(--gray);
+    cursor: pointer;
+    position: relative;
   }
 
   .user-avatar {
@@ -1449,6 +1451,24 @@
     align-items: center;
     justify-content: center;
     font-size: 11px;
+    font-weight: 900;
+  }
+
+  /* NEW: pending requests badge on user chip */
+  .user-pending-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--red);
+    border: 2px solid white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: white;
     font-weight: 900;
   }
 
@@ -1809,6 +1829,177 @@
     color: var(--gray-text);
     line-height: 1.5;
   }
+
+  /* ===== NEW: Admin panel ===== */
+  #adminPanel {
+    background: var(--bg-soft);
+    overflow-y: auto;
+  }
+
+  .admin-title-bar {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 50;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--gray);
+    flex-shrink: 0;
+  }
+
+  .admin-title {
+    font-weight: 900;
+    font-size: 16px;
+  }
+
+  .admin-content { padding: 16px; }
+
+  .admin-section {
+    background: white;
+    border: 2px solid var(--gray);
+    border-bottom: 4px solid var(--gray-dark);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+
+  .admin-section-title {
+    font-weight: 900;
+    font-size: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .admin-count {
+    background: var(--blue);
+    color: white;
+    border-radius: 10px;
+    padding: 1px 8px;
+    font-size: 11px;
+  }
+
+  .admin-count.red {
+    background: var(--red);
+  }
+
+  .admin-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--gray);
+    gap: 8px;
+  }
+
+  .admin-item:last-child { border-bottom: none; }
+
+  .admin-item-info { flex: 1; min-width: 0; }
+
+  .admin-item-name {
+    font-weight: 800;
+    font-size: 14px;
+    word-break: break-word;
+  }
+
+  .admin-item-sub {
+    font-size: 11px;
+    color: var(--gray-text);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .admin-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+  .admin-btn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+
+  .admin-btn:active { transform: scale(0.95); }
+
+  .admin-btn.approve {
+    background: var(--green);
+    color: white;
+    box-shadow: 0 2px 0 var(--green-dark);
+  }
+
+  .admin-btn.deny {
+    background: var(--red);
+    color: white;
+    box-shadow: 0 2px 0 var(--red-dark);
+  }
+
+  .admin-btn.remove {
+    background: var(--bg-soft);
+    color: var(--gray-text);
+    border: 1.5px solid var(--gray);
+  }
+
+  .admin-add-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .admin-input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 2px solid var(--gray);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    outline: none;
+    background: var(--bg-soft);
+  }
+
+  .admin-input:focus { border-color: var(--blue); background: white; }
+
+  .admin-add-btn {
+    padding: 10px 16px;
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 3px 0 var(--blue-dark);
+    transition: transform 0.1s;
+  }
+
+  .admin-add-btn:active { transform: translateY(3px); box-shadow: 0 0 0 var(--blue-dark); }
+
+  .admin-empty {
+    text-align: center;
+    padding: 20px 10px;
+    color: var(--gray-text);
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .admin-banner {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #5C4300;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 14px;
+    line-height: 1.5;
+    border: 2px solid var(--yellow-dark);
+  }
 </style>
 </head>
 <body>
@@ -1858,6 +2049,7 @@
         <div class="user-chip" id="userChip">
           <div class="user-avatar" id="userAvatar">D</div>
           <span id="userName">Danfrolat</span>
+          <span class="user-pending-badge" id="userPendingBadge"></span>
         </div>
       </div>
     </div>
@@ -1919,6 +2111,36 @@
       <div class="nav-item" data-tab="words">
         <span class="nav-icon">📖</span>
         <span>Words</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW: Admin Panel -->
+  <div class="screen" id="adminPanel">
+    <div class="admin-title-bar">
+      <button class="close-btn" id="adminBack">←</button>
+      <div class="admin-title">👑 Admin Panel</div>
+      <div style="width:30px;"></div>
+    </div>
+    <div class="admin-content" id="adminContent">
+      <div class="admin-banner" id="adminBanner" style="display:none;">
+        💡 Tip: You can also add admins directly in your JSONBin by adding a <code>"__admins__": ["name1", "name2"]</code> array.
+      </div>
+      <div class="admin-section">
+        <div class="admin-section-title">📋 Pending Requests <span class="admin-count red" id="adminPendingCount">0</span></div>
+        <div id="adminPendingList"><div class="admin-empty">Loading...</div></div>
+      </div>
+      <div class="admin-section">
+        <div class="admin-section-title">👑 Admins</div>
+        <div id="adminAdminsList"><div class="admin-empty">Loading...</div></div>
+        <div class="admin-add-row">
+          <input type="text" class="admin-input" id="adminNewAdmin" placeholder="Username" maxlength="24" autocomplete="off" spellcheck="false">
+          <button class="admin-add-btn" id="adminAddBtn">Add</button>
+        </div>
+      </div>
+      <div class="admin-section">
+        <div class="admin-section-title">👥 All Users</div>
+        <div id="adminUsersList"><div class="admin-empty">Loading...</div></div>
       </div>
     </div>
   </div>
@@ -2002,6 +2224,9 @@
         <div class="setting-label">Total XP</div>
         <div class="setting-value" id="xpDisplay" style="cursor:default;">0</div>
       </div>
+      <!-- NEW: Admin buttons -->
+      <button class="btn btn-green" style="width:100%; margin-top:16px; display:none;" id="openAdminPanel">👑 Admin Panel</button>
+      <button class="btn btn-white" style="width:100%; margin-top:16px; display:none;" id="claimAdminBtn">👑 Claim First Admin</button>
       <button class="danger-btn" id="logoutBtn">Log Out</button>
       <button class="btn btn-white" style="width:100%; margin-top:8px;" id="closeSettings">Close</button>
     </div>
@@ -2592,6 +2817,50 @@ let state = {
   heartTimerStartedAt: null
 };
 
+// ===== NEW: admin flags =====
+let isCurrentUserAdmin = false;
+let adminsExist = false;
+let pendingRequestsCount = 0;
+
+async function refreshAdminStatus() {
+  if (!currentUser) {
+    isCurrentUserAdmin = false;
+    adminsExist = false;
+    pendingRequestsCount = 0;
+    updateAdminUI();
+    return;
+  }
+  try {
+    const data = await cloudGet();
+    const admins = Array.isArray(data.__admins__) ? data.__admins__ : [];
+    adminsExist = admins.length > 0;
+    isCurrentUserAdmin = admins.includes(currentUser);
+    const reqs = data.__requests__ || {};
+    pendingRequestsCount = Object.values(reqs).filter(r => r.status === 'pending').length;
+  } catch (e) {
+    isCurrentUserAdmin = false;
+    adminsExist = false;
+    pendingRequestsCount = 0;
+  }
+  updateAdminUI();
+}
+
+function updateAdminUI() {
+  const adminBtn = $('openAdminPanel');
+  const claimBtn = $('claimAdminBtn');
+  if (adminBtn) adminBtn.style.display = isCurrentUserAdmin ? 'block' : 'none';
+  if (claimBtn) claimBtn.style.display = (!isCurrentUserAdmin && !adminsExist) ? 'block' : 'none';
+  const userPendingBadge = $('userPendingBadge');
+  if (userPendingBadge) {
+    if (isCurrentUserAdmin && pendingRequestsCount > 0) {
+      userPendingBadge.style.display = 'flex';
+      userPendingBadge.textContent = pendingRequestsCount > 9 ? '9+' : pendingRequestsCount;
+    } else {
+      userPendingBadge.style.display = 'none';
+    }
+  }
+}
+
 async function saveState() {
   if (!currentUser) return;
   const data = await cloudGet();
@@ -2794,6 +3063,27 @@ async function handleRequestClick() {
     const data = await cloudGet();
     const existing = data[name];
     const req = data.__requests__?.[name];
+
+    // ===== NEW: auto-bootstrap the first-ever user as admin =====
+    const otherUsers = Object.keys(data).filter(k => !k.startsWith('__') && k !== name);
+    const noAdmins = !Array.isArray(data.__admins__) || data.__admins__.length === 0;
+    if (noAdmins && otherUsers.length === 0) {
+      data.__requests__ = data.__requests__ || {};
+      data.__requests__[name] = {
+        status: 'approved', timestamp: Date.now(), name,
+        requestingDeviceId: myDevice, autoApproved: true
+      };
+      data.__admins__ = [name];
+      if (!data[name]) data[name] = {};
+      data[name].ownerDeviceId = myDevice;
+      if (!data[name].createdAt) data[name].createdAt = Date.now();
+      await cloudSet(data);
+      setRequestState('approved');
+      toast('👑 You are the first admin!');
+      await enterApp(name);
+      return;
+    }
+
     if (existing?.ownerDeviceId === myDevice) {
       if (existing.data || req?.status === 'approved') { setRequestState('approved'); await enterApp(name); return; }
       if (req?.status === 'pending' && req.requestingDeviceId === myDevice) { setRequestState('requested'); startPolling(name); return; }
@@ -2832,6 +3122,7 @@ async function enterApp(name) {
     if (!data[name].createdAt) data[name].createdAt = Date.now();
     await cloudSet(data);
     if (!state.lang) { state.lang = 'en'; await saveState(); }
+    await refreshAdminStatus(); // NEW
     renderHome();
     showScreen('home');
     if (state.selectedVoiceName) {
@@ -3012,7 +3303,7 @@ $('quitLeaveBtn').addEventListener('click', () => {
   closeQuitModal();
   tts.stop();
   stopPolling();
-  endLessonLock(); // NEW: release anti-cheat lock
+  endLessonLock(); // release anti-cheat lock
   renderHome();
   showScreen('home');
 });
@@ -3122,6 +3413,7 @@ function renderHome() {
   $('userName').textContent = currentUser;
   $('userAvatar').textContent = (currentUser || '?').charAt(0).toUpperCase();
   updateHeartUI();
+  updateAdminUI();
 
   const wrap = $('unitsWrap');
   wrap.innerHTML = '';
@@ -3186,7 +3478,7 @@ function startLesson(unitId, lessonIdx) {
   $('lessonHearts').textContent = state.hearts;
   const pf = $('progressFill');
   if (lesson.isFinal) pf.classList.add('final-fill'); else pf.classList.remove('final-fill');
-  startLessonLock(); // NEW: acquire anti-cheat lock
+  startLessonLock(); // acquire anti-cheat lock
   showScreen('lesson');
   renderStep();
 }
@@ -3497,7 +3789,7 @@ function updateBankAnswer() {
   $('footerBtn').disabled = ans.length === 0;
 }
 
-// NEW: CheckAnswer returns 'correct', 'almost', or 'wrong'
+// CheckAnswer returns 'correct', 'almost', or 'wrong'
 function checkAnswer(step, answer) {
   if (!answer) return 'wrong';
   
@@ -3613,7 +3905,7 @@ async function finishLesson() {
     $('completeTitle').textContent = t('lessonComplete');
     $('completeSub').textContent = t('greatProgress');
   }
-  endLessonLock(); // NEW: release anti-cheat lock
+  endLessonLock();
   showScreen('complete');
   confetti();
 }
@@ -3623,13 +3915,17 @@ $('closeLesson').addEventListener('click', () => { openQuitModal(); });
 $('refillBtn').addEventListener('click', refillHearts);
 $('goHomeBtn').addEventListener('click', () => { endLessonLock(); renderHome(); showScreen('home'); });
 
-$('flagBtn').addEventListener('click', () => {
+$('flagBtn').addEventListener('click', async () => {
+  await refreshAdminStatus();
   $('accountDisplay').textContent = currentUser;
   $('langDisplay').textContent = state.lang === 'da' ? 'Dansk' : 'English';
   $('xpDisplay').textContent = state.xp;
   $('speedDisplay').textContent = state.speed === 'slow' ? t('slow') : state.speed === 'fast' ? t('fast') : t('normal');
   $('settingsModal').classList.add('show');
 });
+
+// NEW: user chip also opens settings
+$('userChip').addEventListener('click', () => { $('flagBtn').click(); });
 
 $('langDisplay').addEventListener('click', () => {
   state.lang = state.lang === 'en' ? 'da' : 'en';
@@ -3683,9 +3979,12 @@ $('logoutBtn').addEventListener('click', () => {
   if (confirm('Log out?')) {
     tts.stop();
     stopPolling();
-    endLessonLock(); // NEW: release anti-cheat lock
+    endLessonLock();
     clearSession();
     currentUser = null;
+    isCurrentUserAdmin = false;
+    adminsExist = false;
+    pendingRequestsCount = 0;
     state = { lang: null, xp: 0, gems: 50, hearts: 5, streak: 0, lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal', heartTimerStartedAt: null };
     $('authError').textContent = '';
     setRequestState('idle');
@@ -3694,6 +3993,231 @@ $('logoutBtn').addEventListener('click', () => {
     setTimeout(() => $('authName').focus(), 300);
   }
 });
+
+// ============ NEW: ADMIN PANEL ============
+
+async function openAdminPanel() {
+  showScreen('adminPanel');
+  await renderAdminPanel();
+}
+
+async function renderAdminPanel() {
+  const pendingList = $('adminPendingList');
+  const adminsList = $('adminAdminsList');
+  const usersList = $('adminUsersList');
+  if (!pendingList) return;
+
+  pendingList.innerHTML = '<div class="admin-empty">Loading...</div>';
+  adminsList.innerHTML = '<div class="admin-empty">Loading...</div>';
+  usersList.innerHTML = '<div class="admin-empty">Loading...</div>';
+
+  let data;
+  try { data = await cloudGet(); }
+  catch (e) {
+    pendingList.innerHTML = '<div class="admin-empty">Failed to load</div>';
+    return;
+  }
+
+  const admins = Array.isArray(data.__admins__) ? data.__admins__ : [];
+  const requests = data.__requests__ || {};
+  const pending = Object.entries(requests).filter(([n, r]) => r.status === 'pending');
+  const users = Object.keys(data).filter(k => !k.startsWith('__'));
+
+  // Pending
+  $('adminPendingCount').textContent = pending.length;
+  if (pending.length === 0) {
+    pendingList.innerHTML = '<div class="admin-empty">No pending requests 🎉</div>';
+  } else {
+    pendingList.innerHTML = '';
+    pending.forEach(([name, req]) => {
+      const item = document.createElement('div');
+      item.className = 'admin-item';
+      const tag = req.isTakeover ? ' <span style="color:var(--yellow-dark);font-size:11px;">(takeover)</span>' : '';
+      const when = new Date(req.timestamp || Date.now()).toLocaleString();
+      item.innerHTML = `
+        <div class="admin-item-info">
+          <div class="admin-item-name">${escapeHtmlHTML(name)}${tag}</div>
+          <div class="admin-item-sub">${when}</div>
+        </div>
+        <div class="admin-actions">
+          <button class="admin-btn approve" data-approve="${escapeHtmlHTML(name)}">Approve</button>
+          <button class="admin-btn deny" data-deny="${escapeHtmlHTML(name)}">Deny</button>
+        </div>`;
+      pendingList.appendChild(item);
+    });
+  }
+
+  // Admins
+  adminsList.innerHTML = '';
+  if (admins.length === 0) {
+    adminsList.innerHTML = '<div class="admin-empty">No admins yet</div>';
+  } else {
+    admins.forEach(name => {
+      const item = document.createElement('div');
+      item.className = 'admin-item';
+      const selfTag = name === currentUser ? ' <span style="color:var(--gray-text);font-size:11px;">(you)</span>' : '';
+      item.innerHTML = `
+        <div class="admin-item-info">
+          <div class="admin-item-name">👑 ${escapeHtmlHTML(name)}${selfTag}</div>
+        </div>
+        <div class="admin-actions">
+          <button class="admin-btn remove" data-remove-admin="${escapeHtmlHTML(name)}">Remove</button>
+        </div>`;
+      adminsList.appendChild(item);
+    });
+  }
+
+  // Users
+  usersList.innerHTML = '';
+  if (users.length === 0) {
+    usersList.innerHTML = '<div class="admin-empty">No users yet</div>';
+  } else {
+    users.forEach(name => {
+      const u = data[name];
+      const req = requests[name];
+      let status = 'unknown';
+      if (admins.includes(name)) status = 'admin';
+      else if (req?.status === 'pending') status = 'pending';
+      else if (req?.status === 'denied') status = 'denied';
+      else if (u?.ownerDeviceId) status = 'approved';
+      const emoji = status === 'admin' ? '👑' : status === 'approved' ? '✅' : status === 'pending' ? '⏳' : status === 'denied' ? '❌' : '❓';
+      const item = document.createElement('div');
+      item.className = 'admin-item';
+      item.innerHTML = `
+        <div class="admin-item-info">
+          <div class="admin-item-name">${escapeHtmlHTML(name)}</div>
+          <div class="admin-item-sub">${emoji} ${status}</div>
+        </div>`;
+      usersList.appendChild(item);
+    });
+  }
+
+  // Wire buttons
+  pendingList.querySelectorAll('[data-approve]').forEach(btn => {
+    btn.addEventListener('click', () => approveRequest(btn.dataset.approve));
+  });
+  pendingList.querySelectorAll('[data-deny]').forEach(btn => {
+    btn.addEventListener('click', () => denyRequest(btn.dataset.deny));
+  });
+  adminsList.querySelectorAll('[data-remove-admin]').forEach(btn => {
+    btn.addEventListener('click', () => removeAdmin(btn.dataset.removeAdmin));
+  });
+}
+
+async function approveRequest(name) {
+  try {
+    const data = await cloudGet();
+    if (!data.__requests__?.[name]) { toast('Request not found'); return; }
+    data.__requests__[name].status = 'approved';
+    data.__requests__[name].approvedBy = currentUser;
+    data.__requests__[name].approvedAt = Date.now();
+    await cloudSet(data);
+    toast(`✅ Approved ${name}`);
+    await refreshAdminStatus();
+    await renderAdminPanel();
+  } catch (e) { toast('Failed to approve'); }
+}
+
+async function denyRequest(name) {
+  try {
+    const data = await cloudGet();
+    if (!data.__requests__?.[name]) { toast('Request not found'); return; }
+    data.__requests__[name].status = 'denied';
+    data.__requests__[name].deniedBy = currentUser;
+    data.__requests__[name].deniedAt = Date.now();
+    await cloudSet(data);
+    toast(`❌ Denied ${name}`);
+    await refreshAdminStatus();
+    await renderAdminPanel();
+  } catch (e) { toast('Failed to deny'); }
+}
+
+async function addAdmin(name) {
+  name = name.trim();
+  if (!name) return;
+  if (!/^[a-zA-Z0-9 _-]+$/.test(name)) { toast('Invalid username'); return; }
+  try {
+    const data = await cloudGet();
+    if (!Array.isArray(data.__admins__)) data.__admins__ = [];
+    if (data.__admins__.includes(name)) { toast(`${name} is already an admin`); return; }
+    data.__admins__.push(name);
+    await cloudSet(data);
+    toast(`👑 ${name} is now an admin`);
+    await refreshAdminStatus();
+    await renderAdminPanel();
+  } catch (e) { toast('Failed to add admin'); }
+}
+
+async function removeAdmin(name) {
+  if (name === currentUser) {
+    if (!confirm('Remove yourself as admin? You will lose admin access.')) return;
+  }
+  try {
+    const data = await cloudGet();
+    if (Array.isArray(data.__admins__)) {
+      data.__admins__ = data.__admins__.filter(n => n !== name);
+      await cloudSet(data);
+      toast(`Removed ${name} from admins`);
+      await refreshAdminStatus();
+      await renderAdminPanel();
+      if (name === currentUser) {
+        showScreen('home');
+        renderHome();
+      }
+    }
+  } catch (e) { toast('Failed to remove admin'); }
+}
+
+async function claimFirstAdmin() {
+  try {
+    const data = await cloudGet();
+    const admins = Array.isArray(data.__admins__) ? data.__admins__ : [];
+    if (admins.length > 0) { toast('An admin already exists'); await refreshAdminStatus(); return; }
+    data.__admins__ = [currentUser];
+    await cloudSet(data);
+    toast('👑 You are now the first admin!');
+    await refreshAdminStatus();
+    $('settingsModal').classList.remove('show');
+    renderHome();
+  } catch (e) { toast('Failed to claim admin'); }
+}
+
+$('adminBack').addEventListener('click', () => {
+  renderHome();
+  showScreen('home');
+});
+
+$('adminAddBtn').addEventListener('click', async () => {
+  const input = $('adminNewAdmin');
+  const name = input.value.trim();
+  if (!name) return;
+  await addAdmin(name);
+  input.value = '';
+});
+
+$('adminNewAdmin').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); $('adminAddBtn').click(); }
+});
+
+$('openAdminPanel').addEventListener('click', () => {
+  $('settingsModal').classList.remove('show');
+  openAdminPanel();
+});
+
+$('claimAdminBtn').addEventListener('click', claimFirstAdmin);
+
+// Poll pending requests for admins every 30s
+setInterval(async () => {
+  if (!currentUser || !isCurrentUserAdmin) return;
+  try {
+    const data = await cloudGet();
+    const reqs = data.__requests__ || {};
+    pendingRequestsCount = Object.values(reqs).filter(r => r.status === 'pending').length;
+    updateAdminUI();
+  } catch (e) {}
+}, 30000);
+
+// ============ END ADMIN PANEL ============
 
 setInterval(() => {
   if (!currentUser) return;
@@ -3706,21 +4230,15 @@ setInterval(() => {
 }, 1000);
 
 /* ============================================================
-   NEW: ANTI-CHEAT TAB / DEVICE LOCK ("Nuh uh")
-   ------------------------------------------------------------
-   • Same browser, other tabs  → localStorage lock + storage event (instant)
-   • Incognito / other browser → cloud lock with heartbeat (polled)
-   • A tab actively in a lesson owns the lock; any other tab/device
-     shows a white "Nuh uh!" overlay until the lock is released
-     (lesson completed, quit, or heartbeat goes stale).
+   ANTI-CHEAT TAB / DEVICE LOCK ("Nuh uh")
    ============================================================ */
 const TAB_ID = 'tab_' + Math.random().toString(36).slice(2) + '_' + Date.now().toString(36);
 const LOCAL_LOCK_KEY = 'df_lesson_lock_v1';
-const LOCAL_HEARTBEAT_MS = 3000;   // how often the lesson tab refreshes its local lock
-const LOCAL_STALE_MS = 10000;      // other tabs treat local lock as stale after this
-const CLOUD_HEARTBEAT_MS = 12000;  // how often the lesson tab refreshes its cloud lock
-const CLOUD_STALE_MS = 30000;      // other devices treat cloud lock as stale after this
-const CLOUD_POLL_MS = 5000;        // how often to poll the cloud for foreign locks
+const LOCAL_HEARTBEAT_MS = 3000;
+const LOCAL_STALE_MS = 10000;
+const CLOUD_HEARTBEAT_MS = 12000;
+const CLOUD_STALE_MS = 30000;
+const CLOUD_POLL_MS = 5000;
 
 let isInLesson = false;
 let localHeartbeatTimer = null;
@@ -3765,7 +4283,6 @@ async function writeCloudLock(active) {
     if (active) {
       data.__lessonLock__ = { tabId: TAB_ID, ts: Date.now(), active: true };
     } else {
-      // Only release the lock if we're the one who set it (or if none exists)
       if (!data.__lessonLock__ || data.__lessonLock__.tabId === TAB_ID) {
         data.__lessonLock__ = { tabId: TAB_ID, ts: Date.now(), active: false };
       }
@@ -3777,7 +4294,7 @@ async function writeCloudLock(active) {
 function startLessonLock() {
   if (isInLesson) return;
   isInLesson = true;
-  setNuhUh(false); // we are the lesson tab — never show overlay to ourselves
+  setNuhUh(false);
   writeLocalLock();
   writeCloudLock(true);
   if (localHeartbeatTimer) clearInterval(localHeartbeatTimer);
@@ -3793,7 +4310,6 @@ function endLessonLock() {
   if (cloudHeartbeatTimer) { clearInterval(cloudHeartbeatTimer); cloudHeartbeatTimer = null; }
   clearLocalLock();
   writeCloudLock(false);
-  // Immediately re-evaluate so this tab's own overlay (if somehow shown) goes away
   localLockActive = false;
   setTimeout(() => { checkLocalLock(); checkForeignLock(); }, 100);
 }
@@ -3818,7 +4334,7 @@ async function checkCloudLock() {
     } else {
       cloudLockActive = false;
     }
-  } catch(e) { /* keep previous state on network error */ }
+  } catch(e) {}
 }
 
 function checkForeignLock() {
@@ -3826,7 +4342,6 @@ function checkForeignLock() {
   setNuhUh(localLockActive || cloudLockActive);
 }
 
-// Instant same-browser cross-tab notification
 window.addEventListener('storage', (e) => {
   if (e.key === LOCAL_LOCK_KEY) {
     checkLocalLock();
@@ -3834,12 +4349,10 @@ window.addEventListener('storage', (e) => {
   }
 });
 
-// Best-effort cleanup when the lesson tab is closed/refreshed
 window.addEventListener('beforeunload', () => {
   if (isInLesson) clearLocalLock();
 });
 
-// Main loop: local check every 2s; cloud check only if needed (and tab visible)
 setInterval(() => {
   if (isInLesson) { setNuhUh(false); return; }
   if (document.visibilityState !== 'visible') return;
@@ -3850,7 +4363,6 @@ setInterval(() => {
   }
 }, 2000);
 
-// Initial check on load
 setTimeout(() => {
   checkLocalLock();
   checkForeignLock();
