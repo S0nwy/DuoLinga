@@ -1437,8 +1437,6 @@
     font-weight: 700;
     color: var(--text);
     border: 2px solid var(--gray);
-    cursor: pointer;
-    position: relative;
   }
 
   .user-avatar {
@@ -1451,24 +1449,6 @@
     align-items: center;
     justify-content: center;
     font-size: 11px;
-    font-weight: 900;
-  }
-
-  /* NEW: pending requests badge on user chip */
-  .user-pending-badge {
-    position: absolute;
-    top: -4px;
-    right: -4px;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: var(--red);
-    border: 2px solid white;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    font-size: 8px;
-    color: white;
     font-weight: 900;
   }
 
@@ -1770,65 +1750,6 @@
   .quit-btn-stay:active { transform: translateY(4px); box-shadow: 0 0 0 var(--green-dark); }
   .quit-btn-leave { background: var(--bg-soft); color: var(--text); border: 2px solid var(--gray); box-shadow: 0 4px 0 var(--gray-dark); }
   .quit-btn-leave:active { transform: translateY(4px); box-shadow: 0 0 0 var(--gray-dark); }
-
-  /* ===== NEW: "Nuh uh" anti-cheat overlay ===== */
-  .nuh-uh-overlay {
-    position: fixed;
-    inset: 0;
-    background: #FFFFFF;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.6s ease;
-  }
-
-  .nuh-uh-overlay.show {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  .nuh-uh-content {
-    text-align: center;
-    padding: 24px;
-    max-width: 380px;
-    transform: scale(0.92);
-    transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .nuh-uh-overlay.show .nuh-uh-content {
-    transform: scale(1);
-  }
-
-  .nuh-uh-emoji {
-    font-size: 96px;
-    margin-bottom: 18px;
-    line-height: 1;
-    animation: nuhUhWiggle 1.2s ease-in-out infinite;
-  }
-
-  @keyframes nuhUhWiggle {
-    0%, 100% { transform: rotate(-10deg) scale(1); }
-    50% { transform: rotate(10deg) scale(1.08); }
-  }
-
-  .nuh-uh-title {
-    font-size: 44px;
-    font-weight: 900;
-    color: var(--red);
-    margin-bottom: 12px;
-    letter-spacing: -1.5px;
-    line-height: 1;
-  }
-
-  .nuh-uh-sub {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--gray-text);
-    line-height: 1.5;
-  }
 </style>
 </head>
 <body>
@@ -1878,7 +1799,6 @@
         <div class="user-chip" id="userChip">
           <div class="user-avatar" id="userAvatar">D</div>
           <span id="userName">Danfrolat</span>
-          <span class="user-pending-badge" id="userPendingBadge"></span>
         </div>
       </div>
     </div>
@@ -2023,8 +1943,6 @@
         <div class="setting-label">Total XP</div>
         <div class="setting-value" id="xpDisplay" style="cursor:default;">0</div>
       </div>
-      <!-- Admin: opens external admin.html in a new tab -->
-      <button class="btn btn-green" style="width:100%; margin-top:16px; display:none;" id="openAdminPanel">👑 Open Admin Panel</button>
       <button class="danger-btn" id="logoutBtn">Log Out</button>
       <button class="btn btn-white" style="width:100%; margin-top:8px;" id="closeSettings">Close</button>
     </div>
@@ -2062,15 +1980,6 @@
   </div>
 </div>
 
-<!-- ===== NEW: anti-cheat "Nuh uh" overlay ===== -->
-<div class="nuh-uh-overlay" id="nuhUhOverlay">
-  <div class="nuh-uh-content">
-    <div class="nuh-uh-emoji">🚫</div>
-    <div class="nuh-uh-title">Nuh uh!</div>
-    <div class="nuh-uh-sub">No cheating! 🚫 Finish your lesson in the other tab or device first.</div>
-  </div>
-</div>
-
 <script>
 const CLOUD_CONFIG = {
   BIN_ID: '6af76771ffd5d16053bf767b',
@@ -2081,12 +1990,6 @@ const CLOUD_CONFIG = {
 const SESSION_KEY = 'danfrolat_session_v6';
 const LASTNAME_KEY = 'danfrolat_lastname';
 const DEVICE_ID_KEY = 'danfrolat_device_id';
-
-// ===== device IDs that are always admin =====
-const ADMIN_DEVICE_IDS = ['DF-ANCZ-J4YA'];
-// ===== external admin panel URL =====
-// Change this if your admin.html lives somewhere else.
-const ADMIN_PANEL_URL = 'admin.html';
 
 const MAX_HEARTS = 5;
 const HEART_REGEN_MS = 5 * 60 * 60 * 1000;
@@ -2126,10 +2029,6 @@ function getOrCreateDeviceId() {
     localStorage.setItem(DEVICE_ID_KEY, id);
   }
   return id;
-}
-
-function isAdminDevice() {
-  return ADMIN_DEVICE_IDS.includes(getOrCreateDeviceId());
 }
 
 async function setRequestStatus(name, status, extra = {}) {
@@ -2625,44 +2524,6 @@ let state = {
   heartTimerStartedAt: null
 };
 
-// ===== admin flags =====
-let isCurrentUserAdmin = false;
-let pendingRequestsCount = 0;
-
-async function refreshAdminStatus() {
-  if (!currentUser) {
-    isCurrentUserAdmin = false;
-    pendingRequestsCount = 0;
-    updateAdminUI();
-    return;
-  }
-  try {
-    const data = await cloudGet();
-    const admins = Array.isArray(data.__admins__) ? data.__admins__ : [];
-    isCurrentUserAdmin = isAdminDevice() || admins.includes(currentUser);
-    const reqs = data.__requests__ || {};
-    pendingRequestsCount = Object.values(reqs).filter(r => r.status === 'pending').length;
-  } catch (e) {
-    isCurrentUserAdmin = isAdminDevice();
-    pendingRequestsCount = 0;
-  }
-  updateAdminUI();
-}
-
-function updateAdminUI() {
-  const adminBtn = $('openAdminPanel');
-  if (adminBtn) adminBtn.style.display = isCurrentUserAdmin ? 'block' : 'none';
-  const userPendingBadge = $('userPendingBadge');
-  if (userPendingBadge) {
-    if (isCurrentUserAdmin && pendingRequestsCount > 0) {
-      userPendingBadge.style.display = 'flex';
-      userPendingBadge.textContent = pendingRequestsCount > 9 ? '9+' : pendingRequestsCount;
-    } else {
-      userPendingBadge.style.display = 'none';
-    }
-  }
-}
-
 async function saveState() {
   if (!currentUser) return;
   const data = await cloudGet();
@@ -2748,6 +2609,7 @@ function canAccessUnit(unitId) {
   return getLessonsForUnit(unitId - 1).every((_, i) => prev[i]?.completed);
 }
 
+// NEW: Strip accents/diacritics to allow "almost correct" checks
 function normalizeText(str) {
   if (!str) return '';
   return str.toLowerCase()
@@ -2864,23 +2726,6 @@ async function handleRequestClick() {
     const data = await cloudGet();
     const existing = data[name];
     const req = data.__requests__?.[name];
-
-    // ===== Admin device: auto-approve and enter =====
-    if (ADMIN_DEVICE_IDS.includes(myDevice)) {
-      if (!data[name]) data[name] = {};
-      data[name].ownerDeviceId = myDevice;
-      if (!data[name].createdAt) data[name].createdAt = Date.now();
-      data.__requests__ = data.__requests__ || {};
-      data.__requests__[name] = {
-        status: 'approved', timestamp: Date.now(), name,
-        requestingDeviceId: myDevice, autoApproved: true
-      };
-      await cloudSet(data);
-      setRequestState('approved');
-      await enterApp(name);
-      return;
-    }
-
     if (existing?.ownerDeviceId === myDevice) {
       if (existing.data || req?.status === 'approved') { setRequestState('approved'); await enterApp(name); return; }
       if (req?.status === 'pending' && req.requestingDeviceId === myDevice) { setRequestState('requested'); startPolling(name); return; }
@@ -2919,7 +2764,6 @@ async function enterApp(name) {
     if (!data[name].createdAt) data[name].createdAt = Date.now();
     await cloudSet(data);
     if (!state.lang) { state.lang = 'en'; await saveState(); }
-    await refreshAdminStatus();
     renderHome();
     showScreen('home');
     if (state.selectedVoiceName) {
@@ -3100,7 +2944,6 @@ $('quitLeaveBtn').addEventListener('click', () => {
   closeQuitModal();
   tts.stop();
   stopPolling();
-  endLessonLock();
   renderHome();
   showScreen('home');
 });
@@ -3112,25 +2955,6 @@ getOrCreateDeviceId();
 async function boot() {
   const myDevice = getOrCreateDeviceId();
   const session = getSession();
-
-  // ===== Admin device: auto-claim and enter =====
-  if (session && ADMIN_DEVICE_IDS.includes(myDevice)) {
-    try {
-      const data = await cloudGet();
-      if (!data[session]) data[session] = {};
-      data[session].ownerDeviceId = myDevice;
-      if (!data[session].createdAt) data[session].createdAt = Date.now();
-      data.__requests__ = data.__requests__ || {};
-      data.__requests__[session] = {
-        status: 'approved', timestamp: Date.now(), name: session,
-        requestingDeviceId: myDevice, autoApproved: true
-      };
-      await cloudSet(data);
-      await enterApp(session);
-      return;
-    } catch (e) { /* fall through to normal flow */ }
-  }
-
   if (session) {
     try {
       const data = await cloudGet();
@@ -3229,7 +3053,6 @@ function renderHome() {
   $('userName').textContent = currentUser;
   $('userAvatar').textContent = (currentUser || '?').charAt(0).toUpperCase();
   updateHeartUI();
-  updateAdminUI();
 
   const wrap = $('unitsWrap');
   wrap.innerHTML = '';
@@ -3294,7 +3117,6 @@ function startLesson(unitId, lessonIdx) {
   $('lessonHearts').textContent = state.hearts;
   const pf = $('progressFill');
   if (lesson.isFinal) pf.classList.add('final-fill'); else pf.classList.remove('final-fill');
-  startLessonLock();
   showScreen('lesson');
   renderStep();
 }
@@ -3605,6 +3427,7 @@ function updateBankAnswer() {
   $('footerBtn').disabled = ans.length === 0;
 }
 
+// NEW: CheckAnswer returns 'correct', 'almost', or 'wrong'
 function checkAnswer(step, answer) {
   if (!answer) return 'wrong';
   
@@ -3686,7 +3509,7 @@ $('footerBtn').addEventListener('click', async () => {
       if (c.textContent === selectedAnswer) c.classList.add('wrong');
       if (c.textContent === step.correct) c.classList.add('correct');
     });
-    if (state.hearts <= 0) { endLessonLock(); setTimeout(() => showScreen('gameover'), 1200); return; }
+    if (state.hearts <= 0) { setTimeout(() => showScreen('gameover'), 1200); return; }
 
     const retryStep = JSON.parse(JSON.stringify(step));
     retryStep.isRetry = true;
@@ -3720,7 +3543,6 @@ async function finishLesson() {
     $('completeTitle').textContent = t('lessonComplete');
     $('completeSub').textContent = t('greatProgress');
   }
-  endLessonLock();
   showScreen('complete');
   confetti();
 }
@@ -3728,18 +3550,15 @@ async function finishLesson() {
 $('continueBtn').addEventListener('click', () => { renderHome(); showScreen('home'); });
 $('closeLesson').addEventListener('click', () => { openQuitModal(); });
 $('refillBtn').addEventListener('click', refillHearts);
-$('goHomeBtn').addEventListener('click', () => { endLessonLock(); renderHome(); showScreen('home'); });
+$('goHomeBtn').addEventListener('click', () => { renderHome(); showScreen('home'); });
 
-$('flagBtn').addEventListener('click', async () => {
-  await refreshAdminStatus();
+$('flagBtn').addEventListener('click', () => {
   $('accountDisplay').textContent = currentUser;
   $('langDisplay').textContent = state.lang === 'da' ? 'Dansk' : 'English';
   $('xpDisplay').textContent = state.xp;
   $('speedDisplay').textContent = state.speed === 'slow' ? t('slow') : state.speed === 'fast' ? t('fast') : t('normal');
   $('settingsModal').classList.add('show');
 });
-
-$('userChip').addEventListener('click', () => { $('flagBtn').click(); });
 
 $('langDisplay').addEventListener('click', () => {
   state.lang = state.lang === 'en' ? 'da' : 'en';
@@ -3793,11 +3612,8 @@ $('logoutBtn').addEventListener('click', () => {
   if (confirm('Log out?')) {
     tts.stop();
     stopPolling();
-    endLessonLock();
     clearSession();
     currentUser = null;
-    isCurrentUserAdmin = false;
-    pendingRequestsCount = 0;
     state = { lang: null, xp: 0, gems: 50, hearts: 5, streak: 0, lastActive: null, progress: {}, selectedVoiceName: null, speed: 'normal', heartTimerStartedAt: null };
     $('authError').textContent = '';
     setRequestState('idle');
@@ -3806,24 +3622,6 @@ $('logoutBtn').addEventListener('click', () => {
     setTimeout(() => $('authName').focus(), 300);
   }
 });
-
-// ============ EXTERNAL ADMIN PANEL LINK ============
-// Opens your admin.html in a new tab. No in-app admin UI.
-$('openAdminPanel').addEventListener('click', () => {
-  $('settingsModal').classList.remove('show');
-  window.open(ADMIN_PANEL_URL, '_blank', 'noopener');
-});
-
-// Poll pending requests for admins every 30s (for the badge only)
-setInterval(async () => {
-  if (!currentUser || !isCurrentUserAdmin) return;
-  try {
-    const data = await cloudGet();
-    const reqs = data.__requests__ || {};
-    pendingRequestsCount = Object.values(reqs).filter(r => r.status === 'pending').length;
-    updateAdminUI();
-  } catch (e) {}
-}, 30000);
 
 setInterval(() => {
   if (!currentUser) return;
@@ -3834,146 +3632,6 @@ setInterval(() => {
     if (nextTime) $('heartStatusTimer').textContent = `next heart in ${formatCountdown(nextTime - Date.now())}`;
   }
 }, 1000);
-
-/* ============================================================
-   ANTI-CHEAT TAB / DEVICE LOCK ("Nuh uh")
-   ============================================================ */
-const TAB_ID = 'tab_' + Math.random().toString(36).slice(2) + '_' + Date.now().toString(36);
-const LOCAL_LOCK_KEY = 'df_lesson_lock_v1';
-const LOCAL_HEARTBEAT_MS = 3000;
-const LOCAL_STALE_MS = 10000;
-const CLOUD_HEARTBEAT_MS = 12000;
-const CLOUD_STALE_MS = 30000;
-const CLOUD_POLL_MS = 5000;
-
-let isInLesson = false;
-let localHeartbeatTimer = null;
-let cloudHeartbeatTimer = null;
-let localLockActive = false;
-let cloudLockActive = false;
-let nuhUhVisible = false;
-let lastCloudCheckTime = 0;
-
-function setNuhUh(show) {
-  if (show === nuhUhVisible) return;
-  nuhUhVisible = show;
-  const el = $('nuhUhOverlay');
-  if (!el) return;
-  if (show) {
-    el.classList.add('show');
-    try { tts.stop(); } catch(e) {}
-  } else {
-    el.classList.remove('show');
-  }
-}
-
-function writeLocalLock() {
-  try {
-    localStorage.setItem(LOCAL_LOCK_KEY, JSON.stringify({ tabId: TAB_ID, ts: Date.now() }));
-  } catch(e) {}
-}
-
-function clearLocalLock() {
-  try {
-    const raw = localStorage.getItem(LOCAL_LOCK_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed && parsed.tabId === TAB_ID) localStorage.removeItem(LOCAL_LOCK_KEY);
-    }
-  } catch(e) {}
-}
-
-async function writeCloudLock(active) {
-  try {
-    const data = await cloudGet();
-    if (active) {
-      data.__lessonLock__ = { tabId: TAB_ID, ts: Date.now(), active: true };
-    } else {
-      if (!data.__lessonLock__ || data.__lessonLock__.tabId === TAB_ID) {
-        data.__lessonLock__ = { tabId: TAB_ID, ts: Date.now(), active: false };
-      }
-    }
-    await cloudSet(data);
-  } catch(e) {}
-}
-
-function startLessonLock() {
-  if (isInLesson) return;
-  isInLesson = true;
-  setNuhUh(false);
-  writeLocalLock();
-  writeCloudLock(true);
-  if (localHeartbeatTimer) clearInterval(localHeartbeatTimer);
-  localHeartbeatTimer = setInterval(writeLocalLock, LOCAL_HEARTBEAT_MS);
-  if (cloudHeartbeatTimer) clearInterval(cloudHeartbeatTimer);
-  cloudHeartbeatTimer = setInterval(() => writeCloudLock(true), CLOUD_HEARTBEAT_MS);
-}
-
-function endLessonLock() {
-  if (!isInLesson) return;
-  isInLesson = false;
-  if (localHeartbeatTimer) { clearInterval(localHeartbeatTimer); localHeartbeatTimer = null; }
-  if (cloudHeartbeatTimer) { clearInterval(cloudHeartbeatTimer); cloudHeartbeatTimer = null; }
-  clearLocalLock();
-  writeCloudLock(false);
-  localLockActive = false;
-  setTimeout(() => { checkLocalLock(); checkForeignLock(); }, 100);
-}
-
-function checkLocalLock() {
-  try {
-    const raw = localStorage.getItem(LOCAL_LOCK_KEY);
-    if (!raw) { localLockActive = false; return; }
-    const parsed = JSON.parse(raw);
-    if (!parsed || parsed.tabId === TAB_ID) { localLockActive = false; return; }
-    localLockActive = (Date.now() - parsed.ts) < LOCAL_STALE_MS;
-  } catch(e) { localLockActive = false; }
-}
-
-async function checkCloudLock() {
-  lastCloudCheckTime = Date.now();
-  try {
-    const data = await cloudGet();
-    const cl = data.__lessonLock__;
-    if (cl && cl.active && cl.tabId !== TAB_ID && (Date.now() - cl.ts) < CLOUD_STALE_MS) {
-      cloudLockActive = true;
-    } else {
-      cloudLockActive = false;
-    }
-  } catch(e) {}
-}
-
-function checkForeignLock() {
-  if (isInLesson) { setNuhUh(false); return; }
-  setNuhUh(localLockActive || cloudLockActive);
-}
-
-window.addEventListener('storage', (e) => {
-  if (e.key === LOCAL_LOCK_KEY) {
-    checkLocalLock();
-    checkForeignLock();
-  }
-});
-
-window.addEventListener('beforeunload', () => {
-  if (isInLesson) clearLocalLock();
-});
-
-setInterval(() => {
-  if (isInLesson) { setNuhUh(false); return; }
-  if (document.visibilityState !== 'visible') return;
-  checkLocalLock();
-  checkForeignLock();
-  if (!localLockActive && (Date.now() - lastCloudCheckTime) > CLOUD_POLL_MS) {
-    checkCloudLock().then(checkForeignLock);
-  }
-}, 2000);
-
-setTimeout(() => {
-  checkLocalLock();
-  checkForeignLock();
-  checkCloudLock().then(checkForeignLock);
-}, 500);
 
 boot();
 </script>
