@@ -547,7 +547,7 @@
     padding: 16px;
     color: white;
     position: relative;
-    overflow: visible; /* FIXED: removed hidden so tooltips show */
+    overflow: visible;
   }
 
   .unit-header {
@@ -591,6 +591,7 @@
   .unit-18 { background: linear-gradient(135deg, #1ABC9C, #117A65); }
   .unit-19 { background: linear-gradient(135deg, #4338CA, #312E81); }
   .unit-20 { background: linear-gradient(135deg, #DC2626, #7F1D1D); }
+  .unit-21 { background: linear-gradient(135deg, #06B6D4, #0E7490); }
 
   .lessons {
     display: flex;
@@ -660,7 +661,6 @@
     border: 2px solid white;
   }
 
-  /* RESTORED: White pulse ring */
   .lesson-node.current { animation: pulse 2s infinite; }
   .lesson-node.final-node.current { animation: finalGlow 2.2s ease-in-out infinite, pulse 2s infinite; }
 
@@ -669,7 +669,6 @@
     50% { transform: scale(1.05); box-shadow: 0 5px 0 rgba(0,0,0,0.15), 0 0 0 10px rgba(255,255,255,0); }
   }
 
-  /* FIXED: Tooltip now on the right side, with little arrow */
   .lesson-tooltip {
     position: absolute;
     top: 50%;
@@ -1077,8 +1076,7 @@
   }
 
   .type-input:focus { border-color: var(--blue); border-bottom-color: var(--blue-dark); }
-  
-  /* NEW: Almost correct state (missing accents) */
+
   .type-input.almost {
     border-color: var(--yellow);
     border-bottom-color: var(--yellow-dark);
@@ -1144,7 +1142,6 @@
   .feedback.show { display: block; }
   .feedback.correct { background: var(--green-light); color: var(--green-dark); }
   .feedback.wrong { background: #FFE5E5; color: var(--red-dark); }
-  /* NEW: Almost feedback */
   .feedback.almost { background: var(--yellow-light); color: var(--yellow-dark); }
 
   .feedback-title {
@@ -1847,6 +1844,7 @@
             <div class="filter-tab" data-filter="18">Time</div>
             <div class="filter-tab" data-filter="19">Numbers</div>
             <div class="filter-tab" data-filter="20">Strong</div>
+            <div class="filter-tab" data-filter="21">Math</div>
           </div>
         </div>
         <div class="words-list" id="wordsList"></div>
@@ -2383,14 +2381,81 @@ const VOCAB = {
     {da:"Hvad fanden?", en:"What the hell?", df:"Quora Maledora?"},
     {da:"Gå væk!", en:"Go away!", df:"Alevara!"},
     {da:"Din idiot!", en:"You idiot!", df:"Tua Idiota!"}
-  ], sentences: [] }
+  ], sentences: [] },
+  21: { title: { en: "Math & Geometry", da: "Matematik og geometri" }, icon: "🧮", color: 21, words: [
+    {da:"Plus (+)", en:"Plus (+)", df:"Addora"},
+    {da:"Minus (−)", en:"Minus (−)", df:"Minora"},
+    {da:"Gange (×)", en:"Multiply (×)", df:"Multipora"},
+    {da:"Divideret med (÷)", en:"Divided by (÷)", df:"Divisora"},
+    {da:"Lige med (=)", en:"Equals (=)", df:"Equora"},
+    {da:"Er ikke lig med (≠)", en:"Not equal to (≠)", df:"Inequora"},
+    {da:"Større end (>)", en:"Greater than (>)", df:"Majora"},
+    {da:"Mindre end (<)", en:"Less than (<)", df:"Minora"},
+    {da:"Plus/minus (±)", en:"Plus/minus (±)", df:"Addminora"},
+    {da:"Procent (%)", en:"Percent (%)", df:"Percentora"},
+    {da:"Tal", en:"Number", df:"Numera"},
+    {da:"Nummer", en:"Number (ID)", df:"Numeron"},
+    {da:"Beregning", en:"Calculation", df:"Calculora"},
+    {da:"Matematik", en:"Mathematics", df:"Mathemora"},
+    {da:"Regnestykke", en:"Math problem", df:"Calculon"},
+    {da:"Svar", en:"Answer", df:"Responsa"},
+    {da:"Resultat", en:"Result", df:"Resultora"},
+    {da:"Sum", en:"Sum", df:"Sumora"},
+    {da:"Forskel", en:"Difference", df:"Differora"},
+    {da:"Produkt", en:"Product", df:"Productora"},
+    {da:"Kvotient", en:"Quotient", df:"Quotora"},
+    {da:"Gennemsnit", en:"Average", df:"Mediora"},
+    {da:"Brøk", en:"Fraction", df:"Fractiona"},
+    {da:"Tæller", en:"Numerator", df:"Numerora"},
+    {da:"Nævner", en:"Denominator", df:"Denomora"},
+    {da:"Decimal", en:"Decimal", df:"Decimora"},
+    {da:"Komma", en:"Decimal point", df:"Comora"},
+    {da:"Afrunding", en:"Rounding", df:"Rotundora"},
+    {da:"Lommeregner", en:"Calculator", df:"Calculatra"},
+    {da:"Formel", en:"Formula", df:"Formora"},
+    {da:"Form", en:"Shape", df:"Figura"},
+    {da:"Cirkel", en:"Circle", df:"Circula"},
+    {da:"Firkant", en:"Quadrilateral", df:"Quadrata"},
+    {da:"Trekant", en:"Triangle", df:"Triangora"},
+    {da:"Rektangel", en:"Rectangle", df:"Rectora"},
+    {da:"Kvadrat", en:"Square", df:"Squarora"},
+    {da:"Linje", en:"Line", df:"Lineora"},
+    {da:"Punkt", en:"Point", df:"Punctora"},
+    {da:"Vinkel", en:"Angle", df:"Angulora"},
+    {da:"Side", en:"Side", df:"Latera"},
+    {da:"Hjørne", en:"Corner", df:"Cornora"},
+    {da:"Længde", en:"Length", df:"Longora"},
+    {da:"Bredde", en:"Width", df:"Latora"},
+    {da:"Højde", en:"Height", df:"Altora"},
+    {da:"Omkreds", en:"Perimeter", df:"Perimora"},
+    {da:"Areal", en:"Area", df:"Areora"},
+    {da:"Rumfang", en:"Volume", df:"Volumora"},
+    {da:"Radius", en:"Radius", df:"Radiora"},
+    {da:"Diameter", en:"Diameter", df:"Diamora"},
+    {da:"Halvdelen", en:"Half", df:"Semora"},
+    {da:"En tredjedel", en:"One third", df:"Untriara"},
+    {da:"En fjerdedel", en:"One quarter", df:"Unquatra"},
+    {da:"Ti procent", en:"Ten percent", df:"Decpercentora"},
+    {da:"Halvtreds procent", en:"Fifty percent", df:"Quinpercentora"},
+    {da:"Hundrede procent", en:"One hundred percent", df:"Centpercentora"},
+    {da:"Hel", en:"Whole", df:"Integra"},
+    {da:"Del", en:"Part", df:"Partora"},
+    {da:"Dobbelt", en:"Double", df:"Duplora"},
+    {da:"Tredobbelt", en:"Triple", df:"Triplora"}
+  ], sentences: [
+    {da:"2 + 2 = 4", en:"2 + 2 = 4", df:"Duora Addora Duora Equora Quatra"},
+    {da:"10 − 5 = 5", en:"10 − 5 = 5", df:"Decora Minora Quinora Equora Quinora"},
+    {da:"3 × 4 = 12", en:"3 × 4 = 12", df:"Tria Multipora Quatra Equora Duodecora"},
+    {da:"20 ÷ 2 = 10", en:"20 ÷ 2 = 10", df:"Vigora Divisora Duora Equora Decora"}
+  ]}
 };
 
 const PHONETIC_MAP = {
   'bonhallo':'bon-HAHL-lo','bonmora':'bon-MO-ra','bonnocta':'bon-NOCK-ta','adevara':'ah-day-VAH-ra','familora':'fah-MEE-lo-ra','madora':'mah-DO-ra','padora':'pah-DO-ra','sorina':'so-REE-na','fratero':'fra-TEH-ro','infanto':'een-FAHN-to','humano':'hoo-MAH-no','amivenn':'ah-mee-VEN','grandmora':'grahnd-MO-ra','grandpador':'grahnd-PAH-dor','femina':'FEH-mee-na','homaro':'ho-MAH-ro','puella':'poo-EH-la','garçono':'gar-SO-no','bebina':'beh-BEE-na','persona':'per-SO-na','amorliv':'ah-MOR-liv','joyara':'joy-AH-ra','dolora':'do-LO-ra','felicia':'feh-LEE-sha','amistara':'ah-mee-STAH-ra','saudora':'sow-DO-ra','somnara':'som-NAH-ra','espera':'es-PE-ra','timora':'tee-MO-ra','sorrisa':'so-REE-sa','besora':'beh-SO-ra','cordehjert':'kor-deh-YERT','iraora':'ee-rah-O-ra','calmina':'kal-MEE-na','joyeux':'joy-UH','tristora':'tree-STO-ra','corajosa':'ko-rah-HO-sa','fierté':'fee-er-TAY','solitara':'so-lee-TAH-ra','amorella':'ah-mo-REH-la','maré':'mah-RAY','aqua':'AH-kwa','fuego':'FWEH-go','terra':'TEH-ra','cielum':'SEE-lum','estrela':'eh-STREH-la','florina':'flo-REE-na','arbor':'AR-bor','silvara':'seel-VAH-ra','montara':'mon-TAH-ra','ventora':'ven-TOR-a','pluvia':'PLOO-vee-a','nivora':'nee-VO-ra','solaria':'so-LAH-ree-a','lunalux':'LOO-na-luks','plajara':'plah-HAH-ra','rivora':'ree-VO-ra','lakora':'lah-KO-ra','herbina':'her-BEE-na','nubela':'noo-BEH-la','domora':'do-MO-ra','camara':'kah-MAH-ra','lectora':'lek-TO-ra','sedora':'seh-DO-ra','tabora':'tah-BO-ra','portara':'por-TAH-ra','fenestra':'feh-NEH-strah','cozinara':'ko-zee-NAH-ra','alimenta':'ah-lee-MEN-ta','panora':'pah-NO-ra','lacté':'lak-TAY','pomara':'po-MAH-ra','cafora':'kah-FO-ra','libera':'LEE-beh-ra','musica':'MOO-zee-ka','telefoné':'teh-leh-fo-NAY','computara':'kom-poo-TAH-ra','clavora':'klah-VO-ra','vestara':'ves-TAH-ra','sapata':'sah-PAH-ta','rubina':'roo-BEE-na','azula':'ah-ZOO-la','verdora':'ver-DO-ra','amarela':'ah-mah-REH-la','nigrum':'NYE-grum','albina':'al-BEE-na','rosalia':'ro-SAH-lee-a','violara':'vee-oh-LAH-ra','aurum':'AW-rum','argenta':'ar-JEN-ta','oranja':'oh-RAHN-ya','brunora':'broo-NO-ra','grisia':'GREE-see-a','bellskøn':'bel-SKUN','grandora':'grahn-DO-ra','minora':'mee-NO-ra','rapida':'rah-PEE-da','lentora':'len-TO-ra','calora':'kah-LO-ra','frigora':'free-GO-ra','diara':'dee-AH-ra','noctara':'noc-TAH-ra','matina':'mah-TEE-na','vespara':'ves-PAH-ra','hodiera':'ho-DYEH-ra','amanora':'ah-mah-NO-ra','heriora':'heh-REE-or-a','tempora':'TEM-po-ra','nuncé':'noon-SAY','sempre':'SEM-preh','nuncquam':'NOON-kwam','semanara':'seh-mah-NAH-ra','mensora':'men-SO-ra','annora':'ah-NO-ra','horina':'ho-REE-na','minuta':'mee-NOO-ta','seconda':'seh-KON-da','antera':'ahn-TE-ra','postara':'pos-TAH-ra','proxima':'PROK-see-ma','mio':'MEE-o','tua':'TOO-ah','elo':'EH-lo','ela':'EH-la','nos':'nos','elar':'EH-lar','mina':'MEE-na','aqui':'ah-KEE','alora':'ah-LO-ra','oui':'wee','non':'non','merci tak':'MER-see tahk','por favor':'por fah-VOR','ubara':'oo-BAH-ra','quisara':'kee-SAH-ra','quora':'KWO-ra','porqué':'por-KAY','porque':'por-KEH','talvez':'tahl-VEZ','amora':'ah-MO-ra','risora':'ree-SO-ra','lacrima':'lah-KREE-ma','mangera':'mahn-JEH-ra','bibera':'bee-BEH-ra','dormira':'dor-MEE-ra','dansara':'dahn-SAH-ra','cantora':'kahn-TO-ra','currera':'koo-REH-ra','ambular':'am-boo-LAR','parlora':'par-LO-ra','audira':'ow-DEE-ra','vidora':'vee-DO-ra','legora':'leh-GO-ra','scriptora':'skreep-TO-ra','ludora':'loo-DO-ra','natara':'nah-TAH-ra','volara':'vo-LAH-ra','pensara':'pen-SAH-ra','sorrira':'so-REE-ra','magiora':'mah-JO-ra','anima':'AH-nee-ma','pacera':'pah-SE-ra','libertara':'lee-ber-TAH-ra','eternora':'eh-ter-NO-ra','secretara':'seh-kreh-TAH-ra','bellora':'beh-LO-ra','universa':'oo-nee-VER-sa','angelora':'ahn-JEH-lo-ra','luxespera':'luks-es-PE-ra','somniversa':'som-nee-VER-sa','aventora':'ah-ven-TO-ra','lun anima':'loon AH-nee-ma','solcorda':'sol-KOR-da','estrelpura':'eh-strel-POO-ra','arcobella':'ar-ko-BEH-la','lumina':'LOO-mee-na','obscura':'ob-SKOO-ra','miracula':'mee-RAH-koo-la','enchantora':'en-chan-TO-ra','scholarina':'sko-lah-REE-na','magistera':'mah-JEES-te-ra','amicora':'ah-mee-KO-ra','aventurosa':'ah-ven-too-RO-sa','matinara':'mah-tee-NAH-ra','prandora':'prahn-DO-ra','cenarina':'seh-nah-REE-na','felina':'feh-LEE-na','canora':'kah-NO-ra','equina':'eh-KWEE-na','aviora':'ah-VEE-o-ra','estivara':'es-tee-VAH-ra','inverna':'een-VER-na','primavera':'pree-mah-VE-ra','autumnara':'aw-tum-NAH-ra','urbana':'ur-BAH-na','paisora':'pay-SO-ra','mundara':'moon-DAH-ra','viatora':'vee-ah-TO-ra','domina':'do-MEE-na',
   'hallovai':'hah-LO-vai','bonadia':'bo-NAH-dee-ya','bonvespa':'bon-VES-pa','bonadia venora':'bo-NAH-dee-ya veh-NO-ra','meraki':'meh-RAH-kee','grandmeraki':'grahnd-meh-RAH-kee','benmeraki':'ben-meh-RAH-kee','perdona':'per-DO-na','perdoni':'per-DO-nee','nulproblema':'nool-pro-BLEH-ma','viresta':'vee-RES-ta','benvara':'ben-VAH-ra','quomara':'kwo-MAH-ra','quandra':'KWAHN-dra','qualora':'kwah-LO-ra','sucede':'soo-SEH-deh','coma vesta':'KO-ma VES-ta','bonora':'bo-NO-ra','malora':'mah-LO-ra','finora':'fee-NO-ra','clarivo':'klah-REE-vo','verita':'veh-REE-ta','okeya':'oh-KAY-ya','attenda':'ah-TEN-da','venira':'veh-NEE-ra','alevara':'ah-leh-VAH-ra','ajuvara':'ah-joo-VAH-ra','miva':'MEE-va','tuva':'TOO-va','nosa':'NO-sa','elara':'eh-LAH-ra','neivora':'nay-VO-ra','somnira':'som-NEE-ra','famelia':'fah-MEH-lee-ya','aquira':'ah-KEE-ra','risavena':'ree-sah-VEH-na','nuljoya':'nool-JOY-ya','nervora':'ner-VO-ra','confusa':'kon-FOO-sa','miravena':'mee-rah-VEH-na','malivara':'mah-lee-VAH-ra','fantora':'fahn-TO-ra','nulcare':'nool-KAH-reh','estara':'es-TAH-ra','habira':'hah-BEE-ra','facera':'fah-SEH-ra','dicera':'dee-SEH-ra','evigora':'eh-vee-GO-ra','sedira':'seh-DEE-ra','statora':'stah-TO-ra','sapira':'sah-PEE-ra','comprena':'kom-PREH-na','banelora':'bah-neh-LO-ra','sanitora':'sah-nee-TO-ra','bagora':'bah-GO-ra','moneta':'mo-NEH-ta','horica':'ho-REE-ka','banora':'bah-NO-ra','carnora':'kar-NO-ra','piscara':'pee-SKAH-ra','rizona':'ree-ZO-na','quesora':'keh-SO-ra','tevara':'teh-VAH-ra','jucera':'joo-SEH-ra','dulcora':'dool-KO-ra','salina':'sah-LEE-na','restora':'res-TO-ra','posterra':'pos-TEH-ra','primora':'pree-MO-ra','tardora':'tar-DO-ra','novara':'no-VAH-ra','vetora':'veh-TO-ra','importa':'eem-POR-ta',
   'nula':'NOO-la','unora':'oo-NO-ra','duora':'doo-O-ra','tria':'TREE-ah','quatra':'KWAH-tra','quinora':'kwee-NO-ra','sexora':'sek-SO-ra','septora':'sep-TO-ra','octora':'ok-TO-ra','decora':'deh-KO-ra','undecora':'oon-deh-KO-ra','duodecora':'doo-oh-deh-KO-ra','tredecora':'treh-deh-KO-ra','quattuordecora':'kwah-toor-deh-KO-ra','quindecora':'kween-deh-KO-ra','sedecora':'seh-deh-KO-ra','septendecora':'sep-ten-deh-KO-ra','octodecora':'ok-toh-deh-KO-ra','novendecora':'no-ven-deh-KO-ra','vigora':'vee-GO-ra','trigora':'tree-GO-ra','quadragora':'kwah-drah-GO-ra','quinquagora':'kween-kwah-GO-ra','sexagora':'sek-sah-GO-ra','septuagora':'sep-too-ah-GO-ra','octogora':'ok-toh-GO-ra','nonagora':'no-nah-GO-ra','centora':'sen-TO-ra','millora':'mee-LO-ra','decamillora':'deh-kah-mee-LO-ra','centimillora':'sen-tee-mee-LO-ra','miliona':'mee-lee-O-na','biliona':'bee-lee-O-na','secora':'seh-KO-ra','tertora':'ter-TO-ra','ultima':'OOL-tee-ma','semora':'seh-MO-ra','duplora':'doo-PLO-ra','multora':'mool-TO-ra','pauora':'pow-O-ra',
-  'stupora':'stoo-PO-ra','idiota':'ee-dee-O-ta','folora':'fo-LO-ra','silenta':'see-LEN-ta','merda':'MER-da','pissora':'pee-SO-ra','maledora':'mah-leh-DO-ra','damora':'dah-MO-ra','fucara':'foo-KAH-ra','culora':'koo-LO-ra','perdora':'per-DO-ra','clownara':'klow-NAH-ra','annoyora':'ah-noy-O-ra','dispara':'dee-SPAH-ra','odia':'O-dee-ah'
+  'stupora':'stoo-PO-ra','idiota':'ee-dee-O-ta','folora':'fo-LO-ra','silenta':'see-LEN-ta','merda':'MER-da','pissora':'pee-SO-ra','maledora':'mah-leh-DO-ra','damora':'dah-MO-ra','fucara':'foo-KAH-ra','culora':'koo-LO-ra','perdora':'per-DO-ra','clownara':'klow-NAH-ra','annoyora':'ah-noy-O-ra','dispara':'dee-SPAH-ra','odia':'O-dee-ah',
+  'addora':'ad-DO-ra','multipora':'mool-tee-PO-ra','divisora':'dee-vee-SO-ra','equora':'eh-KWO-ra','inequora':'een-eh-KWO-ra','majora':'mah-HO-ra','addminora':'ad-mee-NO-ra','percentora':'per-sen-TO-ra','numera':'NOO-meh-ra','numeron':'NOO-meh-ron','calculora':'kal-koo-LO-ra','mathemora':'mah-teh-MO-ra','calculon':'KAL-koo-lon','responsa':'res-PON-sa','resultora':'reh-zool-TO-ra','sumora':'soo-MO-ra','differora':'dee-feh-RO-ra','productora':'pro-dook-TO-ra','quotora':'kwo-TO-ra','mediora':'meh-dee-O-ra','fractiona':'frak-see-O-na','numerora':'noo-meh-RO-ra','denomora':'deh-no-MO-ra','decimora':'deh-see-MO-ra','comora':'ko-MO-ra','rotundora':'ro-toon-DO-ra','calculatra':'kal-koo-LAH-tra','formora':'for-MO-ra','figura':'fee-GOO-ra','circula':'SEER-koo-la','quadrata':'kwah-DRAH-ta','triangora':'tree-ahn-GO-ra','rectora':'rek-TO-ra','squarora':'skwah-RO-ra','lineora':'lee-neh-O-ra','punctora':'poonk-TO-ra','angulora':'ahn-goo-LO-ra','latera':'lah-TEH-ra','cornora':'kor-NO-ra','longora':'lon-GO-ra','latora':'lah-TO-ra','altora':'al-TO-ra','perimora':'peh-ree-MO-ra','areora':'ah-reh-O-ra','volumora':'vo-loo-MO-ra','radiora':'rah-dee-O-ra','diamora':'dee-ah-MO-ra','untriara':'oon-tree-AH-ra','unquatra':'oon-KWAH-tra','decpercentora':'dek-per-sen-TO-ra','quinpercentora':'kween-per-sen-TO-ra','centpercentora':'sent-per-sen-TO-ra','integra':'een-TEH-gra','partora':'par-TO-ra','triplora':'tree-PLO-ra'
 };
 
 const UI_TEXT = {
@@ -2609,7 +2674,6 @@ function canAccessUnit(unitId) {
   return getLessonsForUnit(unitId - 1).every((_, i) => prev[i]?.completed);
 }
 
-// NEW: Strip accents/diacritics to allow "almost correct" checks
 function normalizeText(str) {
   if (!str) return '';
   return str.toLowerCase()
@@ -3427,7 +3491,6 @@ function updateBankAnswer() {
   $('footerBtn').disabled = ans.length === 0;
 }
 
-// NEW: CheckAnswer returns 'correct', 'almost', or 'wrong'
 function checkAnswer(step, answer) {
   if (!answer) return 'wrong';
   
