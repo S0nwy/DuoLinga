@@ -288,6 +288,224 @@
   }
   .captcha-cancel{width:100%;padding:12px;background:var(--bg);color:var(--gray-text);border:2px solid var(--gray);border-radius:12px;font-family:inherit;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;box-shadow:0 3px 0 var(--gray-dark);transition:all .15s}
   .captcha-cancel:active{transform:translateY(3px);box-shadow:0 0 0 var(--gray-dark)}
+
+  /* ============================================================ */
+  /* ===================== SUPER FEATURE CSS ===================== */
+  /* ============================================================ */
+
+  /* --- Galaxy "Duolinga Super" button --- */
+  .super-btn{
+    width:100%;
+    padding:2px;
+    background:transparent;
+    border:none;
+    border-radius:14px;
+    font-family:inherit;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    transition:transform .15s var(--ease), box-shadow .15s var(--ease);
+    box-shadow:0 4px 0 rgba(100,30,180,.55);
+  }
+  .super-btn::before{
+    content:'';
+    position:absolute;
+    top:50%;left:50%;
+    width:300%;height:300%;
+    background:conic-gradient(from 0deg,
+      #ff0080, #c026d3, #7928ca, #00d4ff, #4ade80, #facc15, #ff0080);
+    transform:translate(-50%,-50%);
+    animation:galaxySpin 4s linear infinite;
+    z-index:0;
+  }
+  .super-btn::after{
+    content:'';
+    position:absolute;
+    inset:2px;
+    background:
+      radial-gradient(circle at 12% 20%, rgba(255,255,255,.35) 0, transparent 2px),
+      radial-gradient(circle at 78% 30%, rgba(255,255,255,.5) 0, transparent 1.5px),
+      radial-gradient(circle at 40% 75%, rgba(255,255,255,.4) 0, transparent 1.5px),
+      radial-gradient(circle at 88% 82%, rgba(255,255,255,.35) 0, transparent 2px),
+      radial-gradient(ellipse at 30% 25%, #1e1b4b 0%, #0a0a1a 55%, #03030a 100%);
+    border-radius:12px;
+    z-index:1;
+  }
+  .super-btn:hover::before{ animation-duration:1.6s; }
+  .super-btn:hover{ box-shadow:0 4px 18px rgba(168,85,247,.6), 0 4px 0 rgba(100,30,180,.55); }
+  .super-btn:active{ transform:translateY(4px); box-shadow:0 0 0 rgba(100,30,180,.55); }
+  .super-btn-inner{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:14px 12px;
+    border-radius:12px;
+  }
+  .super-btn-icon{
+    font-size:16px;
+    filter:drop-shadow(0 0 6px rgba(168,85,247,.95));
+    animation:superIconPulse 2s ease-in-out infinite;
+  }
+  @keyframes superIconPulse{
+    0%,100%{transform:scale(1);filter:drop-shadow(0 0 6px rgba(168,85,247,.95))}
+    50%{transform:scale(1.12);filter:drop-shadow(0 0 10px rgba(0,212,255,1))}
+  }
+  .super-btn-text{
+    font-size:14px;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    background:linear-gradient(90deg,#ff80c0,#d946ef,#a855f7,#00d4ff,#4ade80,#facc15,#ff80c0);
+    background-size:300% 100%;
+    -webkit-background-clip:text;
+            background-clip:text;
+    color:transparent;
+    -webkit-text-fill-color:transparent;
+    animation:galaxyText 4s linear infinite;
+  }
+  @keyframes galaxySpin{ to{ transform:translate(-50%,-50%) rotate(360deg); } }
+  @keyframes galaxyText{ to{ background-position:300% 0; } }
+
+  /* --- Super modal --- */
+  .super-backdrop{
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0);backdrop-filter:blur(0);
+    z-index:950;
+    display:flex;align-items:center;justify-content:center;
+    padding:20px;
+    opacity:0;pointer-events:none;
+    transition:all .3s var(--ease);
+  }
+  .super-backdrop.show{
+    opacity:1;pointer-events:auto;
+    background:rgba(0,0,0,.6);backdrop-filter:blur(6px);
+  }
+  .super-modal{
+    background:#fff;
+    border-radius:22px;
+    padding:24px 22px;
+    max-width:400px;width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,.4);
+    transform:scale(.85) translateY(20px);
+    opacity:0;
+    transition:all .4s var(--spring);
+    max-height:90vh;overflow-y:auto;
+    position:relative;
+  }
+  .super-modal::-webkit-scrollbar{width:0}
+  .super-backdrop.show .super-modal{transform:scale(1) translateY(0);opacity:1}
+  .super-modal-icon{
+    font-size:44px;text-align:center;margin-bottom:12px;
+    animation:floatIcon 2s ease-in-out infinite;
+  }
+  .super-modal-title{
+    font-size:20px;font-weight:900;text-align:center;
+    margin-bottom:8px;color:var(--text);
+  }
+  .super-modal-sub{
+    font-size:13px;color:var(--gray-text);font-weight:700;
+    text-align:center;line-height:1.5;margin-bottom:18px;
+  }
+  .super-modal-sub strong{color:#7B1FA2;font-weight:900}
+  .super-modal-row{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;
+  }
+  .super-modal-row.single{grid-template-columns:1fr}
+  .super-modal-row.single .super-modal-btn{margin-top:0}
+  .super-modal-row.single .super-modal-btn + .super-modal-btn{margin-top:10px}
+  .super-modal-btn{
+    padding:13px;border:none;border-radius:11px;
+    font-family:inherit;font-weight:900;font-size:13px;
+    cursor:pointer;transition:all .15s;min-height:46px;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+  }
+  .super-modal-btn-primary{background:var(--green);color:#fff;box-shadow:0 4px 0 var(--green-dark)}
+  .super-modal-btn-primary:active{transform:translateY(4px);box-shadow:0 0 0}
+  .super-modal-btn-secondary{background:var(--bg);color:var(--text);border:2px solid var(--gray);box-shadow:0 4px 0 var(--gray-dark);padding:11px}
+  .super-modal-btn-secondary:active{transform:translateY(4px);box-shadow:0 0 0}
+  .super-modal-btn-blue{background:var(--blue);color:#fff;box-shadow:0 4px 0 var(--blue-dark)}
+  .super-modal-btn-blue:active{transform:translateY(4px);box-shadow:0 0 0}
+  .super-modal-btn-danger{background:var(--red);color:#fff;box-shadow:0 4px 0 var(--red-dark)}
+  .super-modal-btn-danger:active{transform:translateY(4px);box-shadow:0 0 0}
+
+  .super-label{
+    display:block;font-size:12px;font-weight:900;color:var(--gray-text);
+    text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;
+  }
+  .super-input{
+    width:100%;padding:14px 16px;
+    border:2px solid var(--gray);border-radius:12px;
+    font-family:inherit;font-size:16px;font-weight:800;
+    outline:none;background:#FAFAFA;
+    transition:all .2s;text-align:center;letter-spacing:1px;
+    color:var(--text);
+  }
+  .super-input:focus{
+    border-color:#a855f7;background:#fff;
+    box-shadow:0 0 0 4px rgba(168,85,247,.15);
+  }
+  .super-quick-row{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:8px;margin-top:10px;
+  }
+  .super-quick-btn{
+    padding:11px;border:2px solid #a855f7;background:#fff;color:#7B1FA2;
+    border-radius:10px;font-family:inherit;font-weight:900;font-size:12px;
+    cursor:pointer;transition:all .15s;
+  }
+  .super-quick-btn:hover{background:#F3E5FF}
+  .super-quick-btn:active{transform:scale(.96)}
+  .super-quick-btn.selected{
+    background:#a855f7;color:#fff;box-shadow:0 3px 0 #7B1FA2;
+  }
+  .super-spinner-wrap{
+    display:flex;flex-direction:column;align-items:center;
+    gap:14px;padding:26px 0 18px;
+  }
+  .super-spinner{
+    width:42px;height:42px;
+    border:3px solid #e0d0f0;border-top-color:#a855f7;
+    border-radius:50%;animation:spin .8s linear infinite;
+  }
+  .super-spinner-text{
+    font-size:13px;font-weight:800;color:var(--gray-text);text-align:center;
+  }
+  .super-success-icon{
+    font-size:60px;text-align:center;margin-bottom:8px;
+    animation:superSuccessPop .6s var(--spring);
+  }
+  @keyframes superSuccessPop{
+    0%{transform:scale(0) rotate(-180deg)}
+    60%{transform:scale(1.2) rotate(10deg)}
+    100%{transform:scale(1) rotate(0)}
+  }
+  .super-info-box{
+    background:linear-gradient(135deg,#F3E5FF 0%,#E7F7FF 100%);
+    border:2px solid #d8b4fe;border-radius:12px;
+    padding:12px 14px;margin-bottom:16px;
+    font-size:13px;font-weight:700;color:var(--text);
+    text-align:center;line-height:1.5;
+  }
+  .super-info-box strong{color:#7B1FA2;font-weight:900}
+  .super-auto-close-bar{
+    height:4px;background:#e0d0f0;border-radius:2px;
+    margin-top:16px;overflow:hidden;
+  }
+  .super-auto-close-fill{
+    height:100%;width:100%;
+    background:linear-gradient(90deg,#a855f7,#00d4ff);
+    transform-origin:left;
+    animation:superAutoClose 5s linear forwards;
+  }
+  @keyframes superAutoClose{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+  .super-inline-error{
+    color:var(--red);font-size:12px;font-weight:800;
+    text-align:center;margin-top:10px;
+    animation:fadeIn .2s var(--ease);
+  }
 </style>
 </head>
 <body>
@@ -397,6 +615,11 @@
     </div>
     <button class="captcha-cancel" id="captchaCancel">Cancel</button>
   </div>
+</div>
+
+<!-- ===== SUPER MODAL ===== -->
+<div class="super-backdrop" id="superBackdrop">
+  <div class="super-modal" id="superModal"></div>
 </div>
 
 <script>
@@ -990,6 +1213,366 @@ $('checkBtn').addEventListener('click',async()=>{
   }
 });
 
+/* ============================================================ */
+/* ================ SUPER FEATURE (timezone helpers) =========== */
+/* ============================================================ */
+const PARIS_TZ = 'Europe/Paris';
+
+function getParisParts(ts){
+  const src = (ts == null) ? Date.now() : ts;
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: PARIS_TZ,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hourCycle: 'h23'
+  }).formatToParts(new Date(src));
+  const p = {};
+  parts.forEach(x => p[x.type] = x.value);
+  return {
+    year: +p.year, month: +p.month, day: +p.day,
+    hour: +p.hour, minute: +p.minute, second: +p.second
+  };
+}
+
+function parisOffsetMs(ts){
+  const p = getParisParts(ts);
+  const asUtc = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second);
+  return asUtc - ts;
+}
+
+function parisToUtc(year, month, day, hour, minute){
+  const guess = Date.UTC(year, month - 1, day, hour, minute);
+  let off = parisOffsetMs(guess);
+  let result = guess - off;
+  off = parisOffsetMs(result);
+  result = guess - off;
+  return result;
+}
+
+function formatSuperEnd(ts){
+  if (!ts) return '—';
+  return new Intl.DateTimeFormat('en-GB', {
+    timeZone: PARIS_TZ,
+    weekday: 'short', day: 'numeric', month: 'short',
+    hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+  }).format(new Date(ts)) + ' CEST';
+}
+
+/* ============================================================ */
+/* ================ SUPER FEATURE (modal state) ================ */
+/* ============================================================ */
+const superState = {
+  accountName: null,
+  checkTimer: null,
+  autoCloseTimer: null,
+  isReloading: false
+};
+
+function clearSuperTimers(){
+  if (superState.checkTimer){ clearTimeout(superState.checkTimer); superState.checkTimer = null; }
+  if (superState.autoCloseTimer){ clearTimeout(superState.autoCloseTimer); superState.autoCloseTimer = null; }
+}
+
+function openSuperModal(name){
+  superState.accountName = name;
+  superState.isReloading = false;
+  clearSuperTimers();
+  $('superBackdrop').classList.add('show');
+  renderSuperChecking();
+}
+
+function closeSuperModal(){
+  $('superBackdrop').classList.remove('show');
+  clearSuperTimers();
+  const wasName = superState.accountName;
+  superState.accountName = null;
+  // If the account sheet is still open, re-render it so the updated Super status shows up
+  if (openAccountName && openAccountName === wasName && !superState.isReloading){
+    superState.isReloading = true;
+    setTimeout(() => {
+      superState.isReloading = false;
+      if (openAccountName === wasName){
+        const stillExists = getAccounts().find(a => a.name === wasName);
+        if (stillExists) openAccountDetail(wasName);
+      }
+    }, 150);
+  }
+}
+
+function showSuperInlineError(msg){
+  const existing = $('superInlineError');
+  if (existing) existing.remove();
+  const err = document.createElement('div');
+  err.id = 'superInlineError';
+  err.className = 'super-inline-error';
+  err.textContent = msg;
+  $('superModal').appendChild(err);
+  setTimeout(() => { if (err.parentNode) err.remove(); }, 3000);
+}
+
+function renderSuperChecking(){
+  clearSuperTimers();
+  $('superModal').innerHTML = `
+    <div class="super-spinner-wrap">
+      <div class="super-spinner"></div>
+      <div class="super-spinner-text">Checking Super status…</div>
+    </div>
+  `;
+  superState.checkTimer = setTimeout(() => {
+    const name = superState.accountName;
+    if (!name) return;
+    const acctData = allData[name]?.data || {};
+    const superUntil = acctData.superUntil || 0;
+    if (superUntil > Date.now()){
+      renderSuperAlreadyActive(superUntil);
+    } else {
+      renderSuperMenu();
+    }
+  }, 1100);
+}
+
+function renderSuperAlreadyActive(until){
+  $('superModal').innerHTML = `
+    <div class="super-modal-icon">👑</div>
+    <div class="super-modal-title">Already Super!</div>
+    <div class="super-modal-sub">
+      This account already has <strong>Duolinga Super</strong> active until:<br>
+      <strong style="color:#7B1FA2;">${formatSuperEnd(until)}</strong>
+    </div>
+    <div class="super-modal-row">
+      <button class="super-modal-btn super-modal-btn-secondary" id="superOhOk">Oh Ok!</button>
+      <button class="super-modal-btn super-modal-btn-blue" id="superContinue">Continue</button>
+    </div>
+  `;
+  $('superOhOk').onclick = closeSuperModal;
+  $('superContinue').onclick = () => {
+    renderSuperLoading('Loading options…');
+    superState.checkTimer = setTimeout(renderSuperManage, 1000);
+  };
+}
+
+function renderSuperManage(){
+  $('superModal').innerHTML = `
+    <div class="super-modal-icon">⚙️</div>
+    <div class="super-modal-title">Manage Super</div>
+    <div class="super-modal-sub">What would you like to do with this account's Super?</div>
+    <div class="super-modal-row single">
+      <button class="super-modal-btn super-modal-btn-blue" id="superChangeTime">🕒 Change Time</button>
+      <button class="super-modal-btn super-modal-btn-danger" id="superStopSuper">⏹ Stop Super</button>
+    </div>
+  `;
+  $('superChangeTime').onclick = () => {
+    renderSuperLoading('Loading time options…');
+    superState.checkTimer = setTimeout(renderSuperMenu, 1000);
+  };
+  $('superStopSuper').onclick = () => {
+    renderSuperLoading('Loading…');
+    superState.checkTimer = setTimeout(renderSuperConfirmStop, 1000);
+  };
+}
+
+function renderSuperConfirmStop(){
+  $('superModal').innerHTML = `
+    <div class="super-modal-icon">⚠️</div>
+    <div class="super-modal-title">Are you sure?</div>
+    <div class="super-modal-sub">This will immediately stop <strong>Duolinga Super</strong> for this account. Hearts will return to normal.</div>
+    <div class="super-modal-row">
+      <button class="super-modal-btn super-modal-btn-danger" id="superStopYes">Yes, Stop</button>
+      <button class="super-modal-btn super-modal-btn-secondary" id="superStopNo">No</button>
+    </div>
+  `;
+  $('superStopNo').onclick = renderSuperManage;
+  $('superStopYes').onclick = async () => {
+    renderSuperLoading('Stopping Super…');
+    const name = superState.accountName;
+    try {
+      await new Promise(r => setTimeout(r, 900));
+      const data = await cloudGet();
+      if (data[name]?.data){
+        data[name].data.superUntil = 0;
+        const ok = await cloudSet(data);
+        if (!ok) throw new Error('Save failed');
+        await refresh();
+        renderSuperSuccess('Super stopped!', `Hearts are back to normal for <strong>${escapeHtml(name)}</strong>.`);
+      } else {
+        renderSuperSuccess('Already stopped', 'This account has no active Super.');
+      }
+    } catch(e){
+      console.error('Stop super error:', e);
+      renderSuperError('Could not stop Super. Please try again.');
+    }
+  };
+}
+
+function renderSuperLoading(text){
+  clearSuperTimers();
+  $('superModal').innerHTML = `
+    <div class="super-spinner-wrap">
+      <div class="super-spinner"></div>
+      <div class="super-spinner-text">${escapeHtml(text || 'Loading…')}</div>
+    </div>
+  `;
+}
+
+function renderSuperMenu(){
+  $('superModal').innerHTML = `
+    <div class="super-modal-icon">👑</div>
+    <div class="super-modal-title">Duolinga Super</div>
+    <div class="super-modal-sub">Choose how to grant Super. Super gives <strong>infinite hearts</strong> until it expires.</div>
+    <div class="super-modal-row single">
+      <button class="super-modal-btn super-modal-btn-blue" id="superByTime">🕒 Set by Time</button>
+      <button class="super-modal-btn super-modal-btn-blue" id="superByDate">📅 Set by Date</button>
+    </div>
+    <div class="super-modal-row single">
+      <button class="super-modal-btn super-modal-btn-secondary" id="superCancel">Cancel</button>
+    </div>
+  `;
+  $('superCancel').onclick = closeSuperModal;
+  $('superByTime').onclick = () => {
+    renderSuperLoading('Loading time options…');
+    superState.checkTimer = setTimeout(renderSuperTimeInput, 800);
+  };
+  $('superByDate').onclick = () => {
+    renderSuperLoading('Loading date options…');
+    superState.checkTimer = setTimeout(renderSuperDateInput, 800);
+  };
+}
+
+function renderSuperTimeInput(){
+  $('superModal').innerHTML = `
+    <div class="super-modal-icon">🕒</div>
+    <div class="super-modal-title">Set End Time</div>
+    <div class="super-modal-sub">
+      Enter a time in <strong>CEST</strong> when Super should end.<br>
+      If that time already passed today, it ends <strong>tomorrow</strong>.
+    </div>
+    <label class="super-label">End time (CEST)</label>
+    <input type="time" class="super-input" id="superTimeInput" value="15:00" />
+    <div class="super-modal-row">
+      <button class="super-modal-btn super-modal-btn-secondary" id="superTimeBack">Back</button>
+      <button class="super-modal-btn super-modal-btn-primary" id="superTimeContinue">Continue</button>
+    </div>
+  `;
+  $('superTimeBack').onclick = renderSuperMenu;
+  $('superTimeContinue').onclick = () => {
+    const val = $('superTimeInput').value;
+    if (!val || !/^\d{2}:\d{2}$/.test(val)){
+      showSuperInlineError('Please enter a valid time.');
+      return;
+    }
+    const [h, m] = val.split(':').map(Number);
+    const now = getParisParts();
+    const nowMin = now.hour * 60 + now.minute;
+    let year = now.year, month = now.month, day = now.day;
+    if (h * 60 + m <= nowMin){
+      const t = new Date(Date.UTC(year, month - 1, day));
+      t.setUTCDate(t.getUTCDate() + 1);
+      year = t.getUTCFullYear(); month = t.getUTCMonth() + 1; day = t.getUTCDate();
+    }
+    const target = parisToUtc(year, month, day, h, m);
+    grantSuper(target);
+  };
+}
+
+function renderSuperDateInput(){
+  const now = getParisParts();
+  const todayStr = `${now.year}-${String(now.month).padStart(2,'0')}-${String(now.day).padStart(2,'0')}`;
+  $('superModal').innerHTML = `
+    <div class="super-modal-icon">📅</div>
+    <div class="super-modal-title">Set End Date</div>
+    <div class="super-modal-sub">
+      Choose a date or use a quick option.<br>
+      Super ends at <strong>23:59 CEST</strong> on that day.
+    </div>
+    <label class="super-label">End date</label>
+    <input type="date" class="super-input" id="superDateInput" min="${todayStr}" value="${todayStr}" />
+    <label class="super-label" style="margin-top:14px;">Quick options</label>
+    <div class="super-quick-row">
+      <button class="super-quick-btn" data-days="3">3 Days</button>
+      <button class="super-quick-btn" data-days="7">7 Days</button>
+      <button class="super-quick-btn" data-days="30">30 Days</button>
+    </div>
+    <div class="super-modal-row">
+      <button class="super-modal-btn super-modal-btn-secondary" id="superDateBack">Back</button>
+      <button class="super-modal-btn super-modal-btn-primary" id="superDateContinue">Continue</button>
+    </div>
+  `;
+  document.querySelectorAll('.super-quick-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.super-quick-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      const days = parseInt(btn.dataset.days, 10);
+      const n = getParisParts();
+      const t = new Date(Date.UTC(n.year, n.month - 1, n.day));
+      t.setUTCDate(t.getUTCDate() + days);
+      const y = t.getUTCFullYear();
+      const mo = String(t.getUTCMonth() + 1).padStart(2,'0');
+      const d = String(t.getUTCDate()).padStart(2,'0');
+      $('superDateInput').value = `${y}-${mo}-${d}`;
+    };
+  });
+  $('superDateBack').onclick = renderSuperMenu;
+  $('superDateContinue').onclick = () => {
+    const val = $('superDateInput').value;
+    if (!val){ showSuperInlineError('Please choose a date.'); return; }
+    const [y, mo, d] = val.split('-').map(Number);
+    const target = parisToUtc(y, mo, d, 23, 59);
+    grantSuper(target);
+  };
+}
+
+async function grantSuper(targetTs){
+  const name = superState.accountName;
+  if (!name) return;
+  renderSuperLoading('Giving Super…');
+  try {
+    await new Promise(r => setTimeout(r, 1200));
+    const data = await cloudGet();
+    if (!data[name]) data[name] = { data: {} };
+    if (!data[name].data) data[name].data = {};
+    data[name].data.superUntil = targetTs;
+    const ok = await cloudSet(data);
+    if (!ok) throw new Error('Save failed');
+    await refresh();
+    renderSuperSuccess('Super Granted!', `Duolinga Super is now active for <strong>${escapeHtml(name)}</strong> until <strong>${formatSuperEnd(targetTs)}</strong>.`);
+  } catch(e){
+    console.error('Grant super error:', e);
+    renderSuperError('Could not grant Super. Please try again.');
+  }
+}
+
+function renderSuperSuccess(title, messageHtml){
+  clearSuperTimers();
+  $('superModal').innerHTML = `
+    <div class="super-success-icon">✨</div>
+    <div class="super-modal-title">${title}</div>
+    <div class="super-modal-sub">${messageHtml}</div>
+    <div class="super-auto-close-bar"><div class="super-auto-close-fill"></div></div>
+    <div style="text-align:center;margin-top:12px;font-size:11px;color:#999;font-weight:700;">Closing in 5 seconds…</div>
+  `;
+  superState.autoCloseTimer = setTimeout(closeSuperModal, 5000);
+}
+
+function renderSuperError(msg){
+  clearSuperTimers();
+  $('superModal').innerHTML = `
+    <div class="super-modal-icon">😵</div>
+    <div class="super-modal-title">Oops!</div>
+    <div class="super-modal-sub">${escapeHtml(msg)}</div>
+    <div class="super-modal-row single">
+      <button class="super-modal-btn super-modal-btn-secondary" id="superErrClose">Close</button>
+    </div>
+  `;
+  $('superErrClose').onclick = closeSuperModal;
+}
+
+$('superBackdrop').addEventListener('click', (e) => {
+  if (e.target === $('superBackdrop')) closeSuperModal();
+});
+
+/* ============================================================ */
+/* ============== ACCOUNT DETAIL SHEET (updated) ============== */
+/* ============================================================ */
 function openAccountDetail(name) {
   const acct = getAccounts().find(a => a.name === name);
   if (!acct) return;
@@ -1002,6 +1585,11 @@ function openAccountDetail(name) {
   const gems = d.gems || 0;
   const hearts = d.hearts != null ? d.hearts : 5;
   const streak = d.streak || 0;
+
+  const superUntil = d.superUntil || 0;
+  const isSuper = superUntil > Date.now();
+  const superStatusLabel = isSuper ? `Active until ${formatSuperEnd(superUntil)}` : 'Inactive';
+  const heartsDisplay = isSuper ? '∞' : hearts;
 
   let completedLessons = 0;
   let touchedUnits = 0;
@@ -1024,9 +1612,14 @@ function openAccountDetail(name) {
     ? acct.requestStatus.charAt(0).toUpperCase() + acct.requestStatus.slice(1)
     : 'No request';
 
-  const heartBtnHtml = hearts >= 5
-    ? `<button class="give-heart-btn" id="acctGiveHeartBtn" disabled>❤️ Hearts Full (5/5)</button>`
-    : `<button class="give-heart-btn" id="acctGiveHeartBtn">❤️ Give +1 Heart (${hearts}/5)</button>`;
+  let heartBtnHtml;
+  if (isSuper){
+    heartBtnHtml = `<button class="give-heart-btn" id="acctGiveHeartBtn" disabled>👑 Super Active — Infinite Hearts</button>`;
+  } else if (hearts >= 5){
+    heartBtnHtml = `<button class="give-heart-btn" id="acctGiveHeartBtn" disabled>❤️ Hearts Full (5/5)</button>`;
+  } else {
+    heartBtnHtml = `<button class="give-heart-btn" id="acctGiveHeartBtn">❤️ Give +1 Heart (${hearts}/5)</button>`;
+  }
 
   $('acctContent').innerHTML = `
     <div class="acct-hero">
@@ -1037,7 +1630,7 @@ function openAccountDetail(name) {
     <div class="acct-stats">
       <div class="acct-stat"><div class="acct-stat-icon">⚡</div><div class="acct-stat-val">${xp}</div><div class="acct-stat-label">XP</div></div>
       <div class="acct-stat"><div class="acct-stat-icon">💎</div><div class="acct-stat-val">${gems}</div><div class="acct-stat-label">Gems</div></div>
-      <div class="acct-stat"><div class="acct-stat-icon">❤️</div><div class="acct-stat-val">${hearts}</div><div class="acct-stat-label">Hearts</div></div>
+      <div class="acct-stat"><div class="acct-stat-icon">${isSuper ? '♾️' : '❤️'}</div><div class="acct-stat-val">${heartsDisplay}</div><div class="acct-stat-label">Hearts</div></div>
       <div class="acct-stat"><div class="acct-stat-icon">🔥</div><div class="acct-stat-val">${streak}</div><div class="acct-stat-label">Streak</div></div>
     </div>
     <div class="acct-info">
@@ -1045,37 +1638,41 @@ function openAccountDetail(name) {
       <div class="acct-info-row"><span class="acct-info-label">Created</span><span class="acct-info-value plain">${createdLabel}</span></div>
       <div class="acct-info-row"><span class="acct-info-label">Device ID</span><span class="acct-info-value">${escapeHtml(acct.ownerDeviceId)}</span></div>
       <div class="acct-info-row"><span class="acct-info-label">Request Status</span><span class="acct-info-value plain">${statusLabel}</span></div>
+      <div class="acct-info-row"><span class="acct-info-label">Super Status</span><span class="acct-info-value plain">${superStatusLabel}</span></div>
       <div class="acct-info-row"><span class="acct-info-label">Lessons Completed</span><span class="acct-info-value">${completedLessons}</span></div>
       <div class="acct-info-row"><span class="acct-info-label">Units Touched</span><span class="acct-info-value">${touchedUnits}</span></div>
     </div>
     <div class="acct-actions">
+      <button class="super-btn" id="acctSuperBtn">
+        <span class="super-btn-inner">
+          <span class="super-btn-icon">👑</span>
+          <span class="super-btn-text">Duolinga Super</span>
+        </span>
+      </button>
       ${heartBtnHtml}
       <button class="delete-btn" id="acctDeleteBtn">Delete Account</button>
       <button class="acct-close-btn" id="acctCloseBtn">Close</button>
     </div>
   `;
 
-  if (hearts < 5) {
+  if (hearts < 5 && !isSuper) {
     $('acctGiveHeartBtn').onclick = async () => {
       const btn = $('acctGiveHeartBtn');
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner-sm" style="border-color:rgba(255,75,75,.3);border-top-color:var(--red);"></span> Adding...';
-      
       try {
         const data = await cloudGet();
         if (data[name] && data[name].data) {
           let current = data[name].data.hearts || 0;
           data[name].data.hearts = Math.min(5, current + 1);
-          
           if (data[name].data.hearts === 5) {
             data[name].data.heartTimerStartedAt = null;
           } else if (!data[name].data.heartTimerStartedAt) {
             data[name].data.heartTimerStartedAt = Date.now();
           }
-          
           await cloudSet(data);
           showToast({ name, color: '#58CC02', title: 'Heart added!', sub: `${name} now has ${data[name].data.hearts} hearts` });
-          openAccountDetail(name); // Re-open to update UI
+          openAccountDetail(name);
         }
       } catch (e) {
         showToast({ name: '?', color: '#FF4B4B', title: 'Error', sub: 'Could not add heart' });
@@ -1084,6 +1681,11 @@ function openAccountDetail(name) {
       }
     };
   }
+
+  $('acctSuperBtn').onclick = () => {
+    // Keep the account sheet open behind the super modal — smooth "forgot username"-style popup
+    openSuperModal(name);
+  };
 
   $('acctBackdrop').classList.add('show');
   $('acctCloseX').onclick = closeAccountDetail;
